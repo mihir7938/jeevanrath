@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\UploadImageService;
 use App\Services\CityService;
+use App\Services\TypeService;
+use App\Services\VehicleService;
 use App\Services\CarService;
 use App\Models\State;
 use Illuminate\Support\Facades\Hash;
@@ -12,16 +14,20 @@ use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class AdminController extends Controller 
 {
-    private $imageService, $cityService, $carService;
+    private $imageService, $cityService, $typeService, $vehicleService, $carService;
 
     public function __construct ( 
         UploadImageService $imageService,
         CityService $cityService,
+        TypeService $typeService,
+        VehicleService $vehicleService,
         CarService $carService
     )
     {
         $this->imageService = $imageService;
         $this->cityService = $cityService;
+        $this->typeService = $typeService;
+        $this->vehicleService = $vehicleService;
         $this->carService = $carService;
     }
 
@@ -66,6 +72,59 @@ class AdminController extends Controller
             return redirect()->route('admin.cities');
         }
     }
+    public function types(Request $request)
+    {
+        $types = $this->typeService->getAllTypes();
+        return view('admin.types.index')->with('types', $types);
+    }
+    public function addType(Request $request)
+    {
+        return view('admin.types.add');
+    }
+    public function saveType(Request $request)
+    {
+        $data['name'] = $request->type;
+        $this->typeService->create($data);
+        $request->session()->put('message', 'Vehicle Type has been added successfully.');
+        $request->session()->put('alert-type', 'alert-success');
+        return redirect()->route('admin.types');
+    }
+    public function vehicles(Request $request)
+    {
+        $vehicles = $this->vehicleService->getAllVehicles();
+        return view('admin.vehicles.index')->with('vehicles', $vehicles);
+    }
+    public function addVehicle(Request $request)
+    {
+        $types = $this->typeService->getAllTypes();
+        return view('admin.vehicles.add')->with('types', $types);
+    }
+    public function saveVehicle(Request $request)
+    {
+        $data['type_id'] = $request->type;
+        $data['name'] = $request->name;
+        $this->vehicleService->create($data);
+        $request->session()->put('message', 'Vehicle has been added successfully.');
+        $request->session()->put('alert-type', 'alert-success');
+        return redirect()->route('admin.vehicles');
+    }
+    public function deleteVehicle(Request $request, $id)
+    {
+        try{
+            $vehicle = $this->vehicleService->getVehicleById($id);
+            if(!$vehicle){
+                throw new BadRequestException('Invalid Request id.');
+            }
+            $this->vehicleService->delete($vehicle);
+            $request->session()->put('message', 'Vehicle has been deleted successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.vehicles');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.vehicles');
+        }
+    }
     public function cars(Request $request)
     {
         $cars = $this->carService->getAllCars();
@@ -73,7 +132,9 @@ class AdminController extends Controller
     }
     public function addCar(Request $request)
     {
-        return view('admin.cars.add');
+        $states = State::all();
+        $types = $this->typeService->getAllTypes();
+        return view('admin.cars.add')->with('states', $states)->with('types', $types);
     }
     public function saveCar(Request $request)
     {

@@ -4,7 +4,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Cars</h1>
+                    <h1 class="m-0">Vehicles</h1>
                 </div>
             </div>
         </div>
@@ -28,9 +28,51 @@
                         @endif
                         <div class="card card-primary">
                             <div class="card-header">
-                                <h3 class="card-title">Add Car</h3>
+                                <h3 class="card-title">Add Vehicle</h3>
                             </div>
                             <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="state">State*</label>
+                                            <select id="state" name="state" class="form-control">
+                                                <option value="">Select</option>
+                                                @foreach($states as $state)
+                                                    <option value="{{$state->id}}">{{$state->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="city">City*</label>
+                                            <select id="city" name="city" class="form-control">
+                                                <option value="">Select</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="type">Vehicle Type*</label>
+                                            <select id="type" name="type" class="form-control">
+                                                <option value="">Select</option>
+                                                @foreach($types as $type)
+                                                    <option value="{{$type->id}}">{{$type->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="vehicle_name">Vehicle*</label>
+                                            <select id="vehicle_name" name="vehicle_name" class="form-control">
+                                                <option value="">Select</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -125,6 +167,52 @@
 <script>
     $(function () {
         bsCustomFileInput.init();
+        $(document).on('change','#state',function() {
+            var state_value = $(this).val();
+            var appendElement = $("#city");
+            appendElement.empty();
+            var newdata1 = '<option value="">Select</option>';
+            $(newdata1).appendTo(appendElement);        
+            $.ajax({
+                url: "{{ route('get_cities') }}",
+                type: 'get',
+                data: {
+                    'state_id' : state_value
+                },
+                dataType: 'json',
+                success:function(response){
+                    if(response.status){
+                        $.each(response.cities, function(i,result){
+                            newdata = "<option value='"+result.id+"'>"+result.name+"</option>";
+                            $(newdata).appendTo(appendElement);
+                        });
+                    }
+                }
+            });
+        });
+        $(document).on('change','#type',function() {
+            var type_value = $(this).val();
+            var appendElement = $("#vehicle_name");
+            appendElement.empty();
+            var newdata1 = '<option value="">Select</option>';
+            $(newdata1).appendTo(appendElement);        
+            $.ajax({
+                url: "{{ route('get_vehicles') }}",
+                type: 'get',
+                data: {
+                    'type_id' : type_value
+                },
+                dataType: 'json',
+                success:function(response){
+                    if(response.status){
+                        $.each(response.vehicles, function(i,result){
+                            newdata = "<option value='"+result.id+"'>"+result.name+"</option>";
+                            $(newdata).appendTo(appendElement);
+                        });
+                    }
+                }
+            });
+        });
         $('#add-cars-form').validate({
             rules:{
                 car_name:{

@@ -4,7 +4,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Cars</h1>
+                    <h1 class="m-0">Vehicles</h1>
                 </div>
             </div>
         </div>
@@ -16,7 +16,7 @@
                     @include('shared.alert')
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">All Cars</h3>
+                            <h3 class="card-title">All Vehicles</h3>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -71,9 +71,6 @@
                                     </tbody>
                                 </table>
                             </div>
-                        </div>
-                        <div class="card-footer">
-                            For Sales / Demo : 88669 33533
                         </div>
                     </div>
                 </div>

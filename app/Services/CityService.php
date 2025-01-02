@@ -34,4 +34,8 @@ class CityService
     {
         return $cities->delete($cities);
     }
+
+    public function getCitiesByState($state_id){
+        return City::where('state_id', $state_id)->get();
+    }
 }
