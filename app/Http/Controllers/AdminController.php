@@ -6,6 +6,7 @@ use App\Services\UploadImageService;
 use App\Services\CityService;
 use App\Services\TypeService;
 use App\Services\VehicleService;
+use App\Services\CategoryService;
 use App\Services\CarService;
 use App\Models\State;
 use Illuminate\Support\Facades\Hash;
@@ -14,13 +15,14 @@ use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class AdminController extends Controller 
 {
-    private $imageService, $cityService, $typeService, $vehicleService, $carService;
+    private $imageService, $cityService, $typeService, $vehicleService, $categoryService, $carService;
 
     public function __construct ( 
         UploadImageService $imageService,
         CityService $cityService,
         TypeService $typeService,
         VehicleService $vehicleService,
+        CategoryService $categoryService,
         CarService $carService
     )
     {
@@ -28,6 +30,7 @@ class AdminController extends Controller
         $this->cityService = $cityService;
         $this->typeService = $typeService;
         $this->vehicleService = $vehicleService;
+        $this->categoryService = $categoryService;
         $this->carService = $carService;
     }
 
@@ -54,6 +57,40 @@ class AdminController extends Controller
         $request->session()->put('message', 'City has been added successfully.');
         $request->session()->put('alert-type', 'alert-success');
         return redirect()->route('admin.cities');
+    }
+    public function editCity(Request $request, $id)
+    {
+        try{
+            $city = $this->cityService->getCityById($id);
+            if(!$city){
+                throw new BadRequestException('Invalid Request id');
+            }
+            $states = State::all();
+            return view('admin.cities.edit')->with('city', $city)->with('states', $states);
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.cities');
+        }
+    }
+    public function updateCity(Request $request)
+    {
+        try{
+            $city = $this->cityService->getCityById($request->id);
+            if(!$city){
+                throw new BadRequestException('Invalid Request id');
+            }
+            $data['state_id'] = $request->state;
+            $data['name'] = $request->city;
+            $this->cityService->update($city, $data);
+            $request->session()->put('message', 'City has been updated successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.cities');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.cities');
+        }
     }
     public function deleteCity(Request $request, $id)
     {
@@ -89,6 +126,55 @@ class AdminController extends Controller
         $request->session()->put('alert-type', 'alert-success');
         return redirect()->route('admin.types');
     }
+    public function editType(Request $request, $id)
+    {
+        try{
+            $type = $this->typeService->getTypeById($id);
+            if(!$type){
+                throw new BadRequestException('Invalid Request id');
+            }
+            return view('admin.types.edit')->with('type', $type);
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.types');
+        }
+    }
+    public function updateType(Request $request)
+    {
+        try{
+            $type = $this->typeService->getTypeById($request->id);
+            if(!$type){
+                throw new BadRequestException('Invalid Request id');
+            }
+            $data['name'] = $request->type;
+            $this->typeService->update($type, $data);
+            $request->session()->put('message', 'Vehicle Type has been updated successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.types');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.types');
+        }
+    }
+    public function deleteType(Request $request, $id)
+    {
+        try{
+            $type = $this->typeService->getTypeById($id);
+            if(!$type){
+                throw new BadRequestException('Invalid Request id.');
+            }
+            $this->typeService->delete($type);
+            $request->session()->put('message', 'Vehicle Type has been deleted successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.types');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.types');
+        }
+    }
     public function vehicles(Request $request)
     {
         $vehicles = $this->vehicleService->getAllVehicles();
@@ -108,6 +194,40 @@ class AdminController extends Controller
         $request->session()->put('alert-type', 'alert-success');
         return redirect()->route('admin.vehicles');
     }
+    public function editVehicle(Request $request, $id)
+    {
+        try{
+            $vehicle = $this->vehicleService->getVehicleById($id);
+            if(!$vehicle){
+                throw new BadRequestException('Invalid Request id');
+            }
+            $types = $this->typeService->getAllTypes();
+            return view('admin.vehicles.edit')->with('vehicle', $vehicle)->with('types', $types);
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.vehicles');
+        }
+    }
+    public function updateVehicle(Request $request)
+    {
+        try{
+            $vehicle = $this->vehicleService->getVehicleById($request->id);
+            if(!$vehicle){
+                throw new BadRequestException('Invalid Request id');
+            }
+            $data['type_id'] = $request->type;
+            $data['name'] = $request->name;
+            $this->vehicleService->update($vehicle, $data);
+            $request->session()->put('message', 'Vehicle has been updated successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.vehicles');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.vehicles');
+        }
+    }
     public function deleteVehicle(Request $request, $id)
     {
         try{
@@ -123,6 +243,72 @@ class AdminController extends Controller
             $request->session()->put('message', $e->getMessage());
             $request->session()->put('alert-type', 'alert-warning');
             return redirect()->route('admin.vehicles');
+        }
+    }
+    public function categories(Request $request)
+    {
+        $categories = $this->categoryService->getAllCategories();
+        return view('admin.categories.index')->with('categories', $categories);
+    }
+    public function addCategory(Request $request)
+    {
+        return view('admin.categories.add');
+    }
+    public function saveCategory(Request $request)
+    {
+        $data['name'] = $request->name;
+        $this->categoryService->create($data);
+        $request->session()->put('message', 'Category has been added successfully.');
+        $request->session()->put('alert-type', 'alert-success');
+        return redirect()->route('admin.categories');
+    }
+    public function editCategory(Request $request, $id)
+    {
+        try{
+            $category = $this->categoryService->getCategoryById($id);
+            if(!$category){
+                throw new BadRequestException('Invalid Request id');
+            }
+            return view('admin.categories.edit')->with('category', $category);
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.categories');
+        }
+    }
+    public function updateCategory(Request $request)
+    {
+        try{
+            $category = $this->categoryService->getCategoryById($request->id);
+            if(!$category){
+                throw new BadRequestException('Invalid Request id');
+            }
+            $data['name'] = $request->name;
+            $this->categoryService->update($category, $data);
+            $request->session()->put('message', 'Category has been updated successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.categories');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.categories');
+        }
+    }
+    public function deleteCategory(Request $request, $id)
+    {
+        try{
+            $category = $this->categoryService->getCategoryById($id);
+            if(!$category){
+                throw new BadRequestException('Invalid Request id.');
+            }
+            $this->categoryService->delete($category);
+            $request->session()->put('message', 'Category has been deleted successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.categories');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.categories');
         }
     }
     public function cars(Request $request)

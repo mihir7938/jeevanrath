@@ -131,18 +131,28 @@
             <div class="row g-5 align-items-center">
                 <div class="col-lg-6 wow fadeInLeft" data-wow-delay="0.2">
                     <div class="section-title text-start">
-                        <img src="img/car_1.png" class="img-fluid rounded w-100" alt="">
+                        <div class="local-car-carousel owl-carousel">
+                            <div class="item">
+                                <img src="img/car_1.png" class="img-fluid rounded w-100" alt="">
+                            </div>
+                            <div class="item">
+                                <img src="img/car_2.png" class="img-fluid rounded w-100" alt="">
+                            </div>
+                            <div class="item">
+                                <img src="img/car_3.png" class="img-fluid rounded w-100" alt="">
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-6 wow fadeInRight" data-wow-delay="0.4s">
                     <div class="rounded p-4">
                         <p class="fs-4 text-uppercase text-primary">Terms & Conditions</p>
                         <ul>
-                            <li>Only ₹500 in Suart everywhere</li>
-                            <li>From anywhere to surat airport</li>
-                            <li>From surat airport to anywhere</li>
-                            <li>From anywhere to surat railway station</li>
-                            <li>From surat railway station to anywhere</li>
+                            <li>Only ₹500 in suart everywhere</li>
+                            <li>From anywhere in surat to surat airport</li>
+                            <li>From surat airport to anywhere in surat</li>
+                            <li>From anywhere in surat to surat railway station</li>
+                            <li>From surat railway station to anywhere in surat</li>
                             <li>All taxes included</li>
                             <li>Flexible car choice</li>
                         </ul>

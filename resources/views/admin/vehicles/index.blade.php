@@ -3,8 +3,11 @@
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">Vehicles</h1>
+                <div class="col-sm-12">
+                    <div class="d-flex justify-content-between">
+                        <h1 class="m-0">Vehicles</h1>
+                        <a href="{{route('admin.vehicles.add')}}" class="btn btn-primary">Add New Vehicle</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -23,14 +26,14 @@
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th width="100">Delete Vehicle</th>
+                                            <th width="100">Action</th>
                                             <th>Vehicle Name</th>
                                             <th>Vehicle Type Name</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
-                                            <th>Delete Vehicle</th>
+                                            <th>Action</th>
                                             <th>Vehicle Name</th>
                                             <th>Vehicle Type Name</th>
                                         </tr>
@@ -39,6 +42,9 @@
                                         @foreach($vehicles as $vehicle)
                                             <tr>
                                                 <td class="text-center">
+                                                    <a href="{{route('admin.vehicles.edit', ['id' => $vehicle->id])}}" class="btn btn-outline-primary btn-circle">
+                                                        <i class="fas fa-pen"></i>
+                                                    </a>
                                                     <a href="{{route('admin.vehicles.delete', ['id' => $vehicle->id])}}" class="btn btn-outline-danger btn-circle">
                                                         <i class="fas fa-trash"></i>
                                                     </a>

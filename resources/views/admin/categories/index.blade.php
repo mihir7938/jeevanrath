@@ -5,8 +5,8 @@
             <div class="row mb-2">
                 <div class="col-sm-12">
                     <div class="d-flex justify-content-between">
-                        <h1 class="m-0">Cities</h1>
-                        <a href="{{route('admin.cities.add')}}" class="btn btn-primary">Add New City</a>
+                        <h1 class="m-0">Categories</h1>
+                        <a href="{{route('admin.categories.add')}}" class="btn btn-primary">Add New Category</a>
                     </div>
                 </div>
             </div>
@@ -19,7 +19,7 @@
                     @include('shared.alert')
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">All Cities</h3>
+                            <h3 class="card-title">All Categories</h3>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -27,30 +27,27 @@
                                     <thead>
                                         <tr>
                                             <th width="100">Action</th>
-                                            <th>City Name</th>
-                                            <th>State Name</th>
+                                            <th>Category Name</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
                                             <th>Action</th>
-                                            <th>City Name</th>
-                                            <th>State Name</th>
+                                            <th>Category Name</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
-                                        @foreach($cities as $city)
+                                        @foreach($categories as $category)
                                             <tr>
                                                 <td class="text-center">
-                                                    <a href="{{route('admin.cities.edit', ['id' => $city->id])}}" class="btn btn-outline-primary btn-circle">
+                                                    <a href="{{route('admin.categories.edit', ['id' => $category->id])}}" class="btn btn-outline-primary btn-circle">
                                                         <i class="fas fa-pen"></i>
                                                     </a>
-                                                    <a href="{{route('admin.cities.delete', ['id' => $city->id])}}" class="btn btn-outline-danger btn-circle">
+                                                    <a href="{{route('admin.categories.delete', ['id' => $category->id])}}" class="btn btn-outline-danger btn-circle">
                                                         <i class="fas fa-trash"></i>
                                                     </a>
                                                 </td>
-                                                <td>{{$city->name}}</td>
-                                                <td>{{$city->states->name}}</td>
+                                                <td>{{$category->name}}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>

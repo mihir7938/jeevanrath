@@ -41,6 +41,14 @@
         ],
     });
 
+    $(".local-car-carousel").owlCarousel({
+        autoplay: true,
+        items: 1,
+        smartSpeed: 1500,
+        dots: false,
+        loop: true,
+        nav : false
+    });
 
     // International carousel
     $(".testimonial-carousel").owlCarousel({

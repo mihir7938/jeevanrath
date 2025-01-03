@@ -13,8 +13,9 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <form method="POST" action="{{route('admin.vehicles.add.save')}}" class="form" id="add-vehicles-form" enctype="multipart/form-data">
+                    <form method="POST" action="{{route('admin.vehicles.update.save')}}" class="form" id="edit-vehicles-form" enctype="multipart/form-data">
                         @csrf
+                        <input type="hidden" name="id" value="{{$vehicle->id}}" />
                         @include('shared.alert')
                         @if (count($errors) > 0)
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -28,7 +29,7 @@
                         @endif
                         <div class="card card-primary">
                             <div class="card-header">
-                                <h3 class="card-title">Add all types of Cars, Buses and Bikes</h3>
+                                <h3 class="card-title">Edit Vehicle</h3>
                             </div>
                             <div class="card-body">
                                 <div class="row">
@@ -38,7 +39,7 @@
                                             <select id="type" name="type" class="form-control">
                                                 <option value="">Select</option>
                                                 @foreach($types as $type)
-                                                    <option value="{{$type->id}}">{{$type->name}}</option>
+                                                    <option value="{{$type->id}}" @if($vehicle->type_id == $type->id) selected @endif>{{$type->name}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -46,7 +47,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="name">Vehicle Name*</label>
-                                            <input type="text" class="form-control" id="name" name="name" placeholder="Vehicle Name">
+                                            <input type="text" class="form-control" id="name" name="name" placeholder="Vehicle Name" value="{{$vehicle->name}}">
                                         </div>
                                     </div>
                                 </div>
@@ -64,7 +65,7 @@
 @section('footer')
 <script>
     $(function () {
-        $('#add-vehicles-form').validate({
+        $('#edit-vehicles-form').validate({
             rules:{
                 type:{
                     required: true

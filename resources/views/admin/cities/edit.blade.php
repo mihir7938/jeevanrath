@@ -4,7 +4,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Vehicles</h1>
+                    <h1 class="m-0">Cities</h1>
                 </div>
             </div>
         </div>
@@ -13,8 +13,9 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <form method="POST" action="{{route('admin.vehicles.add.save')}}" class="form" id="add-vehicles-form" enctype="multipart/form-data">
+                    <form method="POST" action="{{route('admin.cities.update.save')}}" class="form" id="edit-cities-form" enctype="multipart/form-data">
                         @csrf
+                        <input type="hidden" name="id" value="{{$city->id}}" />
                         @include('shared.alert')
                         @if (count($errors) > 0)
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -28,25 +29,25 @@
                         @endif
                         <div class="card card-primary">
                             <div class="card-header">
-                                <h3 class="card-title">Add all types of Cars, Buses and Bikes</h3>
+                                <h3 class="card-title">Edit City</h3>
                             </div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="type">Vehicle Type*</label>
-                                            <select id="type" name="type" class="form-control">
+                                            <label for="state">State*</label>
+                                            <select id="state" name="state" class="form-control">
                                                 <option value="">Select</option>
-                                                @foreach($types as $type)
-                                                    <option value="{{$type->id}}">{{$type->name}}</option>
+                                                @foreach($states as $state)
+                                                    <option value="{{$state->id}}" @if($city->state_id == $state->id) selected @endif>{{$state->name}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="name">Vehicle Name*</label>
-                                            <input type="text" class="form-control" id="name" name="name" placeholder="Vehicle Name">
+                                            <label for="city">City*</label>
+                                            <input type="text" class="form-control" id="city" name="city" placeholder="City" value="{{$city->name}}">
                                         </div>
                                     </div>
                                 </div>
@@ -64,21 +65,21 @@
 @section('footer')
 <script>
     $(function () {
-        $('#add-vehicles-form').validate({
+        $('#edit-cities-form').validate({
             rules:{
-                type:{
+                state:{
                     required: true
                 },
-                name: {
+                city: {
                     required: true
                 }
             },
             messages:{
-                type:{
-                    required: "Please select vehicle type."
+                state:{
+                    required: "Please select state."
                 },
-                name:{
-                    required: "Please enter vehicle name."
+                city:{
+                    required: "Please enter city."
                 }
             }
         });
