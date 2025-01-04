@@ -61,10 +61,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/categories/edit/{id}', [AdminController::class, 'editCategory'])->name('admin.categories.edit');
     Route::post('/categories/update', [AdminController::class, 'updateCategory'])->name('admin.categories.update.save');
     Route::get('/categories/delete/{id}', [AdminController::class, 'deleteCategory'])->name('admin.categories.delete');
-    Route::get('/all-vehicles', [AdminController::class, 'cars'])->name('admin.cars');
-    Route::get('/all-vehicles/add', [AdminController::class, 'addCar'])->name('admin.cars.add');
-    Route::post('/all-vehicles/save', [AdminController::class, 'saveCar'])->name('admin.cars.add.save');
-    Route::get('/all-vehicles/edit/{id}', [AdminController::class, 'editCar'])->name('admin.cars.edit');
-    Route::post('/all-vehicles/update', [AdminController::class, 'updateCar'])->name('admin.cars.update.save');
-    Route::get('/all-vehicles/delete/{id}', [AdminController::class, 'deleteCar'])->name('admin.cars.delete');
+    Route::get('/all-vehicles', [AdminController::class, 'allVehicles'])->name('admin.details');
+    Route::get('/vehicle-details/add', [AdminController::class, 'addVehicleDetails'])->name('admin.details.add');
+    Route::post('/vehicle-details/save', [AdminController::class, 'saveVehicleDetails'])->name('admin.details.add.save');
+    Route::get('/vehicle-details/edit/{id}', [AdminController::class, 'editVehicleDetails'])->name('admin.details.edit');
+    Route::post('/vehicle-details/update', [AdminController::class, 'updateVehicleDetails'])->name('admin.details.update.save');
+    Route::get('/vehicle-details/delete/{id}', [AdminController::class, 'deleteVehicleDetails'])->name('admin.details.delete');
+    Route::post('/fetch-details', [AdminController::class, 'fetchDetailsByCategory'])->name('admin.details.fetch');
 });

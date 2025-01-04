@@ -7,7 +7,7 @@ use App\Services\CityService;
 use App\Services\TypeService;
 use App\Services\VehicleService;
 use App\Services\CategoryService;
-use App\Services\CarService;
+use App\Services\VehicleDetailService;
 use App\Models\State;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class AdminController extends Controller 
 {
-    private $imageService, $cityService, $typeService, $vehicleService, $categoryService, $carService;
+    private $imageService, $cityService, $typeService, $vehicleService, $categoryService, $vehicleDetailService;
 
     public function __construct ( 
         UploadImageService $imageService,
@@ -23,7 +23,7 @@ class AdminController extends Controller
         TypeService $typeService,
         VehicleService $vehicleService,
         CategoryService $categoryService,
-        CarService $carService
+        VehicleDetailService $vehicleDetailService
     )
     {
         $this->imageService = $imageService;
@@ -31,7 +31,7 @@ class AdminController extends Controller
         $this->typeService = $typeService;
         $this->vehicleService = $vehicleService;
         $this->categoryService = $categoryService;
-        $this->carService = $carService;
+        $this->vehicleDetailService = $vehicleDetailService;
     }
 
     public function index(Request $request)
@@ -311,55 +311,71 @@ class AdminController extends Controller
             return redirect()->route('admin.categories');
         }
     }
-    public function cars(Request $request)
+    public function allVehicles(Request $request)
     {
-        $cars = $this->carService->getAllCars();
-        return view('admin.cars.index')->with('cars', $cars);
+        $vehicle_details = $this->vehicleDetailService->getAllVehicleDetails();
+        return view('admin.vehicle_details.index')->with('vehicle_details', $vehicle_details);
     }
-    public function addCar(Request $request)
+    public function addVehicleDetails(Request $request)
     {
         $states = State::all();
         $types = $this->typeService->getAllTypes();
-        return view('admin.cars.add')->with('states', $states)->with('types', $types);
+        $categories = $this->categoryService->getAllCategories();
+        $category_id = '';
+        return view('admin.vehicle_details.add')->with('states', $states)->with('types', $types)->with('categories', $categories)->with('category_id', $category_id);
     }
-    public function saveCar(Request $request)
+    public function saveVehicleDetails(Request $request)
     {
-        $data['car_name'] = $request->car_name;
+        $data['state_id'] = $request->state;
+        $data['city_id'] = $request->city;
+        $data['type_id'] = $request->type;
+        $data['vehicle_id'] = $request->vehicle_name;
+        $data['category_id'] = $request->category;
         $data['rate'] = $request->rate;
         $data['taxi_doors'] = $request->taxi_doors;
         $data['passengers'] = $request->passengers;
         $data['luggage_carry'] = $request->luggage_carry;
         $data['air_condition'] = $request->air_condition;
         $data['gps_navigation'] = $request->gps_navigation;
-        $filename = $this->imageService->uploadFile($request->image, "assets/cars");
-        $data['car_image'] = '/cars/'.$filename;
-        $this->carService->create($data);
-        $request->session()->put('message', 'Car details has been added successfully.');
+        $filename = $this->imageService->uploadFile($request->image, "assets/vehicles/rental");
+        $data['vehicle_image'] = '/vehicles/rental/'.$filename;
+        $this->vehicleDetailService->create($data);
+        $request->session()->put('message', 'Vehicle details has been added successfully.');
         $request->session()->put('alert-type', 'alert-success');
-        return redirect()->route('admin.cars.add');
+        return redirect()->route('admin.details');
     }
-    public function editCar(Request $request, $id)
+    public function editVehicleDetails(Request $request, $id)
     {
         try{
-            $car = $this->carService->getCarById($id);
-            if(!$car){
+            $vehicle_detail = $this->vehicleDetailService->getVehicleDetailById($id);
+            if(!$vehicle_detail){
                 throw new BadRequestException('Invalid Request id');
             }
-            return view('admin.cars.edit')->with('car', $car);
+            $states = State::all();
+            $cities = $this->cityService->getCitiesByState($vehicle_detail->state_id);
+            $types = $this->typeService->getAllTypes();
+            $vehicles = $this->vehicleService->getVehiclesByType($vehicle_detail->type_id);
+            $categories = $this->categoryService->getAllCategories();
+            $category_id = '';
+            return view('admin.vehicle_details.edit')->with('vehicle_detail', $vehicle_detail)->with('states', $states)->with('cities', $cities)->with('types', $types)->with('vehicles', $vehicles)->with('categories', $categories)->with('category_id', $category_id);
         }catch(\Exception $e){
             $request->session()->put('message', $e->getMessage());
             $request->session()->put('alert-type', 'alert-warning');
-            return redirect()->route('admin.cars');
+            return redirect()->route('admin.details');
         }
     }
-    public function updateCar(Request $request)
+    public function updateVehicleDetails(Request $request)
     {
         try{
-            $car = $this->carService->getCarById($request->id);
-            if(!$car){
+            $vehicle_detail = $this->vehicleDetailService->getVehicleDetailById($request->id);
+            if(!$vehicle_detail){
                 throw new BadRequestException('Invalid Request id');
             }
-            $data['car_name'] = $request->car_name;
+            $data['state_id'] = $request->state;
+            $data['city_id'] = $request->city;
+            $data['type_id'] = $request->type;
+            $data['vehicle_id'] = $request->vehicle_name;
+            $data['category_id'] = $request->category;
             $data['rate'] = $request->rate;
             $data['taxi_doors'] = $request->taxi_doors;
             $data['passengers'] = $request->passengers;
@@ -367,38 +383,43 @@ class AdminController extends Controller
             $data['air_condition'] = $request->air_condition;
             $data['gps_navigation'] = $request->gps_navigation;
             if($request->has('image')){
-                $filepath = public_path('assets/' . $car->car_image);
+                $filepath = public_path('assets/' . $vehicle_detail->vehicle_image);
                 $this->imageService->deleteFile($filepath);
-                $filename = $this->imageService->uploadFile($request->image, "assets/cars");
-                $data['car_image'] = '/cars/'.$filename;
+                $filename = $this->imageService->uploadFile($request->image, "assets/vehicles/rental");
+                $data['vehicle_image'] = '/vehicles/rental/'.$filename;
             }
-            $this->carService->update($car, $data);
-            $request->session()->put('message', 'Car details has been updated successfully.');
+            $this->vehicleDetailService->update($vehicle_detail, $data);
+            $request->session()->put('message', 'Vehicle details has been updated successfully.');
             $request->session()->put('alert-type', 'alert-success');
-            return redirect()->route('admin.cars');
+            return redirect()->route('admin.details');
         }catch(\Exception $e){
             $request->session()->put('message', $e->getMessage());
             $request->session()->put('alert-type', 'alert-warning');
-            return redirect()->route('admin.cars');
+            return redirect()->route('admin.details');
         }
     }
-    public function deleteCar(Request $request, $id)
+    public function deleteVehicleDetails(Request $request, $id)
     {
         try{
-            $car = $this->carService->getCarById($id);
-            if(!$car){
+            $vehicle_detail = $this->vehicleDetailService->getVehicleDetailById($id);
+            if(!$vehicle_detail){
                 throw new BadRequestException('Invalid Request id.');
             }
-            $filepath = public_path('assets/' . $car->car_image);
+            $filepath = public_path('assets/' . $vehicle_detail->vehicle_image);
             $this->imageService->deleteFile($filepath);
-            $this->carService->delete($car);
-            $request->session()->put('message', 'Car has been deleted successfully.');
+            $this->vehicleDetailService->delete($vehicle_detail);
+            $request->session()->put('message', 'Vehicle detail has been deleted successfully.');
             $request->session()->put('alert-type', 'alert-success');
-            return redirect()->route('admin.cars');
+            return redirect()->route('admin.details');
         }catch(\Exception $e){
             $request->session()->put('message', $e->getMessage());
             $request->session()->put('alert-type', 'alert-warning');
-            return redirect()->route('admin.cars');
+            return redirect()->route('admin.details');
         }
+    }
+    public function fetchDetailsByCategory(Request $request)
+    {
+        $category_id = $request->category_id;
+        return view('admin.vehicle_details.details-form')->with('category_id', $category_id)->render();
     }
 }

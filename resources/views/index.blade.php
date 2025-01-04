@@ -47,16 +47,16 @@
             </div>
             <div class="row g-4 justify-content-center">
                 @php $i = 0.1; @endphp
-                @foreach($cars as $car)
+                @foreach($vehicle_details as $vehicle_detail)
                     <div class="col-md-6 col-lg-4 col-xl-4 wow fadeInUp" data-wow-delay="{{$i}}s">
                         <div class="service-item rounded">
                            <div class="service-img rounded-top">
-                                <img src="{{asset('assets/'.$car->car_image)}}" class="img-fluid rounded-top w-100" alt="">
+                                <img src="{{asset('assets/'.$vehicle_detail->vehicle_image)}}" class="img-fluid rounded-top w-100" alt="">
                            </div>
                             <div class="service-content rounded-bottom bg-light p-4">
                                 <div class="service-content-inner">
-                                    <h5 class="text-center">{{$car->car_name}}</h5>
-                                    <p class="mb-4 text-center text-dark">₹{{$car->rate}}/km (Includding All)</p>
+                                    <h5 class="text-center">{{$vehicle_detail->vehicles->name}}</h5>
+                                    <p class="mb-4 text-center text-dark">₹{{$vehicle_detail->rate}}/km (Includding All)</p>
                                     <div class="mb-4 text-dark">
                                         <div class="row py-3">
                                             <div class="col-2 col-lg-2 col-xl-2">
@@ -66,7 +66,7 @@
                                                 Taxi Doors:
                                             </div>
                                             <div class="col-2 col-lg-3 col-xl-2">
-                                                {{$car->taxi_doors}}
+                                                {{$vehicle_detail->taxi_doors}}
                                             </div>
                                         </div>
                                         <div class="row py-3">
@@ -77,7 +77,7 @@
                                                 Passengers:
                                             </div>
                                             <div class="col-2 col-lg-3 col-xl-2">
-                                                {{$car->passengers}}
+                                                {{$vehicle_detail->passengers}}
                                             </div>
                                         </div>
                                         <div class="row py-3">
@@ -88,7 +88,7 @@
                                                 Luggage Carry:
                                             </div>
                                             <div class="col-2 col-lg-3 col-xl-2">
-                                                {{$car->luggage_carry}}
+                                                {{$vehicle_detail->luggage_carry}}
                                             </div>
                                         </div>
                                         <div class="row py-3">
@@ -99,7 +99,7 @@
                                                 Air Condition:
                                             </div>
                                             <div class="col-2 col-lg-3 col-xl-2">
-                                                {{$car->air_condition ? 'Yes' : 'No'}}
+                                                {{$vehicle_detail->air_condition ? 'Yes' : 'No'}}
                                             </div>
                                         </div>
                                         <div class="row py-3">
@@ -110,7 +110,7 @@
                                                 GPS Navigation:
                                             </div>
                                             <div class="col-2 col-lg-3 col-xl-2">
-                                                {{$car->gps_navigation ? 'Yes' : 'No'}}
+                                                {{$vehicle_detail->gps_navigation ? 'Yes' : 'No'}}
                                             </div>
                                         </div>
                                     </div>

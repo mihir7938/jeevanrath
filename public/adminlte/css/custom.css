@@ -25,21 +25,6 @@ label.error {
   z-index: 9999;
   transform: translate(-50%, -50%);
 }
-#day_results {
-  display: none;
-}
-#yatrik_results {
-  display: none;
-}
-#attendance_section {
-  display: none;
-}
-#qr_code {
-  display: none;
-}
-#member_details {
-  display: none;
-}
 .hidden {
   display: none;
 }
@@ -48,6 +33,13 @@ label.error {
 }
 .h-38 {
   height: 38px;
+}
+#vehicle_details {
+  display: none;
+}
+table#dataTableVehicle.dtr-inline.collapsed > tbody > tr > td.dtr-control::before,
+table#dataTableVehicle.dtr-inline.collapsed > tbody > tr > th.dtr-control::before {
+  top: 32%;
 }
 @media (max-width: 767px) {
   .w-50 {

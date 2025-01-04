@@ -5,29 +5,29 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\CityService;
 use App\Services\VehicleService;
-use App\Services\CarService;
+use App\Services\VehicleDetailService;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Illuminate\Support\Facades\Auth;
 
 class PageController extends Controller
 {
-    private $cityService, $vehicleService, $carService;
+    private $cityService, $vehicleService, $vehicleDetailService;
 
     public function __construct (
         CityService $cityService,
         VehicleService $vehicleService,
-        CarService $carService
+        VehicleDetailService $vehicleDetailService
     )
     {
         $this->cityService = $cityService;
         $this->vehicleService = $vehicleService;
-        $this->carService = $carService;
+        $this->vehicleDetailService = $vehicleDetailService;
     }
 
     public function index(Request $request)
     {
-        $cars = $this->carService->getAllCars();
-        return view('index')->with('cars', $cars);
+        $vehicle_details = $this->vehicleDetailService->getAllVehicleDetails();
+        return view('index')->with('vehicle_details', $vehicle_details);
     }
     public function about(Request $request)
     {
