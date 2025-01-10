@@ -55,27 +55,6 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="type">Vehicle Type*</label>
-                                            <select id="type" name="type" class="form-control">
-                                                <option value="">Select</option>
-                                                @foreach($types as $type)
-                                                    <option value="{{$type->id}}">{{$type->name}}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="vehicle_name">Vehicle*</label>
-                                            <select id="vehicle_name" name="vehicle_name" class="form-control">
-                                                <option value="">Select</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
                                             <label for="category">Category*</label>
                                             <select id="category" name="category" class="form-control">
                                                 <option value="">Select</option>
@@ -174,30 +153,92 @@
                 city:{
                     required: true
                 },
-                type:{
-                    required: true
-                },
-                vehicle_name:{
-                    required: true
-                },
                 category:{
                     required: true
                 },
+                type:{
+                    required:function(){
+                        if($('#category').val() == 1){
+                            return true;
+                        }
+                        return false;
+                    }
+                },
+                vehicle_name:{
+                    required:function(){
+                        if($('#category').val() == 1){
+                            return true;
+                        }
+                        return false;
+                    }
+                },
                 rate: {
-                    required: true,
+                    required:function(){
+                        if($('#category').val() == 1){
+                            return true;
+                        }
+                        return false;
+                    },
                     digits: true
                 },
                 taxi_doors: {
-                    required: true,
+                    required:function(){
+                        if($('#category').val() == 1){
+                            return true;
+                        }
+                        return false;
+                    },
                     digits: true
                 },
                 passengers: {
-                    required: true,
+                    required:function(){
+                        if($('#category').val() == 1){
+                            return true;
+                        }
+                        return false;
+                    },
                     digits: true
                 },
                 luggage_carry: {
-                    required: true,
+                    required:function(){
+                        if($('#category').val() == 1){
+                            return true;
+                        }
+                        return false;
+                    },
                     digits: true
+                },
+                origin_trip:{
+                    required:function(){
+                        if($('#category').val() == 2){
+                            return true;
+                        }
+                        return false;
+                    }
+                },
+                return_trip:{
+                    required:function(){
+                        if($('#category').val() == 2){
+                            return true;
+                        }
+                        return false;
+                    }
+                },
+                vehicle1:{
+                    required:function(){
+                        if($('#category').val() == 2){
+                            return true;
+                        }
+                        return false;
+                    }
+                },
+                rate1:{
+                    required:function(){
+                        if($('#category').val() == 2){
+                            return true;
+                        }
+                        return false;
+                    }
                 },
                 image: {
                     required: true,
@@ -212,14 +253,14 @@
                 city:{
                     required: "Please select city."
                 },
+                category:{
+                    required: "Please select category."
+                },
                 type:{
                     required: "Please select vehicle type."
                 },
                 vehicle_name:{
                     required: "Please select vehicle name."
-                },
-                category:{
-                    required: "Please select category."
                 },
                 rate:{
                     required: "Please enter rate."
@@ -232,6 +273,18 @@
                 },
                 luggage_carry:{
                     required: "Please enter total carry luggage."
+                },
+                origin_trip:{
+                    required: "Please enter origin trip."
+                },
+                return_trip:{
+                    required: "Please enter return trip."
+                },
+                vehicle1:{
+                    required: "Please enter vehicle name/type."
+                },
+                rate1:{
+                    required: "Please enter rate."
                 },
                 image: {
                     required: "Please select image.",

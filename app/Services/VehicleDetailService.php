@@ -34,4 +34,11 @@ class VehicleDetailService
     {
         return $vehicle_details->delete($vehicle_details);
     }
+    public function getAllVehicleByCat($cat_id, $per_page = -1)
+    {
+        if($per_page == -1){
+            return VehicleDetails::orderBy('created_at', 'desc')->where('category_id', $cat_id)->get();    
+        }
+        return VehicleDetails::orderBy('created_at', 'desc')->where('category_id', $cat_id)->paginate($per_page);
+    }
 }

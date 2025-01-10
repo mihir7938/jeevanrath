@@ -31,6 +31,18 @@ class VehicleDetails extends Model
         'luggage_carry',
         'air_condition',
         'gps_navigation',
+        'origin_trip',
+        'return_trip',
+        'vehicle1',
+        'rate1',
+        'vehicle2',
+        'rate2',
+        'vehicle3',
+        'rate3',
+        'vehicle4',
+        'rate4',
+        'vehicle5',
+        'rate5',
         'vehicle_image',
     ];
     public function vehicles() {

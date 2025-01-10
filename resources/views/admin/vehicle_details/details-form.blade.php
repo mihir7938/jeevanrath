@@ -7,6 +7,27 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
+                    <label for="type">Vehicle Type*</label>
+                    <select id="type" name="type" class="form-control">
+                        <option value="">Select</option>
+                        @foreach($types as $type)
+                            <option value="{{$type->id}}">{{$type->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="vehicle_name">Vehicle*</label>
+                    <select id="vehicle_name" name="vehicle_name" class="form-control">
+                        <option value="">Select</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
                     <label for="rate">Rate (per km)*</label>
                     <input type="number" class="form-control" id="rate" name="rate" placeholder="Enter Rate" min="1" max="100">
                 </div>
@@ -83,5 +104,111 @@
     </div>
 </div>
 @elseif($category_id  == 2)
-    Fixed Route
+<div class="card card-light">
+    <div class="card-header">
+        <h3 class="card-title">Add Details</h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="origin_trip">Origin Trip*</label>
+                    <input type="text" class="form-control" id="origin_trip" name="origin_trip" placeholder="Enter Origin Trip">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="return_trip">Return Trip</label>
+                    <input type="text" class="form-control" id="return_trip" name="return_trip" placeholder="Enter Return Trip">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="vehicle1">Vehicle*</label>
+                    <input type="text" class="form-control" id="vehicle1" name="vehicle1" placeholder="Enter Vehicle Name/Type">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="rate1">Rate*</label>
+                    <input type="number" class="form-control" id="rate1" name="rate1" placeholder="Enter Rate">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="vehicle2">Vehicle</label>
+                    <input type="text" class="form-control" id="vehicle2" name="vehicle2" placeholder="Enter Vehicle Name/Type">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="rate2">Rate</label>
+                    <input type="number" class="form-control" id="rate2" name="rate2" placeholder="Enter Rate">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="vehicle3">Vehicle</label>
+                    <input type="text" class="form-control" id="vehicle3" name="vehicle3" placeholder="Enter Vehicle Name/Type">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="rate3">Rate</label>
+                    <input type="number" class="form-control" id="rate3" name="rate3" placeholder="Enter Rate">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="vehicle4">Vehicle</label>
+                    <input type="text" class="form-control" id="vehicle4" name="vehicle4" placeholder="Enter Vehicle Name/Type">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="rate4">Rate</label>
+                    <input type="number" class="form-control" id="rate4" name="rate4" placeholder="Enter Rate">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="vehicle5">Vehicle</label>
+                    <input type="text" class="form-control" id="vehicle5" name="vehicle5" placeholder="Enter Vehicle Name/Type">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="rate5">Rate</label>
+                    <input type="number" class="form-control" id="rate5" name="rate5" placeholder="Enter Rate">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="image">Vehicle Image* (allowed only JPG,JPEG &amp; PNG files)</label>
+                    <div class="input-group">
+                        <div class="custom-file">             
+                            <input type="file" class="custom-file-input" id="image" name="image">
+                            <label class="custom-file-label" for="image">Choose file</label>
+                        </div>              
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <button type="submit" class="btn btn-primary" id="btnsubmit" name="btnsubmit">Submit</button>
+    </div>
+</div>
 @endif

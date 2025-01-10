@@ -313,8 +313,10 @@ class AdminController extends Controller
     }
     public function allVehicles(Request $request)
     {
-        $vehicle_details = $this->vehicleDetailService->getAllVehicleDetails();
-        return view('admin.vehicle_details.index')->with('vehicle_details', $vehicle_details);
+        $categories = $this->categoryService->getAllCategories();
+        $rental_vehicles = $this->vehicleDetailService->getAllVehicleByCat(1);
+        $fixed_vehicles = $this->vehicleDetailService->getAllVehicleByCat(2);
+        return view('admin.vehicle_details.index')->with('categories', $categories)->with('rental_vehicles', $rental_vehicles)->with('fixed_vehicles', $fixed_vehicles);
     }
     public function addVehicleDetails(Request $request)
     {
@@ -328,17 +330,34 @@ class AdminController extends Controller
     {
         $data['state_id'] = $request->state;
         $data['city_id'] = $request->city;
-        $data['type_id'] = $request->type;
-        $data['vehicle_id'] = $request->vehicle_name;
         $data['category_id'] = $request->category;
-        $data['rate'] = $request->rate;
-        $data['taxi_doors'] = $request->taxi_doors;
-        $data['passengers'] = $request->passengers;
-        $data['luggage_carry'] = $request->luggage_carry;
-        $data['air_condition'] = $request->air_condition;
-        $data['gps_navigation'] = $request->gps_navigation;
-        $filename = $this->imageService->uploadFile($request->image, "assets/vehicles/rental");
-        $data['vehicle_image'] = '/vehicles/rental/'.$filename;
+        if($request->category == 1) {
+            $data['type_id'] = $request->type;
+            $data['vehicle_id'] = $request->vehicle_name;
+            $data['rate'] = $request->rate;
+            $data['taxi_doors'] = $request->taxi_doors;
+            $data['passengers'] = $request->passengers;
+            $data['luggage_carry'] = $request->luggage_carry;
+            $data['air_condition'] = $request->air_condition;
+            $data['gps_navigation'] = $request->gps_navigation;
+            $filename = $this->imageService->uploadFile($request->image, "assets/vehicles/rental");
+            $data['vehicle_image'] = '/vehicles/rental/'.$filename;
+        } elseif($request->category == 2) {
+            $data['origin_trip'] = $request->origin_trip;
+            $data['return_trip'] = $request->return_trip;
+            $data['vehicle1'] = $request->vehicle1;
+            $data['rate1'] = $request->rate1;
+            $data['vehicle2'] = $request->vehicle2;
+            $data['rate2'] = $request->rate2;
+            $data['vehicle3'] = $request->vehicle3;
+            $data['rate3'] = $request->rate3;
+            $data['vehicle4'] = $request->vehicle4;
+            $data['rate4'] = $request->rate4;
+            $data['vehicle5'] = $request->vehicle5;
+            $data['rate5'] = $request->rate5;
+            $filename = $this->imageService->uploadFile($request->image, "assets/vehicles/fixed");
+            $data['vehicle_image'] = '/vehicles/fixed/'.$filename;
+        }
         $this->vehicleDetailService->create($data);
         $request->session()->put('message', 'Vehicle details has been added successfully.');
         $request->session()->put('alert-type', 'alert-success');
@@ -420,6 +439,7 @@ class AdminController extends Controller
     public function fetchDetailsByCategory(Request $request)
     {
         $category_id = $request->category_id;
-        return view('admin.vehicle_details.details-form')->with('category_id', $category_id)->render();
+        $types = $this->typeService->getAllTypes();
+        return view('admin.vehicle_details.details-form')->with('category_id', $category_id)->with('types', $types)->render();
     }
 }
