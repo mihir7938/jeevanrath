@@ -26,8 +26,9 @@ class PageController extends Controller
 
     public function index(Request $request)
     {
-        $vehicle_details = $this->vehicleDetailService->getAllVehicleDetails();
-        return view('index')->with('vehicle_details', $vehicle_details);
+        $vehicle_details = $this->vehicleDetailService->getAllVehicleByCat(1,6);
+        $fixed_vehicles = $this->vehicleDetailService->getAllVehicleByCat(2,3);
+        return view('index')->with('fixed_vehicles', $fixed_vehicles)->with('vehicle_details', $vehicle_details);
     }
     public function about(Request $request)
     {

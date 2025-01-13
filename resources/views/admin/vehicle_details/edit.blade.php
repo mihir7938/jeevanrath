@@ -16,6 +16,7 @@
                     <form method="POST" action="{{route('admin.details.update.save')}}" class="form" id="edit-details-form" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="id" value="{{$vehicle_detail->id}}" />
+                        <input type="hidden" name="category_id" value="{{$vehicle_detail->category_id}}" />
                         @include('shared.alert')
                         @if (count($errors) > 0)
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -65,38 +66,8 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="type">Vehicle Type*</label>
-                                            <select id="type" name="type" class="form-control">
-                                                <option value="">Select</option>
-                                                @foreach($types as $type)
-                                                    <option value="{{$type->id}}" @if($vehicle_detail->type_id == $type->id) selected @endif>{{$type->name}}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="vehicle_name">Vehicle*</label>
-                                            @if($vehicle_detail->vehicle_id)
-                                                <select id="vehicle_name" name="vehicle_name" class="form-control">
-                                                    <option value="">Select</option>
-                                                    @foreach($vehicles as $vehicle)
-                                                        <option value="{{$vehicle->id}}" @if($vehicle_detail->vehicle_id == $vehicle->id) selected @endif>{{$vehicle->name}}</option>
-                                                    @endforeach
-                                                </select>
-                                            @else
-                                                <select id="vehicle_name" name="vehicle_name" class="form-control">
-                                                    <option value="">Select</option>
-                                                </select>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
                                             <label for="category">Category*</label>
-                                            <select id="category" name="category" class="form-control">
+                                            <select id="category" name="category" class="form-control" disabled>
                                                 <option value="">Select</option>
                                                 @foreach($categories as $category)
                                                     <option value="{{$category->id}}" @if($vehicle_detail->category_id == $category->id) selected @endif>{{$category->name}}</option>
@@ -112,9 +83,39 @@
                                 @if($vehicle_detail->category_id  == 1)
                                     <div class="card card-light">
                                         <div class="card-header">
-                                            <h3 class="card-title">Edit Vehicle</h3>
+                                            <h3 class="card-title">Edit Details</h3>
                                         </div>
                                         <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="type">Vehicle Type*</label>
+                                                        <select id="type" name="type" class="form-control">
+                                                            <option value="">Select</option>
+                                                            @foreach($types as $type)
+                                                                <option value="{{$type->id}}" @if($vehicle_detail->type_id == $type->id) selected @endif>{{$type->name}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="vehicle_name">Vehicle*</label>
+                                                        @if($vehicle_detail->vehicle_id)
+                                                            <select id="vehicle_name" name="vehicle_name" class="form-control">
+                                                                <option value="">Select</option>
+                                                                @foreach($vehicles as $vehicle)
+                                                                    <option value="{{$vehicle->id}}" @if($vehicle_detail->vehicle_id == $vehicle->id) selected @endif>{{$vehicle->name}}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        @else
+                                                            <select id="vehicle_name" name="vehicle_name" class="form-control">
+                                                                <option value="">Select</option>
+                                                            </select>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
@@ -197,7 +198,116 @@
                                         </div>
                                     </div>
                                 @elseif($vehicle_detail->category_id  == 2)
-                                    Fixed
+                                    <div class="card card-light">
+                                        <div class="card-header">
+                                            <h3 class="card-title">Edit Details</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="origin_trip">Origin Trip*</label>
+                                                        <input type="text" class="form-control" id="origin_trip" name="origin_trip" placeholder="Enter Origin Trip" value="{{$vehicle_detail->origin_trip}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="return_trip">Return Trip</label>
+                                                        <input type="text" class="form-control" id="return_trip" name="return_trip" placeholder="Enter Return Trip" value="{{$vehicle_detail->return_trip}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="vehicle1">Vehicle*</label>
+                                                        <input type="text" class="form-control" id="vehicle1" name="vehicle1" placeholder="Enter Vehicle Name/Type" value="{{$vehicle_detail->vehicle1}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="rate1">Rate*</label>
+                                                        <input type="number" class="form-control" id="rate1" name="rate1" placeholder="Enter Rate" value="{{$vehicle_detail->rate1}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="vehicle2">Vehicle</label>
+                                                        <input type="text" class="form-control" id="vehicle2" name="vehicle2" placeholder="Enter Vehicle Name/Type" value="{{$vehicle_detail->vehicle2}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="rate2">Rate</label>
+                                                        <input type="number" class="form-control" id="rate2" name="rate2" placeholder="Enter Rate" value="{{$vehicle_detail->rate2}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="vehicle3">Vehicle</label>
+                                                        <input type="text" class="form-control" id="vehicle3" name="vehicle3" placeholder="Enter Vehicle Name/Type" value="{{$vehicle_detail->vehicle3}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="rate3">Rate</label>
+                                                        <input type="number" class="form-control" id="rate3" name="rate3" placeholder="Enter Rate" value="{{$vehicle_detail->rate3}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="vehicle4">Vehicle</label>
+                                                        <input type="text" class="form-control" id="vehicle4" name="vehicle4" placeholder="Enter Vehicle Name/Type" value="{{$vehicle_detail->vehicle4}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="rate4">Rate</label>
+                                                        <input type="number" class="form-control" id="rate4" name="rate4" placeholder="Enter Rate" value="{{$vehicle_detail->rate4}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="vehicle5">Vehicle</label>
+                                                        <input type="text" class="form-control" id="vehicle5" name="vehicle5" placeholder="Enter Vehicle Name/Type" value="{{$vehicle_detail->vehicle5}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="rate5">Rate</label>
+                                                        <input type="number" class="form-control" id="rate5" name="rate5" placeholder="Enter Rate" value="{{$vehicle_detail->rate5}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="image">Vehicle Image* (allowed only JPG,JPEG &amp; PNG files)</label>
+                                                        <div class="input-group">
+                                                            <div class="custom-file">             
+                                                                <input type="file" class="custom-file-input" id="image" name="image">
+                                                                <label class="custom-file-label" for="image">Choose file</label>
+                                                            </div>              
+                                                        </div>
+                                                        @if($vehicle_detail->vehicle_image)
+                                                            <img src="{{asset('assets/'.$vehicle_detail->vehicle_image)}}" width="200px" class="mt-4 d-block" />
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer">
+                                            <button type="submit" class="btn btn-primary" id="btnsubmit" name="btnsubmit">Submit</button>
+                                        </div>
+                                    </div>
                                 @endif
                             @else
                                 @include('admin.vehicle_details.details-form', ['category_id' => $category_id])
@@ -287,30 +397,92 @@
                 city:{
                     required: true
                 },
-                type:{
-                    required: true
-                },
-                vehicle_name:{
-                    required: true
-                },
                 category:{
                     required: true
                 },
+                type:{
+                    required:function(){
+                        if($('#category').val() == 1){
+                            return true;
+                        }
+                        return false;
+                    }
+                },
+                vehicle_name:{
+                    required:function(){
+                        if($('#category').val() == 1){
+                            return true;
+                        }
+                        return false;
+                    }
+                },
                 rate: {
-                    required: true,
+                    required:function(){
+                        if($('#category').val() == 1){
+                            return true;
+                        }
+                        return false;
+                    },
                     digits: true
                 },
                 taxi_doors: {
-                    required: true,
+                    required:function(){
+                        if($('#category').val() == 1){
+                            return true;
+                        }
+                        return false;
+                    },
                     digits: true
                 },
                 passengers: {
-                    required: true,
+                    required:function(){
+                        if($('#category').val() == 1){
+                            return true;
+                        }
+                        return false;
+                    },
                     digits: true
                 },
                 luggage_carry: {
-                    required: true,
+                    required:function(){
+                        if($('#category').val() == 1){
+                            return true;
+                        }
+                        return false;
+                    },
                     digits: true
+                },
+                origin_trip:{
+                    required:function(){
+                        if($('#category').val() == 2){
+                            return true;
+                        }
+                        return false;
+                    }
+                },
+                return_trip:{
+                    required:function(){
+                        if($('#category').val() == 2){
+                            return true;
+                        }
+                        return false;
+                    }
+                },
+                vehicle1:{
+                    required:function(){
+                        if($('#category').val() == 2){
+                            return true;
+                        }
+                        return false;
+                    }
+                },
+                rate1:{
+                    required:function(){
+                        if($('#category').val() == 2){
+                            return true;
+                        }
+                        return false;
+                    }
                 },
                 image: {
                     extension: "png|jpg|jpeg",
@@ -324,14 +496,14 @@
                 city:{
                     required: "Please select city."
                 },
+                category:{
+                    required: "Please select category."
+                },
                 type:{
                     required: "Please select vehicle type."
                 },
                 vehicle_name:{
                     required: "Please select vehicle name."
-                },
-                category:{
-                    required: "Please select category."
                 },
                 rate:{
                     required: "Please enter rate."
@@ -344,6 +516,18 @@
                 },
                 luggage_carry:{
                     required: "Please enter total carry luggage."
+                },
+                origin_trip:{
+                    required: "Please enter origin trip."
+                },
+                return_trip:{
+                    required: "Please enter return trip."
+                },
+                vehicle1:{
+                    required: "Please enter vehicle name/type."
+                },
+                rate1:{
+                    required: "Please enter rate."
                 },
                 image: {
                     extension: "Please select valid image.",

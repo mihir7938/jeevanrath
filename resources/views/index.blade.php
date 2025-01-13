@@ -234,60 +234,40 @@
                 <h4 class="display-7 mb-4">We provide cars as a fixed route</h4>
             </div>
             <div class="row g-4 justify-content-center">
-                <div class="col-md-6 col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="blog-item rounded">
-                        <div class="blog-img">
-                            <img src="img/S1.png" class="img-fluid w-100" alt="Image">
-                        </div>
-                        <div class="blog-centent p-4 text-center">
-                            <h4>Surat to Mumbai</h4>
-                            <h4>Mumbai to Surat</h4>
-                            <div class="my-4 text-dark">
-                                <p class="mb-2">₹499 Sedan</p>
-                                <p class="mb-2">₹4299 Ertiga</p>
-                                <p class="mb-2">₹5999 Innova</p>
-                                <p class="mb-0">(Includding All)</p>
+                @php $i = 0.1; @endphp
+                @foreach($fixed_vehicles as $fixed)
+                    <div class="col-md-6 col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="{{$i}}s">
+                        <div class="blog-item rounded">
+                            <div class="blog-img">
+                                <img src="{{asset('assets/'.$fixed->vehicle_image)}}" class="img-fluid w-100" alt="Image">
                             </div>
-                            <a href="#" class="btn btn-primary rounded-pill text-white py-2 px-4 mb-1">Book Now</a>
+                            <div class="blog-centent p-4 text-center">
+                                <h4>{{$fixed->origin_trip}}</h4>
+                                <h4>{{$fixed->return_trip}}</h4>
+                                <div class="my-4 text-dark">
+                                    @if ($fixed->vehicle1 && $fixed->rate1)
+                                        <p class="mb-2">₹{{$fixed->rate1}} {{$fixed->vehicle1}}</p>
+                                    @endif
+                                    @if ($fixed->vehicle2 && $fixed->rate2)
+                                        <p class="mb-2">₹{{$fixed->rate2}} {{$fixed->vehicle2}}</p>
+                                    @endif
+                                    @if ($fixed->vehicle3 && $fixed->rate3)
+                                        <p class="mb-2">₹{{$fixed->rate3}} {{$fixed->vehicle3}}</p>
+                                    @endif
+                                    @if ($fixed->vehicle4 && $fixed->rate4)
+                                        <p class="mb-2">₹{{$fixed->rate4}} {{$fixed->vehicle4}}</p>
+                                    @endif
+                                    @if ($fixed->vehicle5 && $fixed->rate5)
+                                        <p class="mb-2">₹{{$fixed->rate5}} {{$fixed->vehicle5}}</p>
+                                    @endif
+                                    <p class="mb-0">(Includding All)</p>
+                                </div>
+                                <a href="#" class="btn btn-primary rounded-pill text-white py-2 px-4 mb-1">Book Now</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-6 col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="blog-item rounded">
-                        <div class="blog-img">
-                            <img src="img/S2.png" class="img-fluid w-100" alt="Image">
-                        </div>
-                        <div class="blog-centent p-4 text-center">
-                            <h4>Surat to Mumbai</h4>
-                            <h4>Mumbai to Surat</h4>
-                            <div class="my-4 text-dark">
-                                <p class="mb-2">₹499 Sedan</p>
-                                <p class="mb-2">₹4299 Ertiga</p>
-                                <p class="mb-2">₹5999 Innova</p>
-                                <p class="mb-0">(Includding All)</p>
-                            </div>
-                            <a href="#" class="btn btn-primary rounded-pill text-white py-2 px-4 mb-1">Book Now</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="blog-item rounded">
-                        <div class="blog-img">
-                            <img src="img/S3.png" class="img-fluid w-100" alt="Image">
-                        </div>
-                        <div class="blog-centent p-4 text-center">
-                            <h4>Surat to Mumbai</h4>
-                            <h4>Mumbai to Surat</h4>
-                            <div class="my-4 text-dark">
-                                <p class="mb-2">₹499 Sedan</p>
-                                <p class="mb-2">₹4299 Ertiga</p>
-                                <p class="mb-2">₹5999 Innova</p>
-                                <p class="mb-0">(Includding All)</p>
-                            </div>
-                            <a href="#" class="btn btn-primary rounded-pill text-white py-2 px-4 mb-1">Book Now</a>
-                        </div>
-                    </div>
-                </div>
+                @php $i = $i + 0.2; @endphp
+                @endforeach
             </div>
         </div>
     </div>

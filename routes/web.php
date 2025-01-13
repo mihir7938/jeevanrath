@@ -62,6 +62,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::post('/categories/update', [AdminController::class, 'updateCategory'])->name('admin.categories.update.save');
     Route::get('/categories/delete/{id}', [AdminController::class, 'deleteCategory'])->name('admin.categories.delete');
     Route::get('/all-vehicles', [AdminController::class, 'allVehicles'])->name('admin.details');
+    Route::post('/fetch-list', [AdminController::class, 'fetchListByCategory'])->name('admin.list.fetch');
     Route::get('/vehicle-details/add', [AdminController::class, 'addVehicleDetails'])->name('admin.details.add');
     Route::post('/vehicle-details/save', [AdminController::class, 'saveVehicleDetails'])->name('admin.details.add.save');
     Route::get('/vehicle-details/edit/{id}', [AdminController::class, 'editVehicleDetails'])->name('admin.details.edit');

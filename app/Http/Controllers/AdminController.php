@@ -314,9 +314,20 @@ class AdminController extends Controller
     public function allVehicles(Request $request)
     {
         $categories = $this->categoryService->getAllCategories();
-        $rental_vehicles = $this->vehicleDetailService->getAllVehicleByCat(1);
-        $fixed_vehicles = $this->vehicleDetailService->getAllVehicleByCat(2);
-        return view('admin.vehicle_details.index')->with('categories', $categories)->with('rental_vehicles', $rental_vehicles)->with('fixed_vehicles', $fixed_vehicles);
+        $vehicles = '';
+        $category_id = '';
+        return view('admin.vehicle_details.index')->with('categories', $categories)->with('vehicles', $vehicles)->with('category_id', $category_id);
+    }
+    public function fetchListByCategory(Request $request)
+    {
+        $category_id = $request->category_id;
+        $vehicles = '';
+        if($category_id == 1) {
+            $vehicles = $this->vehicleDetailService->getAllVehicleByCat($category_id);
+        } elseif($category_id == 2) {
+            $vehicles = $this->vehicleDetailService->getAllVehicleByCat($category_id);
+        }
+        return view('admin.vehicle_details.list')->with('category_id', $category_id)->with('vehicles', $vehicles)->render();
     }
     public function addVehicleDetails(Request $request)
     {
@@ -361,7 +372,7 @@ class AdminController extends Controller
         $this->vehicleDetailService->create($data);
         $request->session()->put('message', 'Vehicle details has been added successfully.');
         $request->session()->put('alert-type', 'alert-success');
-        return redirect()->route('admin.details');
+        return redirect()->route('admin.details.add');
     }
     public function editVehicleDetails(Request $request, $id)
     {
@@ -392,25 +403,46 @@ class AdminController extends Controller
             }
             $data['state_id'] = $request->state;
             $data['city_id'] = $request->city;
-            $data['type_id'] = $request->type;
-            $data['vehicle_id'] = $request->vehicle_name;
-            $data['category_id'] = $request->category;
-            $data['rate'] = $request->rate;
-            $data['taxi_doors'] = $request->taxi_doors;
-            $data['passengers'] = $request->passengers;
-            $data['luggage_carry'] = $request->luggage_carry;
-            $data['air_condition'] = $request->air_condition;
-            $data['gps_navigation'] = $request->gps_navigation;
-            if($request->has('image')){
-                $filepath = public_path('assets/' . $vehicle_detail->vehicle_image);
-                $this->imageService->deleteFile($filepath);
-                $filename = $this->imageService->uploadFile($request->image, "assets/vehicles/rental");
-                $data['vehicle_image'] = '/vehicles/rental/'.$filename;
+            $data['category_id'] = $request->category_id;
+            if($request->category_id == 1) {
+                $data['type_id'] = $request->type;
+                $data['vehicle_id'] = $request->vehicle_name;
+                $data['rate'] = $request->rate;
+                $data['taxi_doors'] = $request->taxi_doors;
+                $data['passengers'] = $request->passengers;
+                $data['luggage_carry'] = $request->luggage_carry;
+                $data['air_condition'] = $request->air_condition;
+                $data['gps_navigation'] = $request->gps_navigation;
+                if($request->has('image')){
+                    $filepath = public_path('assets/' . $vehicle_detail->vehicle_image);
+                    $this->imageService->deleteFile($filepath);
+                    $filename = $this->imageService->uploadFile($request->image, "assets/vehicles/rental");
+                    $data['vehicle_image'] = '/vehicles/rental/'.$filename;
+                }
+            } elseif($request->category_id == 2) {
+                $data['origin_trip'] = $request->origin_trip;
+                $data['return_trip'] = $request->return_trip;
+                $data['vehicle1'] = $request->vehicle1;
+                $data['rate1'] = $request->rate1;
+                $data['vehicle2'] = $request->vehicle2;
+                $data['rate2'] = $request->rate2;
+                $data['vehicle3'] = $request->vehicle3;
+                $data['rate3'] = $request->rate3;
+                $data['vehicle4'] = $request->vehicle4;
+                $data['rate4'] = $request->rate4;
+                $data['vehicle5'] = $request->vehicle5;
+                $data['rate5'] = $request->rate5;
+                if($request->has('image')){
+                    $filepath = public_path('assets/' . $vehicle_detail->vehicle_image);
+                    $this->imageService->deleteFile($filepath);
+                    $filename = $this->imageService->uploadFile($request->image, "assets/vehicles/fixed");
+                    $data['vehicle_image'] = '/vehicles/fixed/'.$filename;
+                }
             }
             $this->vehicleDetailService->update($vehicle_detail, $data);
             $request->session()->put('message', 'Vehicle details has been updated successfully.');
             $request->session()->put('alert-type', 'alert-success');
-            return redirect()->route('admin.details');
+            return redirect()->route('admin.details.edit', ['id' => $request->id]);
         }catch(\Exception $e){
             $request->session()->put('message', $e->getMessage());
             $request->session()->put('alert-type', 'alert-warning');
