@@ -44,6 +44,12 @@
     margin-bottom: 10px;
     color: #202135;
 }
+.search-form {
+    background: rgba(239, 162, 134, 0.3);
+}
+.search-form .btn.btn-primary:hover {
+    box-shadow: inset 700px 0 0 0 var(--bs-light) !important;
+}
 @media (min-width: 1200px) {
     .display-7 {
         font-size: 2rem;

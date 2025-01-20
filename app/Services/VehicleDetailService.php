@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\VehicleDetails;
+use Illuminate\Http\Request;
 
 class VehicleDetailService
 {
@@ -40,5 +41,33 @@ class VehicleDetailService
             return VehicleDetails::orderBy('created_at', 'desc')->where('category_id', $cat_id)->get();    
         }
         return VehicleDetails::orderBy('created_at', 'desc')->where('category_id', $cat_id)->paginate($per_page);
+    }
+    public function getRentalResults(Request $request, $cat_id)
+    {
+        $query = VehicleDetails::where('category_id', $cat_id);
+        if($request->has('state') && $request->state){
+            $query = $query->where('state_id', $request->state);
+        }
+        if($request->has('city') && $request->city){
+            $query = $query->where('city_id', $request->city);
+        }
+        if($request->has('type') && $request->type){
+            $query = $query->where('type_id', $request->type);
+        }
+        if($request->has('vehicle_name') && $request->vehicle_name){
+            $query = $query->where('vehicle_id', $request->vehicle_name);
+        }
+        return $query->select('*')->get();
+    }
+    public function getFixedResults(Request $request, $cat_id)
+    {
+        $query = VehicleDetails::where('category_id', $cat_id);
+        if($request->has('state') && $request->state){
+            $query = $query->where('state_id', $request->state);
+        }
+        if($request->has('city') && $request->city){
+            $query = $query->where('city_id', $request->city);
+        }
+        return $query->select('*')->get();
     }
 }

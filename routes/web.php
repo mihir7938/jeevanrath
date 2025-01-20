@@ -18,6 +18,10 @@ use App\Http\Controllers\AdminController;
 
 Route::get('/', [PageController::class, 'index'])->name('index');
 Route::get('/about', [PageController::class, 'about'])->name('about');
+Route::get('/search-rental', [PageController::class, 'searchRental'])->name('search_rental');
+Route::get('/search-rental/getRentalResults', [PageController::class, 'getRentalResults'])->name('get_rental_results');
+Route::get('/search-fixed', [PageController::class, 'searchFixed'])->name('search_fixed');
+Route::get('/search-fixed/getFixedResults', [PageController::class, 'getFixedResults'])->name('get_fixed_results');
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::get('/getCities', [PageController::class, 'getCitiesByState'])->name('get_cities');
 Route::get('/getVehicles', [PageController::class, 'getVehiclesByType'])->name('get_vehicles');

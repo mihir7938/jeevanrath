@@ -124,6 +124,11 @@
                     @php $i = $i + 0.2; @endphp
                 @endforeach
             </div>
+            <div class="row justify-content-center">
+                <div class="col-12 text-center wow fadeInUp mt-5" data-wow-delay="0.2s">
+                    <a href="{{route('search_rental')}}" class="btn btn-primary rounded-pill text-white py-3 px-5">Search Cars</a>
+                </div>
+            </div>
         </div>
     </div>
     <div class="container-fluid local bg-light py-5">
@@ -268,6 +273,11 @@
                     </div>
                 @php $i = $i + 0.2; @endphp
                 @endforeach
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-12 text-center wow fadeInUp mt-5" data-wow-delay="0.2s">
+                    <a href="{{route('search_fixed')}}" class="btn btn-primary rounded-pill text-white py-3 px-5">Search Cars</a>
+                </div>
             </div>
         </div>
     </div>
