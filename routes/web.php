@@ -25,6 +25,7 @@ Route::get('/search-fixed/getFixedResults', [PageController::class, 'getFixedRes
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::get('/getCities', [PageController::class, 'getCitiesByState'])->name('get_cities');
 Route::get('/getVehicles', [PageController::class, 'getVehiclesByType'])->name('get_vehicles');
+Route::post('/send-enquiry', [PageController::class, 'sendEnquiry'])->name('send_enquiry');
 
 Route::group(['prefix' => 'auth'], function () {
     Route::get('/login', [AuthController::class, 'getLogin'])->name('login');

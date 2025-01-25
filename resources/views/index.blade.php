@@ -8,7 +8,7 @@
                     <h1 class="display-1 text-capitalize text-white mb-4">Rental Car</h1>
                     <p class="mb-5 fs-5">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
                     </p>
-                    <a class="btn btn-primary rounded-pill text-white py-3 px-5" href="#">Book Now</a>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#book-now-modal" class="btn btn-primary rounded-pill text-white py-3 px-5">Book Now</a>
                 </div>
             </div>
         </div>
@@ -19,7 +19,7 @@
                     <h1 class="display-1 text-capitalize text-white mb-4">Taxi Cab</h1>
                     <p class="mb-5 fs-5 animated slideInDown">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
                     </p>
-                    <a class="btn btn-primary rounded-pill text-white py-3 px-5" href="#">Book Now</a>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#book-now-modal" class="btn btn-primary rounded-pill text-white py-3 px-5">Book Now</a>
                 </div>
             </div>
         </div>
@@ -30,7 +30,7 @@
                     <h1 class="display-1 text-capitalize text-white mb-4">Fixed Route</h1>
                     <p class="mb-5 fs-5 animated slideInDown">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
                     </p>
-                    <a class="btn btn-primary rounded-pill text-white py-3 px-5" href="#">Book Now</a>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#book-now-modal" class="btn btn-primary rounded-pill text-white py-3 px-5">Book Now</a>
                 </div>
             </div>
         </div>
@@ -115,7 +115,7 @@
                                         </div>
                                     </div>
                                     <div class="text-center">
-                                        <a href="#" class="btn btn-primary rounded-pill text-white py-2 px-4 mb-2">Book Now</a>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#book-now-modal" class="btn btn-primary rounded-pill text-white py-2 px-4 mb-2">Book Now</a>
                                     </div>
                                 </div>
                             </div>
@@ -267,7 +267,7 @@
                                     @endif
                                     <p class="mb-0">(Includding All)</p>
                                 </div>
-                                <a href="#" class="btn btn-primary rounded-pill text-white py-2 px-4 mb-1">Book Now</a>
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#book-now-modal" class="btn btn-primary rounded-pill text-white py-2 px-4 mb-1">Book Now</a>
                             </div>
                         </div>
                     </div>
@@ -624,4 +624,5 @@
     </div>
 @endsection
 @section('footer')
+@include('shared.book-now-popup')
 @endsection

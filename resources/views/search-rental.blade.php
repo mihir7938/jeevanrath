@@ -51,6 +51,7 @@
     </div>
 @endsection
 @section('footer')
+@include('shared.book-now-popup')
 <script>
     $(function () {
         $(document).on('change','#state',function() {

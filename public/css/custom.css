@@ -50,6 +50,36 @@
 .search-form .btn.btn-primary:hover {
     box-shadow: inset 700px 0 0 0 var(--bs-light) !important;
 }
+.modal-title {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+.btn.btn-secondary:hover {
+    box-shadow: inset 300px 0 0 0 var(--bs-light) !important;
+    color: #efa286 !important;
+}
+.modal-header {
+    background: linear-gradient(rgba(21, 185, 217, 0.9), rgba(21, 185, 217, 0.9));
+}
+.btn-close {
+    opacity: 1;
+}
+.datepicker td,th {
+    text-align: center;
+    padding: 8px 12px;
+    font-size: 14px;
+}
+.datepicker .datepicker-days {
+    color: #202135;
+}
+.error {
+    font-size: 13px;
+    color: #f00;
+}
+#book-now-form .alert {
+    padding: 0.5rem 1rem;
+}
 @media (min-width: 1200px) {
     .display-7 {
         font-size: 2rem;

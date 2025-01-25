@@ -29,7 +29,7 @@
                                 @endif
                                 <p class="mb-0">(Includding All)</p>
                             </div>
-                            <a href="#" class="btn btn-primary rounded-pill text-white py-2 px-4 mb-1">Book Now</a>
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#book-now-modal" class="btn btn-primary rounded-pill text-white py-2 px-4 mb-1">Book Now</a>
                         </div>
                     </div>
                 </div>

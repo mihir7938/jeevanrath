@@ -70,7 +70,7 @@
                                     </div>
                                 </div>
                                 <div class="text-center">
-                                    <a href="#" class="btn btn-primary rounded-pill text-white py-2 px-4 mb-2">Book Now</a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#book-now-modal" class="btn btn-primary rounded-pill text-white py-2 px-4 mb-2">Book Now</a>
                                 </div>
                             </div>
                         </div>

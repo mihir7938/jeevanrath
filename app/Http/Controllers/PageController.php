@@ -7,25 +7,31 @@ use App\Services\CityService;
 use App\Services\TypeService;
 use App\Services\VehicleService;
 use App\Services\VehicleDetailService;
+use App\Services\EnquiryService;
+use App\Services\EmailService;
 use App\Models\State;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Illuminate\Support\Facades\Auth;
 
 class PageController extends Controller
 {
-    private $cityService, $typeService, $vehicleService, $vehicleDetailService;
+    private $cityService, $typeService, $vehicleService, $vehicleDetailService, $enquiryService, $emailService;
 
     public function __construct (
         CityService $cityService,
         TypeService $typeService,
         VehicleService $vehicleService,
-        VehicleDetailService $vehicleDetailService
+        VehicleDetailService $vehicleDetailService,
+        EnquiryService $enquiryService,
+        EmailService $emailService
     )
     {
         $this->cityService = $cityService;
         $this->typeService = $typeService;
         $this->vehicleService = $vehicleService;
         $this->vehicleDetailService = $vehicleDetailService;
+        $this->enquiryService = $enquiryService;
+        $this->emailService = $emailService;
     }
 
     public function index(Request $request)
@@ -74,5 +80,38 @@ class PageController extends Controller
     {
         $vehicles = $this->vehicleService->getVehiclesByType($request->type_id);
         return response()->json(['status' => true, 'vehicles' => $vehicles]);
+    }
+    public function sendEnquiry(Request $request)
+    {
+        try{
+            $ajax_data = $request->all();        
+            $enqData=  array();
+            parse_str($ajax_data['data'], $enqData);
+            $data['name'] = $enqData['name'];
+            $data['journey_date'] = date('Y-m-d', strtotime(strtr($enqData['journey_date'], '/', '-')));
+            $data['mobile_number'] = $enqData['mobile'];
+            $data['email'] = $enqData['email'];
+            $data['pickup_from'] = $enqData['pickup_from'];
+            $data['drop_to'] = $enqData['drop_to'];
+            $data['vehicle_name'] = $enqData['car'];
+            $data['journey_type'] = $enqData['journey_type'];
+            $this->enquiryService->create($data);
+            $admin_email = env('CONTACT_EMAIL');
+            $subject = 'New Enquiry Submission';
+            $result = [
+                'name' => $enqData['name'],
+                'mobile_number' => $enqData['mobile'],
+                'email' => $enqData['email'],
+                'journey_date' => $enqData['journey_date'],
+                'pickup_from' => $enqData['pickup_from'],
+                'drop_to' => $enqData['drop_to'],
+                'vehicle_name' => $enqData['car'],
+                'journey_type' => $enqData['journey_type'],
+            ];
+            $this->emailService->sendEmail('emails.enquiry', $result, $admin_email, $subject);
+            return response()->json(['status' => true]);
+        }catch(\Exception $e){
+            return response()->json(['status' => false]);
+        }
     }
 }
