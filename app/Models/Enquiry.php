@@ -20,6 +20,8 @@ class Enquiry extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'user_type',
+        'company_name',
         'name',
         'journey_date',
         'mobile_number',

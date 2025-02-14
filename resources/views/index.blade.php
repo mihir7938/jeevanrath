@@ -447,7 +447,7 @@
     </div>--}}
     <div class="container-fluid appointment py-5" id="appointment">
         <div class="container py-5">
-            <div class="row g-5 align-items-center">
+            <div class="row g-5">
                 <div class="col-lg-6 wow fadeInLeft" data-wow-delay="0.2">
                     <div class="section-title text-start">
                         <h2 class="sub-title pe-3 mb-0">Solutions To Your Plan</h2>
@@ -484,47 +484,62 @@
                     <div class="appointment-form rounded p-5">
                         <p class="fs-4 text-uppercase text-primary">Get In Touch</p>
                         <h4 class="display-7 mb-4">Book Your Car Now</h4>
-                        <form>
+                        <form method="POST" action="{{route('send_enquiry')}}" id="home-book-now-form" enctype="multipart/form-data">
+                            @csrf
+                            <div class="message"></div>
                             <div class="row gy-3 gx-4">
-                                <div class="col-xl-6">
-                                    <input type="text" class="form-control py-3 border-primary bg-transparent" placeholder="First Name">
+                                <div class="col-xl-12">
+                                    <div class="custom-control">
+                                        <input type="radio" id="self" name="user_type" value="Self" checked>
+                                        <label for="self">Self</label>
+                                    </div>
+                                    <div class="custom-control">
+                                        <input type="radio" id="company" name="user_type" value="Company">
+                                        <label for="company">Company</label>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 hidden">
+                                    <input type="text" class="form-control py-3 border-primary bg-transparent" placeholder="Company Name" name="company_name">
                                 </div>
                                 <div class="col-xl-6">
-                                    <input type="text" class="form-control py-3 border-primary bg-transparent" placeholder="Date of Journey">
+                                    <input type="text" class="form-control py-3 border-primary bg-transparent" placeholder="First Name" name="name">
                                 </div>
                                 <div class="col-xl-6">
-                                    <input type="phone" class="form-control py-3 border-primary bg-transparent" placeholder="Phone">
+                                    <input type="text" class="form-control py-3 border-primary bg-transparent" placeholder="Date of Journey" id="datepicker" name="journey_date">
                                 </div>
                                 <div class="col-xl-6">
-                                    <input type="email" class="form-control py-3 border-primary bg-transparent" placeholder="Email">
+                                    <input type="phone" class="form-control py-3 border-primary bg-transparent" placeholder="Mobile" name="mobile">
                                 </div>
                                 <div class="col-xl-6">
-                                    <input type="text" class="form-control py-3 border-primary bg-transparent" placeholder="Pickup From">
+                                    <input type="email" class="form-control py-3 border-primary bg-transparent" placeholder="Email" name="email">
                                 </div>
                                 <div class="col-xl-6">
-                                    <input type="text" class="form-control py-3 border-primary bg-transparent" placeholder="Drop To">
+                                    <input type="text" class="form-control py-3 border-primary bg-transparent" placeholder="Pickup From" name="pickup_from">
                                 </div>
                                 <div class="col-xl-6">
-                                    <select class="form-select py-3 border-primary bg-transparent" aria-label="Default select example">
+                                    <input type="text" class="form-control py-3 border-primary bg-transparent" placeholder="Drop To" name="drop_to">
+                                </div>
+                                <div class="col-xl-6">
+                                    <select class="form-select py-3 border-primary bg-transparent" aria-label="Default select car" name="car">
                                         <option value="">Select Car</option>
                                         <option value="Hatchback">Hatchback</option>
                                         <option value="Ac Sedan">Ac Sedan</option>
                                         <option value="Ac Suv">Ac Suv</option>
                                         <option value="Ac Innova">Ac Innova</option>
-                                        <option value="innova Crysta">innova Crysta</option>
-                                        <option value="tempo Traveller">tempo Traveller</option>
+                                        <option value="Innova Crysta">Innova Crysta</option>
+                                        <option value="Tempo Traveller">Tempo Traveller</option>
                                     </select>
                                 </div>
                                 <div class="col-xl-6">
-                                    <select class="form-select py-3 border-primary bg-transparent" aria-label="Default select example">
-                                        <option value="">Type of journey</option>
-                                        <option value="One way Trip">One way Trip</option>
-                                        <option value="Round trip">Round trip</option>
-                                        <option value="Local car rental">Local car rental</option>
+                                    <select class="form-select py-3 border-primary bg-transparent" aria-label="Default select type of journey" name="journey_type">
+                                        <option value="">Type of Journey</option>
+                                        <option value="One Way Trip">One Way Trip</option>
+                                        <option value="Round Trip">Round Trip</option>
+                                        <option value="Local Car Rental">Local Car Rental</option>
                                     </select>
                                 </div>
                                 <div class="col-12">
-                                    <button type="button" class="btn btn-primary text-white w-100 py-3 px-5">SUBMIT NOW</button>
+                                    <button type="submit" class="btn btn-primary text-white w-100 py-3 px-5">SUBMIT NOW</button>
                                 </div>
                             </div>
                         </form>
@@ -625,4 +640,110 @@
 @endsection
 @section('footer')
 @include('shared.book-now-popup')
+<script type="text/javascript">
+    $(function(){
+        $('#home-book-now-form #datepicker').datepicker({
+            startDate: '+0d',
+            format: 'dd/mm/yyyy',
+            autoclose: true
+        });
+        $("#home-book-now-form input[name='user_type']").change(function(){
+            if($(this).is(':checked')){
+                if($(this).val() == 'Company'){
+                    $('#home-book-now-form .hidden').show();
+                }else{  
+                    $('#home-book-now-form .hidden').hide();
+                }
+            }
+        });
+        $('#home-book-now-form').validate({
+            rules:{
+                company_name: {
+                    required:function(){
+                        if($('#home-book-now-form input[name="user_type"]:checked').val()  == 'Company') {
+                            return true;
+                        }
+                        return false;
+                    },
+                },
+                name:{
+                    required: true
+                },
+                journey_date:{
+                    required: true
+                },
+                mobile:{
+                    required: true,
+                    digits: true,
+                },
+                email: {
+                    maxlength: 155,
+                },
+                pickup_from:{
+                    required: true
+                },
+                drop_to:{
+                    required: true
+                },
+                car:{
+                    required: true
+                },
+                journey_type:{
+                    required: true
+                },
+            },
+            messages:{
+                company_name:{
+                    required: "Please enter company name."
+                },
+                name:{
+                    required: "Please enter name."
+                },
+                journey_date:{
+                    required: "Please select journey date."
+                },
+                mobile:{
+                    required: "Plese enter mobile number.",
+                },
+                email:{
+                    email: "Please provide a valid email."
+                },
+                pickup_from:{
+                    required: "Please enter pickup from."
+                },
+                drop_to:{
+                    required: "Please enter drop to."
+                },
+                car:{
+                    required: "Please select car."
+                },
+                journey_type:{
+                    required: "Please select journey type."
+                },
+            },
+            submitHandler: function (form) {
+                $('.loader').show();
+                $.ajax({
+                    url: "{{ route('send_enquiry') }}",
+                    method: "POST",
+                    headers: {
+                      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: {
+                      'data' : $('#home-book-now-form').serialize(),
+                    },
+                    success: function (data) {
+                      $('.loader').hide();
+                      if(data.status == true) {
+                        $("#home-book-now-form .message").html('<div class="alert alert-success"><span>Enquiry has been sent successfully.</span></div>');
+                        $("#home-book-now-form").find("input.form-control,textarea,select").val('');
+                      } else {
+                        $("#home-book-now-form .message").html('<div class="alert alert-warning"><span>Something went wrong.</span></div>');
+                      }
+                    },
+                });
+            }
+        }); 
+    });
+</script>
 @endsection

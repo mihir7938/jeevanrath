@@ -10,6 +10,19 @@
 	            	@csrf
                     <div class="message"></div>
                     <div class="row gy-3 gx-4">
+                        <div class="col-xl-12">
+                            <label class="custom-control">
+                                <input type="radio" id="self" name="user_type" value="Self" checked>
+                                <span>Self</span>
+                            </label>
+                            <label class="custom-control">
+                                <input type="radio" id="company" name="user_type" value="Company">
+                                <span>Company</span>
+                            </label>
+                        </div>
+                        <div class="col-xl-12 hidden">
+                            <input type="text" class="form-control py-2 border-primary bg-transparent" placeholder="Company Name" name="company_name">
+                        </div>
                         <div class="col-xl-6">
                             <input type="text" class="form-control py-2 border-primary bg-transparent" placeholder="First Name" name="name">
                         </div>
@@ -35,16 +48,16 @@
                                 <option value="Ac Sedan">Ac Sedan</option>
                                 <option value="Ac Suv">Ac Suv</option>
                                 <option value="Ac Innova">Ac Innova</option>
-                                <option value="innova Crysta">innova Crysta</option>
-                                <option value="tempo Traveller">tempo Traveller</option>
+                                <option value="Innova Crysta">Innova Crysta</option>
+                                <option value="Tempo Traveller">Tempo Traveller</option>
                             </select>
                         </div>
                         <div class="col-xl-6">
                             <select class="form-select py-2 border-primary bg-transparent" aria-label="Default select type of journey" name="journey_type">
-                                <option value="">Type of journey</option>
-                                <option value="One way Trip">One way Trip</option>
-                                <option value="Round trip">Round trip</option>
-                                <option value="Local car rental">Local car rental</option>
+                                <option value="">Type of Journey</option>
+                                <option value="One Way Trip">One Way Trip</option>
+                                <option value="Round Trip">Round Trip</option>
+                                <option value="Local Car Rental">Local Car Rental</option>
                             </select>
                         </div>
                     </div>
@@ -60,19 +73,36 @@
 <script type="text/javascript">
     $(function(){
         $('#book-now-modal').on('hidden.bs.modal', function (e) {
-            $(this).find("input,textarea,select").val('').end();
+            $(this).find("input.form-control,textarea,select").val('').end();
             var $alertas = $('#book-now-modal');
             $alertas.validate().resetForm();
             $alertas.find('.error').removeClass('error');
-            $(".message").html('');
+            $("#book-now-form .message").html('');
         })
-        $('#datepicker').datepicker({
+        $('#book-now-form #datepicker').datepicker({
             startDate: '+0d',
             format: 'dd/mm/yyyy',
             autoclose: true
         });
+        $("#book-now-form input[name='user_type']").change(function(){
+            if($(this).is(':checked')){
+                if($(this).val() == 'Company'){
+                    $('#book-now-form .hidden').show();
+                }else{  
+                    $('#book-now-form .hidden').hide();
+                }
+            }
+        });
         $('#book-now-form').validate({
             rules:{
+                company_name: {
+                    required:function(){
+                        if($('#book-now-form input[name="user_type"]:checked').val()  == 'Company') {
+                            return true;
+                        }
+                        return false;
+                    },
+                },
                 name:{
                     required: true
                 },
@@ -100,6 +130,9 @@
                 },
             },
             messages:{
+                company_name:{
+                    required: "Please enter company name."
+                },
                 name:{
                     required: "Please enter name."
                 },
@@ -126,7 +159,7 @@
                 },
             },
             submitHandler: function (form) {
-                $('#spinner').addClass('show');
+                $('.loader').show();
                 $.ajax({
                     url: "{{ route('send_enquiry') }}",
                     method: "POST",
@@ -137,14 +170,14 @@
                       'data' : $('#book-now-form').serialize(),
                     },
                     success: function (data) {
-                      $('#spinner').removeClass('show');
+                      $('.loader').hide();
                       if(data.status == true) {
-                        $(".message").html('<div class="alert alert-success"><span>Enquiry has been sent successfully.</span></div>');
+                        $("#book-now-form .message").html('<div class="alert alert-success"><span>Enquiry has been sent successfully.</span></div>');
                         setTimeout(function(){
                             $('#book-now-modal').modal('hide')
                         }, 2000);
                       } else {
-                        $(".message").html('<div class="alert alert-warning"><span>Something went wrong.</span></div>');
+                        $("#book-now-form .message").html('<div class="alert alert-warning"><span>Something went wrong.</span></div>');
                       }
                     },
                 });

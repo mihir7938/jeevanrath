@@ -25,6 +25,11 @@
             <span class="sr-only">Loading...</span>
         </div>
     </div>
+    <div class="loader">
+        <div class="loader-inner">
+            <img src="{{asset('img/loading.gif')}}" alt="" style="width: 100%;">
+        </div>
+    </div>
     <div class="container-fluid bg-dark px-5 d-none d-lg-block">
         <div class="row gx-0 align-items-center" style="height: 45px;">
             <div class="col-lg-8 text-center text-lg-start mb-lg-0">

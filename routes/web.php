@@ -42,6 +42,10 @@ Route::group(['prefix' => 'password'], function () {
 
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
+    Route::get('/fetch-inquiries', [AdminController::class, 'fetchInquiries'])->name('admin.inquiries.fetch');
+    Route::get('/inquiries/edit/{id}', [AdminController::class, 'editInquiry'])->name('admin.inquiries.edit');
+    Route::post('/inquiries/update', [AdminController::class, 'updateInquiry'])->name('admin.inquiries.update.save');
+    Route::get('/inquiries/delete/{id}', [AdminController::class, 'deleteInquiry'])->name('admin.inquiries.delete');
     Route::get('/cities', [AdminController::class, 'cities'])->name('admin.cities');
     Route::get('/cities/add', [AdminController::class, 'addCity'])->name('admin.cities.add');
     Route::post('/cities/save', [AdminController::class, 'saveCity'])->name('admin.cities.add.save');

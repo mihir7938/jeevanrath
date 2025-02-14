@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{asset('adminlte/css/responsive.bootstrap4.min.css')}}">
     <link rel="stylesheet" href="{{asset('adminlte/css/buttons.bootstrap4.min.css')}}">
     <link rel="stylesheet" href="{{asset('adminlte/css/daterangepicker.css')}}">
+    <link rel="stylesheet" href="{{asset('adminlte/css/bootstrap-datepicker.css')}}">
 	@yield('header')
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -52,7 +53,7 @@
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <li class="nav-item">
-                            <a href="{{route('admin.index')}}" class="nav-link {{(Route::currentRouteName() == 'admin.index') ? 'active' : '' }}">
+                            <a href="{{route('admin.index')}}" class="nav-link {{(Route::currentRouteName() == 'admin.index') || (Route::currentRouteName() == 'admin.inquiries.edit') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>Dashboard</p>
                             </a>
@@ -127,10 +128,15 @@
     <script src="{{asset('adminlte/js/dataTables.bootstrap4.min.js')}}"></script>
     <script src="{{asset('adminlte/js/dataTables.responsive.min.js')}}"></script>
     <script src="{{asset('adminlte/js/responsive.bootstrap4.min.js')}}"></script>
+    <script src="{{asset('adminlte/js/dataTables.buttons.min.js')}}"></script>
+    <script src="{{asset('adminlte/js/buttons.bootstrap4.min.js')}}"></script>
+    <script src="{{asset('adminlte/js/jszip.min.js')}}"></script>
+    <script src="{{asset('adminlte/js/buttons.html5.min.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js"></script>
     <script src="{{asset('adminlte/js/moment.min.js')}}"></script>
     <script src="{{asset('adminlte/js/daterangepicker.js')}}"></script>
+    <script src="{{asset('adminlte/js/bootstrap-datepicker.js')}}"></script>
     <script src="{{asset('adminlte/js/jquery.overlayScrollbars.min.js')}}"></script>
     <script src="{{asset('adminlte/js/adminlte.js')}}"></script>
      <script type="text/javascript">

@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\UploadImageService;
+use App\Services\EnquiryService;
 use App\Services\CityService;
 use App\Services\TypeService;
 use App\Services\VehicleService;
@@ -15,10 +16,11 @@ use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class AdminController extends Controller 
 {
-    private $imageService, $cityService, $typeService, $vehicleService, $categoryService, $vehicleDetailService;
+    private $imageService, $enquiryService, $cityService, $typeService, $vehicleService, $categoryService, $vehicleDetailService;
 
     public function __construct ( 
         UploadImageService $imageService,
+        EnquiryService $enquiryService,
         CityService $cityService,
         TypeService $typeService,
         VehicleService $vehicleService,
@@ -27,6 +29,7 @@ class AdminController extends Controller
     )
     {
         $this->imageService = $imageService;
+        $this->enquiryService = $enquiryService;
         $this->cityService = $cityService;
         $this->typeService = $typeService;
         $this->vehicleService = $vehicleService;
@@ -36,7 +39,73 @@ class AdminController extends Controller
 
     public function index(Request $request)
     {
-        return view('admin.index');
+        $enquiries = $this->enquiryService->getAllEnquiries();
+        return view('admin.index')->with('enquiries', $enquiries);
+    }
+    public function fetchInquiries(Request $request)
+    {
+        $enquiries = $this->enquiryService->getAllEnquiriesByFilter($request);
+        return view('admin.search-result')->with('enquiries', $enquiries)->render();
+    }
+    public function editInquiry(Request $request, $id)
+    {
+        try{
+            $enquiry = $this->enquiryService->getEnquiryById($id);
+            if(!$enquiry){
+                throw new BadRequestException('Invalid Request id');
+            }
+            return view('admin.edit-enquiry')->with('enquiry', $enquiry);
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.index');
+        }
+    }
+    public function updateInquiry(Request $request)
+    {
+        try{
+            $enquiry = $this->enquiryService->getEnquiryById($request->id);
+            if(!$enquiry){
+                throw new BadRequestException('Invalid Request id');
+            }
+            $data['status'] = $request->status;
+            if($request->user_type == 'Company') {
+                $data['company_name'] = $request->company_name;
+            }
+            $data['name'] = $request->name;
+            $data['journey_date'] = date('Y-m-d', strtotime(strtr($request->journey_date, '/', '-')));
+            $data['mobile_number'] = $request->mobile;
+            $data['email'] = $request->email;
+            $data['pickup_from'] = $request->pickup_from;
+            $data['drop_to'] = $request->drop_to;
+            $data['vehicle_name'] = $request->car;
+            $data['journey_type'] = $request->journey_type;
+            $this->enquiryService->update($enquiry, $data);
+            $request->session()->put('message', 'Inquiry has been updated successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.index');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.index');
+        }
+    }
+    public function deleteInquiry(Request $request, $id)
+    {
+        try{
+            $enquiry = $this->enquiryService->getEnquiryById($id);
+            if(!$enquiry){
+                throw new BadRequestException('Invalid Request id.');
+            }
+            $this->enquiryService->delete($enquiry);
+            $request->session()->put('message', 'Inquiry has been deleted successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.index');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.index');
+        }
     }
     public function cities(Request $request)
     {

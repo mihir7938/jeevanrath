@@ -87,6 +87,10 @@ class PageController extends Controller
             $ajax_data = $request->all();        
             $enqData=  array();
             parse_str($ajax_data['data'], $enqData);
+            $data['user_type'] = $enqData['user_type'];
+            if($enqData['user_type'] == 'Company') {
+                $data['company_name'] = $enqData['company_name'];
+            }
             $data['name'] = $enqData['name'];
             $data['journey_date'] = date('Y-m-d', strtotime(strtr($enqData['journey_date'], '/', '-')));
             $data['mobile_number'] = $enqData['mobile'];
@@ -99,6 +103,8 @@ class PageController extends Controller
             $admin_email = env('CONTACT_EMAIL');
             $subject = 'New Enquiry Submission';
             $result = [
+                'user_type' => $enqData['user_type'],
+                'company_name' => $enqData['company_name'],
                 'name' => $enqData['name'],
                 'mobile_number' => $enqData['mobile'],
                 'email' => $enqData['email'],

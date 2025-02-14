@@ -7,6 +7,10 @@
 <body>
     <h4>New Enquiry Submission:</h4>
     <p>
+        <strong>User Type: </strong> {{ $result['user_type'] }}<br>
+        @if($result['user_type'] == 'Company')
+        <strong>Company Name: </strong> {{ $result['company_name'] }}<br>
+        @endif
         <strong>Name: </strong> {{ $result['name'] }}<br>
         <strong>Mobile Number: </strong> {{ $result['mobile_number'] }}<br>
         <strong>Email: </strong> {{ $result['email'] }}<br>
