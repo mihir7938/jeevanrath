@@ -54,6 +54,19 @@
                                         </div>
                                     @endif
                                 </div>
+                                <div class="row driver_box" style="{{($enquiry->status == '2') ? 'display: block;' : 'display: none;' }}">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="driver">Driver*</label>
+                                            <select id="driver" name="driver" class="form-control">
+                                                <option value="">Select</option>
+                                                @foreach($drivers as $driver)
+                                                    <option value="{{$driver->id}}" @if($enquiry->driver_id == $driver->id) selected @endif>{{$driver->name}} - {{$driver->mobile_number}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -137,6 +150,13 @@
 @section('footer')
 <script>
     $(function () {
+        $(document).on('change', '#status', function(){
+            if($(this).val() == 2) {
+                $(".driver_box").show();
+            } else {
+                $(".driver_box").hide();
+            }
+        });
         $("#journey_date").datepicker({
             'format': 'dd/mm/yyyy',
             'autoclose': true
@@ -146,6 +166,14 @@
                 company_name: {
                     required:function(){
                         if($('#user_type').val()  == 'Company') {
+                            return true;
+                        }
+                        return false;
+                    },
+                },
+                driver: {
+                    required:function(){
+                        if($('#status').val()  == '2') {
                             return true;
                         }
                         return false;
@@ -180,6 +208,9 @@
             messages:{
                 company_name:{
                     required: "Please enter company name."
+                },
+                driver:{
+                    required: "Please select driver."
                 },
                 name:{
                     required: "Please enter name."

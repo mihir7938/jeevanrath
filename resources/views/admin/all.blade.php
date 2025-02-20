@@ -4,7 +4,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Confirm Inquiries</h1>
+                    <h1 class="m-0">All Inquiries</h1>
                 </div>
             </div>
         </div>
@@ -15,7 +15,6 @@
                 <div class="col-md-12">
                     <form method="POST" action="{{route('admin.inquiries.fetch')}}" class="form" id="fetch-inquiries-form" enctype="multipart/form-data">
                         @csrf
-                        <input type="hidden" name="status" value="2" />
                         @include('shared.alert')
                         @if (count($errors) > 0)
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -29,9 +28,23 @@
                         @endif
                         <div class="card card-primary">
                             <div class="card-header">
-                                <h3 class="card-title">Select Date</h3>
+                                <h3 class="card-title">Status</h3>
                             </div>
                             <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="status">Status</label>
+                                            <select id="status" name="status" class="form-control">
+                                                <option value="">Select</option>
+                                                <option value="0">Pending</option>
+                                                <option value="1">Inprocess</option>
+                                                <option value="2">Confirmed</option>
+                                                <option value="3">Cancelled</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">

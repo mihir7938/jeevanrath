@@ -9,6 +9,7 @@ use App\Services\TypeService;
 use App\Services\VehicleService;
 use App\Services\CategoryService;
 use App\Services\VehicleDetailService;
+use App\Services\DriverService;
 use App\Models\State;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,7 @@ use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class AdminController extends Controller 
 {
-    private $imageService, $enquiryService, $cityService, $typeService, $vehicleService, $categoryService, $vehicleDetailService;
+    private $imageService, $enquiryService, $cityService, $typeService, $vehicleService, $categoryService, $vehicleDetailService, $driverService;
 
     public function __construct ( 
         UploadImageService $imageService,
@@ -25,7 +26,8 @@ class AdminController extends Controller
         TypeService $typeService,
         VehicleService $vehicleService,
         CategoryService $categoryService,
-        VehicleDetailService $vehicleDetailService
+        VehicleDetailService $vehicleDetailService,
+        DriverService $driverService
     )
     {
         $this->imageService = $imageService;
@@ -35,11 +37,12 @@ class AdminController extends Controller
         $this->vehicleService = $vehicleService;
         $this->categoryService = $categoryService;
         $this->vehicleDetailService = $vehicleDetailService;
+        $this->driverService = $driverService;
     }
 
     public function index(Request $request)
     {
-        $enquiries = $this->enquiryService->getAllEnquiries();
+        $enquiries = $this->enquiryService->getAllEnquiriesByStatus(2);
         return view('admin.index')->with('enquiries', $enquiries);
     }
     public function fetchInquiries(Request $request)
@@ -54,11 +57,12 @@ class AdminController extends Controller
             if(!$enquiry){
                 throw new BadRequestException('Invalid Request id');
             }
-            return view('admin.edit-enquiry')->with('enquiry', $enquiry);
+            $drivers = $this->driverService->getAllDrivers();
+            return view('admin.edit-enquiry')->with('enquiry', $enquiry)->with('drivers', $drivers);
         }catch(\Exception $e){
             $request->session()->put('message', $e->getMessage());
             $request->session()->put('alert-type', 'alert-warning');
-            return redirect()->route('admin.index');
+            return redirect()->route('admin.inquiries.all');
         }
     }
     public function updateInquiry(Request $request)
@@ -72,6 +76,9 @@ class AdminController extends Controller
             if($request->user_type == 'Company') {
                 $data['company_name'] = $request->company_name;
             }
+            if($request->status == '2') {
+                $data['driver_id'] = $request->driver;
+            }
             $data['name'] = $request->name;
             $data['journey_date'] = date('Y-m-d', strtotime(strtr($request->journey_date, '/', '-')));
             $data['mobile_number'] = $request->mobile;
@@ -83,11 +90,11 @@ class AdminController extends Controller
             $this->enquiryService->update($enquiry, $data);
             $request->session()->put('message', 'Inquiry has been updated successfully.');
             $request->session()->put('alert-type', 'alert-success');
-            return redirect()->route('admin.index');
+            return redirect()->route('admin.inquiries.all');
         }catch(\Exception $e){
             $request->session()->put('message', $e->getMessage());
             $request->session()->put('alert-type', 'alert-warning');
-            return redirect()->route('admin.index');
+            return redirect()->route('admin.inquiries.all');
         }
     }
     public function deleteInquiry(Request $request, $id)
@@ -106,6 +113,11 @@ class AdminController extends Controller
             $request->session()->put('alert-type', 'alert-warning');
             return redirect()->route('admin.index');
         }
+    }
+    public function allInquiry(Request $request)
+    {
+        $enquiries = $this->enquiryService->getAllEnquiries();
+        return view('admin.all')->with('enquiries', $enquiries);
     }
     public function cities(Request $request)
     {
@@ -378,6 +390,84 @@ class AdminController extends Controller
             $request->session()->put('message', $e->getMessage());
             $request->session()->put('alert-type', 'alert-warning');
             return redirect()->route('admin.categories');
+        }
+    }
+    public function drivers(Request $request)
+    {
+        $drivers = $this->driverService->getAllDrivers();
+        return view('admin.drivers.index')->with('drivers', $drivers);
+    }
+    public function addDriver(Request $request)
+    {
+        return view('admin.drivers.add');
+    }
+    public function saveDriver(Request $request)
+    {
+        $data = $request->all();
+        $filename = $this->imageService->uploadFile($request->id_proof_document, "assets/drivers");
+        $data['id_proof_document'] = '/drivers/'.$filename;
+        $this->driverService->create($data);
+        $request->session()->put('message', 'Driver has been added successfully.');
+        $request->session()->put('alert-type', 'alert-success');
+        return redirect()->route('admin.drivers');
+    }
+    public function editDriver(Request $request, $id)
+    {
+        try{
+            $driver = $this->driverService->getDriverById($id);
+            if(!$driver){
+                throw new BadRequestException('Invalid Request id');
+            }
+            return view('admin.drivers.edit')->with('driver', $driver);
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.drivers');
+        }
+    }
+    public function updateDriver(Request $request)
+    {
+        try{
+            $driver = $this->driverService->getDriverById($request->id);
+            if(!$driver){
+                throw new BadRequestException('Invalid Request id');
+            }
+            $data['name'] = $request->name;
+            $data['address'] = $request->address;
+            $data['mobile_number'] = $request->mobile_number;
+            $data['alternative_number'] = $request->alternative_number;
+            $data['id_proof'] = $request->id_proof;
+            if($request->has('id_proof_document')){
+                $filepath = public_path('assets/' . $driver->id_proof_document);
+                $this->imageService->deleteFile($filepath);
+                $filename = $this->imageService->uploadFile($request->id_proof_document, "assets/drivers");
+                $data['id_proof_document'] = '/drivers/'.$filename;
+            }
+            $this->driverService->update($driver, $data);
+            $request->session()->put('message', 'Driver has been updated successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.drivers');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.drivers');
+        }
+    }
+    public function deleteDriver(Request $request, $id)
+    {
+        try{
+            $driver = $this->driverService->getDriverById($id);
+            if(!$driver){
+                throw new BadRequestException('Invalid Request id.');
+            }
+            $this->driverService->delete($driver);
+            $request->session()->put('message', 'Driver has been deleted successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.drivers');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.drivers');
         }
     }
     public function allVehicles(Request $request)
