@@ -99,10 +99,13 @@ class PageController extends Controller
             $data['drop_to'] = $enqData['drop_to'];
             $data['vehicle_name'] = $enqData['car'];
             $data['journey_type'] = $enqData['journey_type'];
+            $booking_id = substr($enqData['mobile'], -5).rand(10000,99999);
+            $data['booking_id'] = $booking_id;
             $this->enquiryService->create($data);
             $admin_email = env('CONTACT_EMAIL');
             $subject = 'New Enquiry Submission';
             $result = [
+                'booking_id' => $booking_id,
                 'user_type' => $enqData['user_type'],
                 'company_name' => $enqData['company_name'],
                 'name' => $enqData['name'],

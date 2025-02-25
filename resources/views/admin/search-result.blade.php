@@ -10,6 +10,7 @@
                         <th></th>
                         <th width="100">Action</th>
                         <th>Status</th>
+                        <th>Booking ID</th>
                         <th>Name</th>
                         <th>Phone</th>
                         <th>Journey Date</th>
@@ -27,6 +28,7 @@
                         <th></th>
                         <th>Action</th>
                         <th>Status</th>
+                        <th>Booking ID</th>
                         <th>Name</th>
                         <th>Phone</th>
                         <th>Journey Date</th>
@@ -62,6 +64,7 @@
                                     <div class="py-2 px-3 bg-danger d-inline-flex">Cancelled</div>
                                 @endif
                             </td>
+                            <td>{{$enquiry->booking_id}}</td>
                             <td>{{$enquiry->name}}</td>
                             <td>{{$enquiry->mobile_number}}</td>
                             <td>{{Carbon\Carbon::parse($enquiry->journey_date)->format('d/m/Y')}}</td>

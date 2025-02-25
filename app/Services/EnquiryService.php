@@ -46,6 +46,9 @@ class EnquiryService
         if($request->has('status') && $request->status != ''){
             $query = $query->where('status', $request->status);
         }
+        if($request->has('booking_id') && $request->booking_id != ''){
+            $query = $query->where('booking_id', $request->booking_id);
+        }
         if($request->start_date && $request->end_date){
             $startDate = date("Y-m-d", strtotime(str_replace('/', '-', $request->start_date)));
             $endDate = date("Y-m-d", strtotime(str_replace('/', '-', $request->end_date)));

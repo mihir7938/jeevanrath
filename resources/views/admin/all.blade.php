@@ -44,6 +44,12 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="booking_id">Booking ID</label>
+                                            <input type="text" class="form-control" id="booking_id" name="booking_id" placeholder="Booking ID">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
@@ -98,6 +104,9 @@
         }).buttons().container().appendTo('#fetch_inquiry_data_wrapper .col-md-6:eq(0)');
         $('#fetch-inquiries-form').validate({
             rules:{
+                booking_id: {
+                    digits: true,
+                },
                 start_date:{
                     required:function(){
                         if($('#end_date').val()!='') {

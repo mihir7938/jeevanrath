@@ -31,6 +31,7 @@ class Enquiry extends Model
         'vehicle_name',
         'journey_type',
         'status',
+        'booking_id',
         'driver_id',
     ];
 }

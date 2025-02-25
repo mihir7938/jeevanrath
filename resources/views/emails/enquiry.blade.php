@@ -7,6 +7,7 @@
 <body>
     <h4>New Enquiry Submission:</h4>
     <p>
+        <strong>Booking ID: </strong> {{ $result['booking_id'] }}<br>
         <strong>User Type: </strong> {{ $result['user_type'] }}<br>
         @if($result['user_type'] == 'Company')
         <strong>Company Name: </strong> {{ $result['company_name'] }}<br>
