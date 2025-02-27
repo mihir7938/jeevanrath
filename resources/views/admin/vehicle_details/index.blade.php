@@ -2,7 +2,7 @@
 @section('content')
     <div class="content-header">
         <div class="container-fluid">
-            <div class="row mb-2">
+            <div class="row">
                 <div class="col-sm-6">
                     <h1 class="m-0">Vehicles</h1>
                 </div>
@@ -22,9 +22,8 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="category">Category*</label>
                                         <select id="category" name="category" class="form-control">
-                                            <option value="">Select</option>
+                                            <option value="">Select Category</option>
                                             @foreach($categories as $category)
                                                 <option value="{{$category->id}}">{{$category->name}}</option>
                                             @endforeach

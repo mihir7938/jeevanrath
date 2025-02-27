@@ -4,7 +4,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Drivers</h1>
+                    <h1 class="m-0">Drivers/Vendors</h1>
                 </div>
             </div>
         </div>
@@ -28,9 +28,25 @@
                         @endif
                         <div class="card card-primary">
                             <div class="card-header">
-                                <h3 class="card-title">Add Driver</h3>
+                                <h3 class="card-title">Add Driver/Vendor</h3>
                             </div>
                             <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <div class="d-flex align-items-center">
+                                                <div class="custom-control custom-radio mr-3">
+                                                  <input class="custom-control-input" type="radio" id="driver_radio" name="type" value="Driver" checked>
+                                                  <label for="driver_radio" class="custom-control-label">Driver</label>
+                                                </div>
+                                                <div class="custom-control custom-radio">
+                                                  <input class="custom-control-input" type="radio" id="vendor_radio" name="type" value="Vendor">
+                                                  <label for="vendor_radio" class="custom-control-label">Vendor</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -65,7 +81,7 @@
                                             <label for="id_proof">ID Proof*</label>
                                             <select class="form-control" name="id_proof" id="id_proof">
                                                 <option value="">Select ID Proof</option>
-                                                <option value="aadhaar">Aadhaar Card</option>
+                                                <option value="aadhaar_card">Aadhaar Card</option>
                                                 <option value="driving_license">Driving License</option>
                                                 <option value="pan_card">PAN Card</option>
                                             </select>
@@ -124,7 +140,7 @@
             },
             messages:{
                 name:{
-                    required: "Please enter driver name."
+                    required: "Please enter driver/vendor name."
                 },
                 address:{
                     required: "Please enter address."

@@ -18,6 +18,7 @@ class Driver extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'type',
         'name',
         'address',
         'mobile_number',

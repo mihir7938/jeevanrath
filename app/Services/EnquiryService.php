@@ -56,4 +56,14 @@ class EnquiryService
         }
         return $query->select('*')->get();
     }
+
+    public function getBookingId($mobile)
+    {
+        $booking_id = substr($mobile, -5).rand(10000,99999);
+        $check_booking_id_exists = Enquiry::where('booking_id', $booking_id)->exists();
+        if($check_booking_id_exists) {
+            $booking_id = substr($mobile, -5).rand(10000,99999);
+        }
+        return $booking_id;
+    }
 }

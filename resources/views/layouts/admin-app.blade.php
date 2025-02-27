@@ -105,7 +105,7 @@
                                 <li class="nav-item">
                                     <a href="{{route('admin.drivers')}}" class="nav-link {{(Route::currentRouteName() == 'admin.drivers') || (Route::currentRouteName() == 'admin.drivers.add') || (Route::currentRouteName() == 'admin.drivers.edit') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Drivers</p>
+                                        <p>Drivers/Vendors</p>
                                     </a>
                                 </li>
                             </ul>

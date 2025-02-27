@@ -8,7 +8,7 @@
                 <thead>
                     <tr>
                         <th></th>
-                        <th width="100">Action</th>
+                        <th width="70">Action</th>
                         <th>Status</th>
                         <th>Booking ID</th>
                         <th>Name</th>
@@ -21,6 +21,8 @@
                         <th>User Type</th>
                         <th>Company Name</th>
                         <th>Email</th>
+                        <th>Driver/Vendor</th>
+                        <th>Vehicle Number</th>
                     </tr>
                 </thead>
                 <tfoot>
@@ -39,13 +41,15 @@
                         <th>User Type</th>
                         <th>Company Name</th>
                         <th>Email</th>
+                        <th>Driver/Vendor</th>
+                        <th>Vehicle Number</th>
                     </tr>
                 </tfoot>
                 <tbody>
                     @foreach($enquiries as $enquiry)
                         <tr>
                             <td class="text-center"></td>
-                            <td class="text-center" style="min-width: 100px;">
+                            <td class="text-center" style="min-width: 70px;">
                                 <a href="{{route('admin.inquiries.edit', ['id' => $enquiry->id])}}" class="btn btn-outline-primary btn-circle">
                                     <i class="fas fa-pen"></i>
                                 </a>
@@ -53,15 +57,15 @@
                                     <i class="fas fa-trash"></i>
                                 </a>
                             </td>
-                            <td class="text-center">
+                            <td class="text-center status">
                                 @if($enquiry->status == 0)
-                                    <div class="py-2 px-3 bg-secondary d-inline-flex">Pending</div>
+                                    <div class="bg-secondary d-inline-flex">Pending</div>
                                 @elseif($enquiry->status == 1)
-                                    <div class="py-2 px-3 bg-warning d-inline-flex">Inprocess</div>
+                                    <div class="bg-warning d-inline-flex">Inprocess</div>
                                 @elseif($enquiry->status == 2)
-                                    <div class="py-2 px-3 bg-success d-inline-flex">Confirmed</div>
+                                    <div class="bg-success d-inline-flex">Confirmed</div>
                                 @elseif($enquiry->status == 3)
-                                    <div class="py-2 px-3 bg-danger d-inline-flex">Cancelled</div>
+                                    <div class="bg-danger d-inline-flex">Cancelled</div>
                                 @endif
                             </td>
                             <td>{{$enquiry->booking_id}}</td>
@@ -75,6 +79,13 @@
                             <td>{{$enquiry->user_type}}</td>
                             <td>{{$enquiry->company_name}}</td>
                             <td>{{$enquiry->email}}</td>
+                            @if($enquiry->status == 2)
+                                <td>({{$enquiry->drivers->type}} - {{$enquiry->drivers->name}} - {{$enquiry->drivers->mobile_number}})</td>
+                                <td>{{$enquiry->vehicle_number}}</td>
+                            @else
+                                <td></td>
+                                <td></td>
+                            @endif
                         </tr>
                     @endforeach
                 </tbody>

@@ -78,6 +78,7 @@ class AdminController extends Controller
             }
             if($request->status == '2') {
                 $data['driver_id'] = $request->driver;
+                $data['vehicle_number'] = $request->vehicle_number;
             }
             $data['name'] = $request->name;
             $data['journey_date'] = date('Y-m-d', strtotime(strtr($request->journey_date, '/', '-')));
@@ -407,7 +408,7 @@ class AdminController extends Controller
         $filename = $this->imageService->uploadFile($request->id_proof_document, "assets/drivers");
         $data['id_proof_document'] = '/drivers/'.$filename;
         $this->driverService->create($data);
-        $request->session()->put('message', 'Driver has been added successfully.');
+        $request->session()->put('message', 'Driver/Vendor has been added successfully.');
         $request->session()->put('alert-type', 'alert-success');
         return redirect()->route('admin.drivers');
     }
@@ -432,6 +433,7 @@ class AdminController extends Controller
             if(!$driver){
                 throw new BadRequestException('Invalid Request id');
             }
+            $data['type'] = $request->type;
             $data['name'] = $request->name;
             $data['address'] = $request->address;
             $data['mobile_number'] = $request->mobile_number;
@@ -444,7 +446,7 @@ class AdminController extends Controller
                 $data['id_proof_document'] = '/drivers/'.$filename;
             }
             $this->driverService->update($driver, $data);
-            $request->session()->put('message', 'Driver has been updated successfully.');
+            $request->session()->put('message', 'Driver/Vendor has been updated successfully.');
             $request->session()->put('alert-type', 'alert-success');
             return redirect()->route('admin.drivers');
         }catch(\Exception $e){
@@ -461,7 +463,7 @@ class AdminController extends Controller
                 throw new BadRequestException('Invalid Request id.');
             }
             $this->driverService->delete($driver);
-            $request->session()->put('message', 'Driver has been deleted successfully.');
+            $request->session()->put('message', 'Driver/Vendor has been deleted successfully.');
             $request->session()->put('alert-type', 'alert-success');
             return redirect()->route('admin.drivers');
         }catch(\Exception $e){

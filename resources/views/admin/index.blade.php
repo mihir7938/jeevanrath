@@ -2,7 +2,7 @@
 @section('content')
     <div class="content-header">
         <div class="container-fluid">
-            <div class="row mb-2">
+            <div class="row">
                 <div class="col-sm-6">
                     <h1 class="m-0">Confirm Inquiries</h1>
                 </div>
@@ -28,27 +28,20 @@
                         </div>
                         @endif
                         <div class="card card-primary">
-                            <div class="card-header">
-                                <h3 class="card-title">Select Date</h3>
-                            </div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="start_date">Start Date</label>
                                             <input type="text" class="form-control" id="start_date" name="start_date" placeholder="Start Date">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="end_date">End Date</label>
                                             <input type="text" class="form-control" id="end_date" name="end_date" placeholder="End Date">
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="card-footer">
-                                <button type="submit" class="btn btn-primary" id="btnsubmit" name="btnsubmit">Submit</button>
+                                <button type="submit" class="btn btn-primary" id="btnsubmit" name="btnsubmit">Search</button>
                             </div>
                         </div>
                     </form>
@@ -82,7 +75,7 @@
         $('#fetch_inquiry_data').DataTable({
             "buttons": ["csv", "excel"],
             "responsive": true,
-        }).buttons().container().appendTo('#fetch_inquiry_data_wrapper .col-md-6:eq(0)');
+        }).buttons().container().appendTo('#fetch_inquiry_data_wrapper .col-md-6:eq(0) label');
         $('#fetch-inquiries-form').validate({
             rules:{
                 start_date:{
@@ -123,7 +116,7 @@
                         "buttons": ["csv", "excel"],
                         "destroy": true,
                         "responsive": true,
-                    }).buttons().container().appendTo('#fetch_inquiry_data_wrapper .col-md-6:eq(0)');
+                    }).buttons().container().appendTo('#fetch_inquiry_data_wrapper .col-md-6:eq(0) label');
                 });
             }
         }); 

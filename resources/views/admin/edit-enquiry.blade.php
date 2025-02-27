@@ -2,7 +2,7 @@
 @section('content')
     <div class="content-header">
         <div class="container-fluid">
-            <div class="row mb-2">
+            <div class="row">
                 <div class="col-sm-6">
                     <h1 class="m-0">Edit Inquiry</h1>
                 </div>
@@ -54,16 +54,24 @@
                                         </div>
                                     @endif
                                 </div>
-                                <div class="row driver_box" style="{{($enquiry->status == '2') ? 'display: block;' : 'display: none;' }}">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="driver">Driver*</label>
-                                            <select id="driver" name="driver" class="form-control">
-                                                <option value="">Select</option>
-                                                @foreach($drivers as $driver)
-                                                    <option value="{{$driver->id}}" @if($enquiry->driver_id == $driver->id) selected @endif>{{$driver->name}} - {{$driver->mobile_number}}</option>
-                                                @endforeach
-                                            </select>
+                                <div class="driver_box" style="{{($enquiry->status == '2') ? 'display: block;' : 'display: none;' }}">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="driver">Driver/Vendor*</label>
+                                                <select id="driver" name="driver" class="form-control">
+                                                    <option value="">Select</option>
+                                                    @foreach($drivers as $driver)
+                                                        <option value="{{$driver->id}}" @if($enquiry->driver_id == $driver->id) selected @endif>{{$driver->type}} - {{$driver->name}} - {{$driver->mobile_number}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="vehicle_number">Vehicle Number*</label>
+                                                <input type="text" class="form-control" id="vehicle_number" name="vehicle_number" placeholder="Vehicle Number" value="{{$enquiry->vehicle_number}}" oninput="this.value = this.value.toUpperCase()">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -161,6 +169,12 @@
             'format': 'dd/mm/yyyy',
             'autoclose': true
         });
+        $.validator.addMethod("noSpace", function(value, element) {
+            return value.indexOf(" ") < 0; 
+        });
+        $.validator.addMethod("alphaNumeric", function(value, element) {
+            return this.optional(element) || /^[a-z0-9\s]+$/i.test(value);
+        });
         $('#edit-inquiries-form').validate({
             rules:{
                 company_name: {
@@ -178,6 +192,16 @@
                         }
                         return false;
                     },
+                },
+                vehicle_number: {
+                    required:function(){
+                        if($('#status').val()  == '2') {
+                            return true;
+                        }
+                        return false;
+                    },
+                    noSpace: true,
+                    alphaNumeric: true
                 },
                 name:{
                     required: true
@@ -210,7 +234,12 @@
                     required: "Please enter company name."
                 },
                 driver:{
-                    required: "Please select driver."
+                    required: "Please select driver/vendor."
+                },
+                vehicle_number:{
+                    required: "Please enter vehicle number.",
+                    noSpace: "Space not allowed",
+                    alphaNumeric: "Please enter only letters and numbers.",
                 },
                 name:{
                     required: "Please enter name."
