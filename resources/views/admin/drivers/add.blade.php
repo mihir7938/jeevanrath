@@ -64,14 +64,37 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="mobile_number">Mobile Number*</label>
-                                            <input type="phone" class="form-control" id="mobile_number" name="mobile_number" placeholder="Mobile Number">
+                                            <label for="phone">Mobile Number*</label>
+                                            <input type="phone" class="form-control" id="phone" name="phone" placeholder="Mobile Number">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="alternative_number">Alternative Number*</label>
                                             <input type="phone" class="form-control" id="alternative_number" name="alternative_number" placeholder="Alternative Number">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="email">Email</label>
+                                            <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="active">Active</label>
+                                            <div class="d-flex align-items-center">
+                                                <div class="custom-control custom-radio mr-3">
+                                                  <input class="custom-control-input" type="radio" id="yes" name="active" value="1" checked>
+                                                  <label for="yes" class="custom-control-label">Yes</label>
+                                                </div>
+                                                <div class="custom-control custom-radio">
+                                                  <input class="custom-control-input" type="radio" id="no" name="active" value="0">
+                                                  <label for="no" class="custom-control-label">No</label>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -122,9 +145,11 @@
                 address: {
                     required: true
                 },
-                mobile_number: {
+                phone: {
                     required: true,
                     digits: true,
+                    minlength: 10,
+                    maxlength: 10
                 },
                 alternative_number: {
                     required: true,
@@ -136,6 +161,9 @@
                 id_proof_document: {
                     required: true,
                     maxsize: 2000000
+                },
+                email: {
+                    alphanumeric: true
                 }
             },
             messages:{
@@ -145,7 +173,7 @@
                 address:{
                     required: "Please enter address."
                 },
-                mobile_number:{
+                phone:{
                     required: "Please enter mobile number."
                 },
                 alternative_number:{
@@ -157,6 +185,9 @@
                 id_proof_document:{
                     required: "Please upload id proof.",
                     maxsize: "File size must be less than 2MB."
+                },
+                email:{
+                    email: "Please provide a valid email."
                 }
             },
             errorPlacement: function(error, element) {

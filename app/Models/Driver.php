@@ -18,6 +18,7 @@ class Driver extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'user_id',
         'type',
         'name',
         'address',
@@ -26,4 +27,7 @@ class Driver extends Model
         'id_proof',
         'id_proof_document',
     ];
+    public function users() {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 }

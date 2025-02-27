@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\UserRequest;
 use App\Services\UploadImageService;
 use App\Services\EnquiryService;
 use App\Services\CityService;
@@ -10,14 +11,16 @@ use App\Services\VehicleService;
 use App\Services\CategoryService;
 use App\Services\VehicleDetailService;
 use App\Services\DriverService;
+use App\Services\UserService;
 use App\Models\State;
+use App\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class AdminController extends Controller 
 {
-    private $imageService, $enquiryService, $cityService, $typeService, $vehicleService, $categoryService, $vehicleDetailService, $driverService;
+    private $imageService, $enquiryService, $cityService, $typeService, $vehicleService, $categoryService, $vehicleDetailService, $driverService, $userService;
 
     public function __construct ( 
         UploadImageService $imageService,
@@ -27,7 +30,8 @@ class AdminController extends Controller
         VehicleService $vehicleService,
         CategoryService $categoryService,
         VehicleDetailService $vehicleDetailService,
-        DriverService $driverService
+        DriverService $driverService,
+        UserService $userService
     )
     {
         $this->imageService = $imageService;
@@ -38,6 +42,7 @@ class AdminController extends Controller
         $this->categoryService = $categoryService;
         $this->vehicleDetailService = $vehicleDetailService;
         $this->driverService = $driverService;
+        $this->userService = $userService;
     }
 
     public function index(Request $request)
@@ -402,9 +407,15 @@ class AdminController extends Controller
     {
         return view('admin.drivers.add');
     }
-    public function saveDriver(Request $request)
+    public function saveDriver(UserRequest $request)
     {
         $data = $request->all();
+        $role_id = Role::USER_ROLE_ID;
+        $password = 'jr'.substr($request->phone, -3);
+        $user = $this->userService->create($request, $role_id, $password);
+        $user_id = $user->id;
+        $data['user_id'] = $user_id;
+        $data['mobile_number'] = $request->phone;
         $filename = $this->imageService->uploadFile($request->id_proof_document, "assets/drivers");
         $data['id_proof_document'] = '/drivers/'.$filename;
         $this->driverService->create($data);
@@ -436,7 +447,6 @@ class AdminController extends Controller
             $data['type'] = $request->type;
             $data['name'] = $request->name;
             $data['address'] = $request->address;
-            $data['mobile_number'] = $request->mobile_number;
             $data['alternative_number'] = $request->alternative_number;
             $data['id_proof'] = $request->id_proof;
             if($request->has('id_proof_document')){
@@ -446,6 +456,12 @@ class AdminController extends Controller
                 $data['id_proof_document'] = '/drivers/'.$filename;
             }
             $this->driverService->update($driver, $data);
+            $user_id = $driver->user_id;
+            $user = $this->userService->getUserById($user_id);
+            $userdata['name'] = $request->name;
+            $userdata['email'] = $request->email;
+            $userdata['status'] = $request->active;
+            $this->userService->update($user, $userdata);
             $request->session()->put('message', 'Driver/Vendor has been updated successfully.');
             $request->session()->put('alert-type', 'alert-success');
             return redirect()->route('admin.drivers');

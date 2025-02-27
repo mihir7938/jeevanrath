@@ -154,6 +154,7 @@
     <script src="{{asset('adminlte/js/buttons.html5.min.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js"></script>
+    <script src="{{asset('js/validation-additional.js')}}"></script>
     <script src="{{asset('adminlte/js/moment.min.js')}}"></script>
     <script src="{{asset('adminlte/js/daterangepicker.js')}}"></script>
     <script src="{{asset('adminlte/js/bootstrap-datepicker.js')}}"></script>
