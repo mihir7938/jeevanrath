@@ -33,6 +33,8 @@
                                             <th>Mobile</th>
                                             <th>Alternative</th>
                                             <th>ID Proof</th>
+                                            <th>Status</th>
+                                            <th>Email</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
@@ -44,12 +46,17 @@
                                             <th>Mobile</th>
                                             <th>Alternative</th>
                                             <th>ID Proof</th>
+                                            <th>Status</th>
+                                            <th>Email</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
                                         @foreach($drivers as $driver)
                                             <tr>
                                                 <td class="text-center">
+                                                    <a href="{{route('admin.users.change', ['id' => $driver->user_id])}}" class="btn btn-outline-dark btn-circle">
+                                                        <i class="fas fa-unlock"></i>
+                                                    </a>
                                                     <a href="{{route('admin.drivers.edit', ['id' => $driver->id])}}" class="btn btn-outline-primary btn-circle">
                                                         <i class="fas fa-pen"></i>
                                                     </a>
@@ -71,6 +78,8 @@
                                                       <span>PAN Card</span>
                                                     @endif
                                                 </td>
+                                                <td>{{($driver->users->status == 1) ? 'Active' : 'Not Active'}}</td>
+                                                <td>{{$driver->users->email}}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>

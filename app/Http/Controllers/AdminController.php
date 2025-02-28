@@ -478,7 +478,11 @@ class AdminController extends Controller
             if(!$driver){
                 throw new BadRequestException('Invalid Request id.');
             }
+            $filepath = public_path('assets/' . $driver->id_proof_document);
+            $this->imageService->deleteFile($filepath);
             $this->driverService->delete($driver);
+            $user = $this->userService->getUserById($driver->user_id);
+            $this->userService->delete($user);
             $request->session()->put('message', 'Driver/Vendor has been deleted successfully.');
             $request->session()->put('alert-type', 'alert-success');
             return redirect()->route('admin.drivers');
@@ -486,6 +490,89 @@ class AdminController extends Controller
             $request->session()->put('message', $e->getMessage());
             $request->session()->put('alert-type', 'alert-warning');
             return redirect()->route('admin.drivers');
+        }
+    }
+    public function getUsers()
+    {
+        $role_id = Role::ADMIN_ROLE_ID;
+        $users = $this->userService->getAllUsers($role_id);
+        return view('admin.users.index')->with('users', $users);
+    }
+    public function addUser()
+    {
+        return view('admin.users.add');
+    }
+    public function saveUser(UserRequest $request)
+    {
+        $role_id = Role::ADMIN_ROLE_ID;
+        $user = $this->userService->create($request, $role_id);
+        $request->session()->put('message', 'Admin has been added successfully.');
+        $request->session()->put('alert-type', 'alert-success');
+        return redirect()->route('admin.users');
+    }
+    public function editUser(Request $request, $id)
+    {
+        try{
+            $user = $this->userService->getUserById($id);
+            if(!$user){
+                throw new BadRequestException('Invalid Request id');
+            }
+            return view('admin.users.edit')->with('user', $user);
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.users');
+        }
+    }
+    public function updateUser(Request $request)
+    {
+        try{
+            $user = $this->userService->getUserById($request->id);
+            if(!$user){
+                throw new BadRequestException('Invalid Request id');
+            }
+            $data['name'] = $request->name;
+            $data['email'] = $request->email;
+            $data['status'] = $request->active;
+            $this->userService->update($user, $data);
+            $request->session()->put('message', 'Admin has been updated successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.users');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.users');
+        }
+    }
+    public function changePassword(Request $request, $id)
+    {
+        try{
+            $user = $this->userService->getUserById($id);
+            if(!$user){
+                throw new BadRequestException('Invalid Request id');
+            }
+            return view('admin.users.change-password')->with('user', $user);
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->back();
+        }
+    }
+    public function updateChangePassword(Request $request)
+    {
+        try {
+            $user = $this->userService->getUserById($request->id);
+            if ($user) {
+                $data['password'] = Hash::make($request->password);
+                $this->userService->update($user, $data);
+                $request->session()->put('message', 'Password has been changed successfully.');
+                $request->session()->put('alert-type', 'alert-success');
+                return redirect()->back();
+            }
+        } catch (\Exception $e) {
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->back();
         }
     }
     public function allVehicles(Request $request)

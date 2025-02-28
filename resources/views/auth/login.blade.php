@@ -32,10 +32,10 @@
 					</div>
 					@endif
 			        <div class="input-group mb-3">
-			          	<input type="email" id="email" name="email" class="form-control" placeholder="Email" value="{{old('email')}}" maxlength="155">
+			          	<input type="text" class="form-control" id="phone" name="phone" placeholder="Mobile Number">
 			          	<div class="input-group-append">
 			            	<div class="input-group-text">
-			              		<span class="fas fa-envelope"></span>
+			              		<span class="fas fa-phone"></span>
 			            	</div>
 			          	</div>
 			        </div>
@@ -61,9 +61,6 @@
 			          	</div>
 			        </div>
 		      	</form>
-      			<p class="mb-1">
-        			<a href="{{route('forget_password')}}">I forgot my password</a>
-      			</p>
     		</div>
   		</div>
 	</div>
@@ -77,20 +74,20 @@
 	(function() {
 		$('#login-form').validate({
 			rules: {
-				email: {
-					required: true,
-					alphanumeric: true,
-					maxlength: 155,
-				},
+				phone: {
+                    required: true,
+                    digits: true,
+                    minlength: 10,
+                    maxlength: 10
+                },
 				password: {
 					required: true,
 				},
 			},
 			messages:{
-			 	email:{
-			 		required: "Please enter your email.",
-			 		email: "Please provide a valid email."
-			 	},
+			 	phone: {
+                    required: "Plese enter mobile number.",
+                },
 			 	password:{
 			 		required: "Plese enter your password.",
 			 	}

@@ -11,7 +11,7 @@ class UserService
 {
     public function __construct(){}
 
-    public function create($request, $role_id, $password)
+    public function create($request, $role_id, $password = '')
     {
         return DB::transaction(function () use ($request, $role_id, $password) {
             $user = new User();
@@ -41,11 +41,11 @@ class UserService
     {
         return $user->delete($user);
     }
-    public function getAllUsers($per_page = -1)
+    public function getAllUsers($role_id, $per_page = -1)
     {
         if($per_page == -1){
-            return User::orderBy('created_at', 'desc')->get();    
+            return User::orderBy('created_at', 'desc')->where('role_id', $role_id)->get();    
         }
-        return User::orderBy('created_at', 'desc')->paginate($per_page);
+        return User::orderBy('created_at', 'desc')->where('role_id', $role_id)->paginate($per_page);
     }
 }

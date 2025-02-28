@@ -26,7 +26,7 @@ class AuthController extends Controller
             return view('auth.login');
         }
         if (Auth::check() && Auth::user()->role_id == Role::USER_ROLE_ID) {
-            $url = url('/users/profile');
+            $url = url('/users');
         } elseif (Auth::check() && Auth::user()->role_id == Role::ADMIN_ROLE_ID) {
             $url = url('/admin');
         }
@@ -44,8 +44,9 @@ class AuthController extends Controller
     {
         try {
             $input = [
-                'email' => $request->email,
+                'phone' => $request->phone,
                 'password' => $request->password,
+                'status' => true
             ];
             $is_auth = Auth::attempt($input, $request->has('remember_me') ? true : false);
             if ($is_auth) {
@@ -56,12 +57,12 @@ class AuthController extends Controller
                     if ($user->role_id == Role::ADMIN_ROLE_ID) {
                         $url = url('/admin');
                     } elseif ($user->role_id == Role::USER_ROLE_ID) {
-                        $url = url('/users/profile');
+                        $url = url('/users');
                     }
                 }
                 return redirect($url);
             } else {
-                throw new \Exception('Invalid email or password, please try again.');
+                throw new \Exception('Invalid mobile number or password, please try again.');
             }
         } catch (\Exception $e) {
             if ($request->ajax()) {

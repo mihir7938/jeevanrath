@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -85,4 +86,16 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::post('/vehicle-details/update', [AdminController::class, 'updateVehicleDetails'])->name('admin.details.update.save');
     Route::get('/vehicle-details/delete/{id}', [AdminController::class, 'deleteVehicleDetails'])->name('admin.details.delete');
     Route::post('/fetch-details', [AdminController::class, 'fetchDetailsByCategory'])->name('admin.details.fetch');
+    Route::get('/users', [AdminController::class, 'getUsers'])->name('admin.users');
+    Route::get('/users/add', [AdminController::class, 'addUser'])->name('admin.users.add');
+    Route::post('/users/save', [AdminController::class, 'saveUser'])->name('admin.users.add.save');
+    Route::get('/users/edit/{id}', [AdminController::class, 'editUser'])->name('admin.users.edit');
+    Route::post('/users/update', [AdminController::class, 'updateUser'])->name('admin.users.update.save');
+    Route::get('/users/delete/{id}', [AdminController::class, 'deleteUser'])->name('admin.users.delete');
+    Route::get('/users/change/{id}', [AdminController::class, 'changePassword'])->name('admin.users.change');
+    Route::post('/users/change-password', [AdminController::class, 'updateChangePassword'])->name('admin.users.password.change');
+});
+
+Route::group(['prefix' => 'users', 'middleware' => 'user'], function () {
+    Route::get('/', [UserController::class, 'index'])->name('users.index');
 });
