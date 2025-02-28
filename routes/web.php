@@ -98,4 +98,5 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
 Route::group(['prefix' => 'users', 'middleware' => 'user'], function () {
     Route::get('/', [UserController::class, 'index'])->name('users.index');
+    Route::get('/fetch-details', [UserController::class, 'fetchDetails'])->name('users.details.fetch');
 });

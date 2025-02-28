@@ -26,6 +26,8 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
+        $user_id = Auth::user()->id;
+        $driver_id = Auth::user()->drivers->id;
         return view('users.index');
     }
 }

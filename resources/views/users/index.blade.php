@@ -13,18 +13,38 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    @include('shared.alert')
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Welcome to Jeevan Rath</h3>
+                    <form method="POST" action="{{route('users.details.fetch')}}" class="form" id="fetch-details-form" enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" name="status" value="2" />
+                        @include('shared.alert')
+                        @if (count($errors) > 0)
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
                         </div>
-                        <div class="card-body">
-                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+                        @endif
+                        <div class="card card-primary">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" id="start_date" name="start_date" placeholder="Start Date">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" id="end_date" name="end_date" placeholder="End Date">
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary" id="btnsubmit" name="btnsubmit">Search</button>
+                            </div>
                         </div>
-                        <div class="card-footer">
-                            For Sales / Demo : 88669 33533
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
