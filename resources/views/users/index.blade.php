@@ -13,38 +13,44 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <form method="POST" action="{{route('users.details.fetch')}}" class="form" id="fetch-details-form" enctype="multipart/form-data">
-                        @csrf
-                        <input type="hidden" name="status" value="2" />
-                        @include('shared.alert')
-                        @if (count($errors) > 0)
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
+                    @include('shared.alert')
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">All Bookings</h3>
                         </div>
-                        @endif
-                        <div class="card card-primary">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" id="start_date" name="start_date" placeholder="Start Date">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" id="end_date" name="end_date" placeholder="End Date">
-                                        </div>
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-primary" id="btnsubmit" name="btnsubmit">Search</button>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Booking ID</th>
+                                            <th>Journey Date</th>
+                                            <th>Customer Name</th>
+                                            <th>Customer Number</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Booking ID</th>
+                                            <th>Journey Date</th>
+                                            <th>Customer Name</th>
+                                            <th>Customer Number</th>
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                        @foreach($bookings as $booking)
+                                            <tr>
+                                                <td>{{$booking->booking_id}}</td>
+                                                <td>{{Carbon\Carbon::parse($booking->journey_date)->format('d-m-Y')}}</td>
+                                                <td>{{$booking->name}}</td>
+                                                <td>{{$booking->mobile_number}}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>

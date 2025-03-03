@@ -59,6 +59,12 @@
                                     <p>Dashboard</p>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{route('users.details.add')}}" class="nav-link {{(Route::currentRouteName() == 'users.details.add') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-layer-group"></i>
+                                    <p>Add Details</p>
+                                </a>
+                            </li>
                         @elseif(Auth::check() && Auth::user()->isAdmin())
                             <li class="nav-item {{(Route::currentRouteName() == 'admin.index') || (Route::currentRouteName() == 'admin.inquiries.edit') || (Route::currentRouteName() == 'admin.inquiries.all') ? 'menu-open' : '' }}">
                                 <a href="#" class="nav-link {{(Route::currentRouteName() == 'admin.index') || (Route::currentRouteName() == 'admin.inquiries.edit') || (Route::currentRouteName() == 'admin.inquiries.all') ? 'active' : '' }}">

@@ -248,7 +248,7 @@
                     required: "Please select journey date."
                 },
                 mobile:{
-                    required: "Plese enter mobile number.",
+                    required: "Please enter mobile number.",
                 },
                 email:{
                     email: "Please provide a valid email."
