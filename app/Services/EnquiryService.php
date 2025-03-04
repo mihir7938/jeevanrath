@@ -71,4 +71,9 @@ class EnquiryService
     {
         return Enquiry::orderBy('created_at', 'desc')->where('driver_id', $driver_id)->where('status', 2)->get(); 
     }
+
+    public function getEnquiryByBookingId($booking_id)
+    {
+        return Enquiry::where('booking_id', $booking_id)->where('status', 2)->first(); 
+    }
 }

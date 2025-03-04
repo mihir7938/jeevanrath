@@ -103,6 +103,15 @@ table#dataTableVehicle.dtr-inline.collapsed > tbody > tr > th.dtr-control::befor
 .dataTables_wrapper div.dt-buttons {
   margin-left: 10px;
 }
+#search_result {
+  display: none;
+}
+#search_result div {
+  margin-bottom: .5rem;
+}
+#search_result label {
+  margin-bottom: 0;
+}
 
 /* Layout changes Admin Panel End */
 

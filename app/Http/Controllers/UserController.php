@@ -36,8 +36,14 @@ class UserController extends Controller
 
     public function addDetails(Request $request)
     {
-        $user_id = Auth::user()->id;
-        $driver_id = Auth::user()->drivers->id;
-        return view('users.add-details');
+        $booking_data = '';
+        return view('users.add-details')->with('booking_data', $booking_data);
+    }
+
+    public function fetchDetails(Request $request)
+    {
+        $booking_id = $request->booking_id;
+        $booking_data = $this->enquiryService->getEnquiryByBookingId($booking_id);
+        return view('users.fetch-details')->with('booking_data', $booking_data)->render();
     }
 }

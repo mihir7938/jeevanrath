@@ -40,6 +40,9 @@
                             </div>
                         </div>
                     </form>
+                    <div id="search_result">
+                        @include('users.fetch-details', ['booking_data' => $booking_data])
+                    </div>
                 </div>
             </div>
         </div>
@@ -59,6 +62,25 @@
                 booking_id:{
                     required: "Please enter booking id",
                 }
+            },
+            submitHandler: function (form) {
+                $('.loader').show();
+                $.ajax({
+                    url: "{{ route('users.details.fetch') }}",
+                    method: "POST",
+                    headers: {
+                      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: {
+                      'booking_id' : $("#booking_id").val(),
+                    },
+                    success: function (data) {
+                        $('.loader').hide();
+                        $("#search_result").show();
+                        $("#search_result").html('');
+                        $('#search_result').append(data);
+                    },
+                });
             }
         });
     });
