@@ -106,14 +106,15 @@ table#dataTableVehicle.dtr-inline.collapsed > tbody > tr > th.dtr-control::befor
 #booking_details {
   display: none;
 }
-#booking_details div {
+#booking_details .summary div {
   margin-bottom: .5rem;
 }
-#booking_details label {
+#booking_details .summary label {
   margin-bottom: 0;
 }
-.start_duty {
+.start_duty, .end_duty {
     display: none;
+    margin-top: 10px;
 }
 
 /* Layout changes Admin Panel End */

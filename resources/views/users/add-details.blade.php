@@ -41,9 +41,7 @@
                         </div>
                     </form>
                     <div id="booking_details">
-                        <form method="POST" action="{{route('users.duty.save')}}" class="form" id="duty-form" enctype="multipart/form-data">
-                            @include('users.fetch-details', ['booking_data' => $booking_data])
-                        </form>
+                        @include('users.fetch-details', ['booking_data' => $booking_data])
                     </div>
                 </div>
             </div>
@@ -79,8 +77,21 @@
                     success: function (data) {
                         $('.loader').hide();
                         $("#booking_details").show();
-                        $("#booking_details #duty-form").html('');
-                        $('#booking_details #duty-form').append(data);
+                        $("#booking_details").html('');
+                        $('#booking_details').append(data);
+                        $('#start_time').datetimepicker({
+                            'format': 'LT'
+                        });
+                        $('#end_time').datetimepicker({
+                            'format': 'LT'
+                        });
+                        var startDate = new Date($("#start_date").val());
+                        $("#end_date").datepicker({
+                            'format': 'dd/mm/yyyy',
+                            'startDate': startDate,
+                            'autoclose': true
+                        });
+                        bsCustomFileInput.init();
                     },
                 });
             }
@@ -88,24 +99,65 @@
         $(document).on('click', '#start_duty', function(){
             $(".start_duty").show();
         });
-        $('#duty-form').validate({
-            rules:{
-                start_kilometre:{
-                    required: true,
-                    digits: true,
+        $(document).on('click', '#end_duty', function(){
+            $(".end_duty").show();
+        });
+        $(document).on('click', '#submitBtn', function(){
+            $('#duty-form').validate({
+                rules:{
+                    start_kilometre:{
+                        required: true,
+                        digits: true,
+                    },
+                    start_time:{
+                        required: true,
+                    },
+                    end_kilometre:{
+                        required: true,
+                        digits: true,
+                    },
+                    end_time:{
+                        required: true,
+                    },
+                    end_date:{
+                        required: true,
+                    },
+                    image: {
+                        required: true,
+                        extension: "png|jpg|jpeg",
+                        maxsize: 2000000,
+                    }
                 },
-                start_time:{
-                    required: true,
-                }
-            },
-            messages:{
-                start_kilometre:{
-                    required: "Please enter starting kilometre",
+                messages:{
+                    start_kilometre:{
+                        required: "Please enter starting kilometre",
+                    },
+                    start_time:{
+                        required: "Please select starting time",
+                    },
+                    end_kilometre:{
+                        required: "Please enter ending kilometre",
+                    },
+                    end_time:{
+                        required: "Please select ending time",
+                    },
+                    end_date:{
+                        required: "Please select ending date."
+                    },
+                    image: {
+                        required: "Please upload image.",
+                        extension: "Please select valid image.",
+                        maxsize: "File size must be less than 2MB."
+                    }
                 },
-                start_time:{
-                    required: "Please select starting time",
+                errorPlacement: function(error, element) {
+                    if (element.attr("name") == "image" ) {
+                        $(".input-group").after(error);
+                    } else {
+                        error.insertAfter(element);
+                    }
                 }
-            }
+            });
         });
     });
 </script>
