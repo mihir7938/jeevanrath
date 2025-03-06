@@ -84,6 +84,8 @@ class AdminController extends Controller
             if($request->status == '2') {
                 $data['driver_id'] = $request->driver;
                 $data['vehicle_number'] = $request->vehicle_number;
+                $data['pickup_location'] = $request->pickup_location;
+                $data['pickup_time'] = $request->pickup_time;
             }
             $data['name'] = $request->name;
             $data['journey_date'] = date('Y-m-d', strtotime(strtr($request->journey_date, '/', '-')));

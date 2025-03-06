@@ -40,8 +40,10 @@
                             </div>
                         </div>
                     </form>
-                    <div id="search_result">
-                        @include('users.fetch-details', ['booking_data' => $booking_data])
+                    <div id="booking_details">
+                        <form method="POST" action="{{route('users.duty.save')}}" class="form" id="duty-form" enctype="multipart/form-data">
+                            @include('users.fetch-details', ['booking_data' => $booking_data])
+                        </form>
                     </div>
                 </div>
             </div>
@@ -76,11 +78,33 @@
                     },
                     success: function (data) {
                         $('.loader').hide();
-                        $("#search_result").show();
-                        $("#search_result").html('');
-                        $('#search_result').append(data);
+                        $("#booking_details").show();
+                        $("#booking_details #duty-form").html('');
+                        $('#booking_details #duty-form').append(data);
                     },
                 });
+            }
+        });
+        $(document).on('click', '#start_duty', function(){
+            $(".start_duty").show();
+        });
+        $('#duty-form').validate({
+            rules:{
+                start_kilometre:{
+                    required: true,
+                    digits: true,
+                },
+                start_time:{
+                    required: true,
+                }
+            },
+            messages:{
+                start_kilometre:{
+                    required: "Please enter starting kilometre",
+                },
+                start_time:{
+                    required: "Please select starting time",
+                }
             }
         });
     });

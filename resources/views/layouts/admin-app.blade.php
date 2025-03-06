@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="{{asset('adminlte/css/buttons.bootstrap4.min.css')}}">
     <link rel="stylesheet" href="{{asset('adminlte/css/daterangepicker.css')}}">
     <link rel="stylesheet" href="{{asset('adminlte/css/bootstrap-datepicker.css')}}">
+    <link rel="stylesheet" href="{{asset('adminlte/css/tempusdominus-bootstrap-4.min.css')}}">
 	@yield('header')
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -179,6 +180,7 @@
     <script src="{{asset('adminlte/js/moment.min.js')}}"></script>
     <script src="{{asset('adminlte/js/daterangepicker.js')}}"></script>
     <script src="{{asset('adminlte/js/bootstrap-datepicker.js')}}"></script>
+    <script src="{{asset('adminlte/js/tempusdominus-bootstrap-4.min.js')}}"></script>
     <script src="{{asset('adminlte/js/jquery.overlayScrollbars.min.js')}}"></script>
     <script src="{{asset('adminlte/js/adminlte.js')}}"></script>
      <script type="text/javascript">

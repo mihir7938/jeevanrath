@@ -1,3 +1,4 @@
+@csrf
 <div class="card card-primary">
     <div class="card-header">
         <h3 class="card-title">Booking Details</h3>
@@ -26,8 +27,35 @@
                     <div><label>Journey Type :</label> {{$booking_data->journey_type}}</div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-primary" id="start_duty">Start Duty</button>
+                </div>
+            </div>
+            <div class="start_duty">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="start_kilometre" name="start_kilometre" placeholder="Start Kilometre">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="text" class="form-control datetimepicker-input" id="start_time" name="start_time" placeholder="Start Time" data-toggle="datetimepicker">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-primary" id="startsubmit">Submit</button>
+                    </div>
+                </div>
+            </div>
         @else
             <h5>No record found</h5>
         @endif
     </div>
 </div>
+<script type="text/javascript">
+    $('#start_time').datetimepicker({
+        'format': 'LT'
+    })
+</script>

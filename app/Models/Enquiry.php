@@ -34,6 +34,8 @@ class Enquiry extends Model
         'booking_id',
         'driver_id',
         'vehicle_number',
+        'pickup_location',
+        'pickup_time',
     ];
     public function drivers() {
         return $this->belongsTo(Driver::class, 'driver_id', 'id');

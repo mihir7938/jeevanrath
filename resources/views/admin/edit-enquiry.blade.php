@@ -74,6 +74,20 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="pickup_location">Pickup Location*</label>
+                                                <input type="text" class="form-control" id="pickup_location" name="pickup_location" placeholder="Pickup Location" value="{{$enquiry->pickup_location}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="pickup_time">Pickup Time*</label>
+                                                <input type="text" class="form-control datetimepicker-input" id="pickup_time" name="pickup_time" placeholder="Pickup Time" data-toggle="datetimepicker" value="{{$enquiry->pickup_time}}">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
@@ -169,6 +183,9 @@
             'format': 'dd/mm/yyyy',
             'autoclose': true
         });
+        $('#pickup_time').datetimepicker({
+            'format': 'LT'
+        })
         $.validator.addMethod("noSpace", function(value, element) {
             return value.indexOf(" ") < 0; 
         });
@@ -202,6 +219,22 @@
                     },
                     noSpace: true,
                     alphaNumeric: true
+                },
+                pickup_location: {
+                    required:function(){
+                        if($('#status').val()  == '2') {
+                            return true;
+                        }
+                        return false;
+                    },
+                },
+                pickup_time: {
+                    required:function(){
+                        if($('#status').val()  == '2') {
+                            return true;
+                        }
+                        return false;
+                    },
                 },
                 name:{
                     required: true
@@ -240,6 +273,12 @@
                     required: "Please enter vehicle number.",
                     noSpace: "Space not allowed",
                     alphaNumeric: "Please enter only letters and numbers.",
+                },
+                pickup_location:{
+                    required: "Please enter pickup location."
+                },
+                pickup_time:{
+                    required: "Please select pickup time."
                 },
                 name:{
                     required: "Please enter name."
