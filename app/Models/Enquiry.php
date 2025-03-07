@@ -24,6 +24,8 @@ class Enquiry extends Model
         'company_name',
         'name',
         'journey_date',
+        'end_journey_date',
+        'total_days',
         'mobile_number',
         'email',
         'pickup_from',
@@ -36,6 +38,15 @@ class Enquiry extends Model
         'vehicle_number',
         'pickup_location',
         'pickup_time',
+        'start_point_kilometer',
+        'duty_on_kilometer',
+        'duty_start_time',
+        'end_point_kilometer',
+        'duty_closed_kilometer',
+        'duty_end_time',
+        'end_duty_date',
+        'image',
+        'duty_closed',
     ];
     public function drivers() {
         return $this->belongsTo(Driver::class, 'driver_id', 'id');

@@ -57,13 +57,13 @@
                             <li class="nav-item">
                                 <a href="{{route('users.index')}}" class="nav-link {{(Route::currentRouteName() == 'users.index') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-tachometer-alt"></i>
-                                    <p>Dashboard</p>
+                                    <p>Duty Details</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{route('users.details.add')}}" class="nav-link {{(Route::currentRouteName() == 'users.details.add') ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-layer-group"></i>
-                                    <p>Add Details</p>
+                                <a href="{{route('users.reports')}}" class="nav-link {{(Route::currentRouteName() == 'users.reports') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-file"></i>
+                                    <p>Reports</p>
                                 </a>
                             </li>
                         @elseif(Auth::check() && Auth::user()->isAdmin())

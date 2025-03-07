@@ -34,43 +34,44 @@ class UserController extends Controller
     {
         $driver_id = Auth::user()->drivers->id;
         $bookings = $this->enquiryService->assignedBookingsToDriver($driver_id);
-        return view('users.index')->with('bookings', $bookings);
-    }
-
-    public function addDetails(Request $request)
-    {
         $booking_data = '';
-        return view('users.add-details')->with('booking_data', $booking_data);
+        return view('users.add-details')->with('bookings', $bookings)->with('booking_data', $booking_data);
     }
 
     public function fetchDetails(Request $request)
     {
         $booking_id = $request->booking_id;
         $booking_data = $this->enquiryService->getEnquiryByBookingId($booking_id);
-        $driver_duty_data = $this->driverDutyService->getDriverDutyByBookingId($booking_id);
-        return view('users.fetch-details')->with('booking_data', $booking_data)->with('driver_duty_data', $driver_duty_data)->render();
+        return view('users.fetch-details')->with('booking_data', $booking_data)->render();
     }
 
     public function saveDuty(Request $request)
     {
+        $enquiry = $this->enquiryService->getEnquiryById($request->id);
         if($request->journey == 'start') {
-            $data['driver_id'] = Auth::user()->drivers->id;
-            $data['booking_id'] = $request->booking_id;
-            $data['start_kilometre'] = $request->start_kilometre;
-            $data['start_date'] = $request->start_date;
-            $data['start_time'] = $request->start_time;
-            $this->driverDutyService->create($data);
+            $data['start_point_kilometer'] = $request->start_point_kilometer;
+            $data['duty_on_kilometer'] = $request->duty_on_kilometer;
+            $data['duty_start_time'] = $request->duty_start_time;
+            $this->enquiryService->update($enquiry, $data);
         } else {
-            $driver_duty = $this->driverDutyService->getDriverDutyById($request->id);
-            $data['end_kilometre'] = $request->end_kilometre;
-            $data['end_date'] = date('Y-m-d', strtotime(strtr($request->end_date, '/', '-')));
-            $data['end_time'] = $request->end_time;
+            $data['duty_closed_kilometer'] = $request->duty_closed_kilometer;
+            $data['duty_end_time'] = $request->duty_end_time;
+            $data['end_point_kilometer'] = $request->end_point_kilometer;
+            $data['end_duty_date'] = date('Y-m-d', strtotime(strtr($request->end_duty_date, '/', '-')));
             $filename = $this->imageService->uploadFile($request->image, "assets/duties");
             $data['image'] = '/duties/'.$filename;
-            $this->driverDutyService->update($driver_duty, $data);
+            $data['duty_closed'] = 1;
+            $this->enquiryService->update($enquiry, $data);
         }
         $request->session()->put('message', 'Data has been added successfully.');
         $request->session()->put('alert-type', 'alert-success');
-        return redirect()->route('users.details.add');
+        return redirect()->route('users.index');
+    }
+
+    public function reports(Request $request)
+    {
+        $driver_id = Auth::user()->drivers->id;
+        $bookings = $this->enquiryService->assignedBookingsToDriver($driver_id);
+        return view('users.reports')->with('bookings', $bookings);
     }
 }

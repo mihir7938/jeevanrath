@@ -86,6 +86,10 @@ class AdminController extends Controller
                 $data['vehicle_number'] = $request->vehicle_number;
                 $data['pickup_location'] = $request->pickup_location;
                 $data['pickup_time'] = $request->pickup_time;
+                $data['end_journey_date'] = date('Y-m-d', strtotime(strtr($request->end_journey_date, '/', '-')));
+                $diff = strtotime(date("Y-m-d", strtotime(str_replace('/', '-', $request->end_journey_date)))) - strtotime(date("Y-m-d", strtotime(str_replace('/', '-', $request->journey_date))));
+                $total_days = floor($diff / (60 * 60 * 24));
+                $data['total_days'] = $total_days + 1;
             }
             $data['name'] = $request->name;
             $data['journey_date'] = date('Y-m-d', strtotime(strtr($request->journey_date, '/', '-')));

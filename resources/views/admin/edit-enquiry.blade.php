@@ -92,14 +92,25 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="name">First Name*</label>
-                                            <input type="text" class="form-control" id="name" name="name" placeholder="First Name" value="{{$enquiry->name}}">
+                                            <label for="journey_date">Start Date of Journey*</label>
+                                            <input type="text" class="form-control" id="journey_date" name="journey_date" placeholder="Date of Journey" value="{{Carbon\Carbon::parse($enquiry->journey_date)->format('d/m/Y')}}">
+                                            <input type="hidden" name="start_journey_date" id="start_journey_date" value="{{Carbon\Carbon::parse($enquiry->journey_date)->format('m/d/Y')}}">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="journey_date">Date of Journey*</label>
-                                            <input type="text" class="form-control" id="journey_date" name="journey_date" placeholder="Date of Journey" value="{{Carbon\Carbon::parse($enquiry->journey_date)->format('d/m/Y')}}">
+                                            <label for="name">First Name*</label>
+                                            <input type="text" class="form-control" id="name" name="name" placeholder="First Name" value="{{$enquiry->name}}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="driver_box" style="{{($enquiry->status == '2') ? 'display: block;' : 'display: none;' }}">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="end_journey_date">End Date of Journey*</label>
+                                                <input type="text" class="form-control" id="end_journey_date" name="end_journey_date" placeholder="End Date of Journey" value="{{($enquiry->end_journey_date) ? Carbon\Carbon::parse($enquiry->end_journey_date)->format('d/m/Y') : ''}}">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -112,7 +123,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="email">Email*</label>
+                                            <label for="email">Email</label>
                                             <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="{{$enquiry->email}}">
                                         </div>
                                     </div>
@@ -183,6 +194,12 @@
             'format': 'dd/mm/yyyy',
             'autoclose': true
         });
+        var startDate = new Date($("#start_journey_date").val());
+        $("#end_journey_date").datepicker({
+            'format': 'dd/mm/yyyy',
+            'startDate': startDate,
+            'autoclose': true
+        });
         $('#pickup_time').datetimepicker({
             'format': 'LT'
         })
@@ -242,6 +259,14 @@
                 journey_date:{
                     required: true
                 },
+                end_journey_date: {
+                    required:function(){
+                        if($('#status').val()  == '2') {
+                            return true;
+                        }
+                        return false;
+                    },
+                },
                 mobile:{
                     required: true,
                     digits: true,
@@ -285,6 +310,9 @@
                 },
                 journey_date:{
                     required: "Please select journey date."
+                },
+                end_journey_date:{
+                    required: "Please select end journey date."
                 },
                 mobile:{
                     required: "Please enter mobile number.",

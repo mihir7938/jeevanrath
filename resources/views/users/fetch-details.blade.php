@@ -6,6 +6,7 @@
         @if($booking_data)
             <div class="row summary">
                 <div class="col-md-6">
+                    <div><label>Booking ID :</label> {{$booking_data->booking_id}}</div>
                     <div><label>Customer Name :</label> {{$booking_data->name}}</div>
                     @if($booking_data->company_name)
                         <div><label>Company Name :</label> {{$booking_data->company_name}}</div>
@@ -18,34 +19,18 @@
                     <div><label>Vehicle Number :</label> {{$booking_data->vehicle_number}}</div>
                 </div>
                 <div class="col-md-6">
-                    <div><label>Journey Date :</label> {{Carbon\Carbon::parse($booking_data->journey_date)->format('d-m-Y')}}</div>
+                    <div><label>Start Journey Date :</label> {{Carbon\Carbon::parse($booking_data->journey_date)->format('d-m-Y')}}</div>
                     <div><label>Pickup Time :</label> {{$booking_data->pickup_time}}</div>
                     <div><label>Pickup Location :</label> {{$booking_data->pickup_location}}</div>
-                    {{--<div><label>Pickup From :</label> {{$booking_data->pickup_from}}</div>--}}
+                    <div><label>End Journey Date :</label> {{Carbon\Carbon::parse($booking_data->end_journey_date)->format('d-m-Y')}}</div>
                     <div><label>Drop Location :</label> {{$booking_data->drop_to}}</div>
                     <div><label>Journey Type :</label> {{$booking_data->journey_type}}</div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    @if($driver_duty_data)
-                        @if($driver_duty_data->end_kilometre)
-                            <button type="button" class="btn btn-primary mb-3" disabled>Duty Closed</button>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div><label>Start Journey Date :</label> {{Carbon\Carbon::parse($driver_duty_data->start_date)->format('d-m-Y')}}</div>
-                                    <div><label>Start Journey Time :</label> {{$driver_duty_data->start_time}}</div>
-                                    <div><label>Start Kilometre :</label> {{$driver_duty_data->start_kilometre}}</div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div><label>End Journey Date :</label> {{Carbon\Carbon::parse($driver_duty_data->end_date)->format('d-m-Y')}}</div>
-                                    <div><label>End Journey Time :</label> {{$driver_duty_data->end_time}}</div>
-                                    <div><label>End Kilometre :</label> {{$driver_duty_data->end_kilometre}}</div>
-                                </div>
-                            </div>
-                        @else
-                            <button type="button" class="btn btn-primary" id="end_duty">End Duty</button>
-                        @endif
+                    @if($booking_data->start_point_kilometer && $booking_data->duty_on_kilometer && $booking_data->duty_start_time)
+                        <button type="button" class="btn btn-primary" id="end_duty">End Duty</button>
                     @else
                         <button type="button" class="btn btn-primary" id="start_duty">Start Duty</button>
                     @endif
@@ -53,29 +38,36 @@
             </div>
             <form method="POST" action="{{route('users.duty.save')}}" class="form" id="duty-form" enctype="multipart/form-data">
                 @csrf
-                @if($driver_duty_data)
+                <input type="hidden" name="id" value="{{$booking_data->id}}">
+                @if($booking_data->start_point_kilometer && $booking_data->duty_on_kilometer && $booking_data->duty_start_time)
                     <div class="end_duty">
                         <div class="row">
                             <div class="col-md-6">
-                                <div><label>Start Journey Date :</label> {{Carbon\Carbon::parse($driver_duty_data->start_date)->format('d-m-Y')}}</div>
-                                <div><label>Start Journey Time :</label> {{$driver_duty_data->start_time}}</div>
-                                <div><label>Start Kilometre :</label> {{$driver_duty_data->start_kilometre}}</div>
+                                <div><label>Start Journey Date :</label> {{Carbon\Carbon::parse($booking_data->journey_date)->format('d-m-Y')}}</div>
+                                <div><label>Duty Start Time :</label> {{$booking_data->duty_start_time}}</div>
+                                <div><label>Start Point Kilometer :</label> {{$booking_data->start_point_kilometer}}</div>
+                                <div><label>Duty On Kilometer :</label> {{$booking_data->duty_on_kilometer}}</div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" id="end_kilometre" name="end_kilometre" placeholder="End Kilometre">
+                                    <input type="text" class="form-control" id="duty_closed_kilometer" name="duty_closed_kilometer" placeholder="Duty Closed Kilometer">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <input type="text" class="form-control datetimepicker-input" id="end_time" name="end_time" placeholder="End Time" data-toggle="datetimepicker">
+                                    <input type="text" class="form-control datetimepicker-input" id="duty_end_time" name="duty_end_time" placeholder="Duty End Time" data-toggle="datetimepicker">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" id="end_date" name="end_date" placeholder="End Date of Journey">
+                                    <input type="text" class="form-control" id="end_point_kilometer" name="end_point_kilometer" placeholder="End Point Kilometer">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="end_duty_date" name="end_duty_date" placeholder="End Date of Journey">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -83,15 +75,14 @@
                                     <div class="input-group">
                                         <div class="custom-file">             
                                             <input type="file" class="custom-file-input" id="image" name="image">
-                                            <label class="custom-file-label" for="image">Choose file</label>
+                                            <label class="custom-file-label" for="image">Driver Customer Image</label>
                                         </div>              
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <input type="hidden" name="journey" value="end">
-                                <input type="hidden" name="id" value="{{$driver_duty_data->id}}">
-                                <input type="hidden" name="start_date" id="start_date" value="{{Carbon\Carbon::parse($driver_duty_data->start_date)->format('m/d/Y')}}">
+                                <input type="hidden" name="start_date" id="start_date" value="{{Carbon\Carbon::parse($booking_data->journey_date)->format('m/d/Y')}}">
                                 <button type="submit" class="btn btn-primary" id="submitBtn">Submit</button>
                             </div>
                         </div>
@@ -106,18 +97,21 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" id="start_kilometre" name="start_kilometre" placeholder="Start Kilometre">
+                                    <input type="text" class="form-control" id="start_point_kilometer" name="start_point_kilometer" placeholder="Start Point Kilometer">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <input type="text" class="form-control datetimepicker-input" id="start_time" name="start_time" placeholder="Start Time" data-toggle="datetimepicker">
+                                    <input type="text" class="form-control" id="duty_on_kilometer" name="duty_on_kilometer" placeholder="Duty On Kilometer">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" class="form-control datetimepicker-input" id="duty_start_time" name="duty_start_time" placeholder="Duty Start Time" data-toggle="datetimepicker">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <input type="hidden" name="journey" value="start">
-                                <input type="hidden" name="booking_id" value="{{$booking_data->booking_id}}">
-                                <input type="hidden" name="start_date" value="{{$booking_data->journey_date}}">
                                 <button type="submit" class="btn btn-primary" id="submitBtn">Submit</button>
                             </div>
                         </div>

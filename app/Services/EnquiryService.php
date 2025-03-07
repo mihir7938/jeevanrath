@@ -69,7 +69,7 @@ class EnquiryService
 
     public function assignedBookingsToDriver($driver_id)
     {
-        return Enquiry::orderBy('created_at', 'desc')->where('driver_id', $driver_id)->where('status', 2)->get(); 
+        return Enquiry::orderBy('created_at', 'desc')->where('driver_id', $driver_id)->where('status', 2)->where('duty_closed', 0)->get(); 
     }
 
     public function getEnquiryByBookingId($booking_id)
