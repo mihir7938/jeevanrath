@@ -33,7 +33,8 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $driver_id = Auth::user()->drivers->id;
-        $bookings = $this->enquiryService->assignedBookingsToDriver($driver_id);
+        $duty_closed = 0;
+        $bookings = $this->enquiryService->assignedBookingsToDriver($driver_id, $duty_closed);
         $booking_data = '';
         return view('users.add-details')->with('bookings', $bookings)->with('booking_data', $booking_data);
     }
@@ -57,10 +58,16 @@ class UserController extends Controller
             $data['duty_closed_kilometer'] = $request->duty_closed_kilometer;
             $data['duty_end_time'] = $request->duty_end_time;
             $data['end_point_kilometer'] = $request->end_point_kilometer;
-            $data['end_duty_date'] = date('Y-m-d', strtotime(strtr($request->end_duty_date, '/', '-')));
-            $filename = $this->imageService->uploadFile($request->image, "assets/duties");
-            $data['image'] = '/duties/'.$filename;
-            $data['duty_closed'] = 1;
+            if($request->end_duty_date) {
+                $data['end_duty_date'] = date('Y-m-d', strtotime(strtr($request->end_duty_date, '/', '-')));
+            }
+            if($request->has('image')){
+                $filename = $this->imageService->uploadFile($request->image, "assets/duties");
+                $data['image'] = '/duties/'.$filename;
+            }
+            if($request->duty_closed) {
+                $data['duty_closed'] = 1;
+            }
             $this->enquiryService->update($enquiry, $data);
         }
         $request->session()->put('message', 'Data has been added successfully.');
@@ -71,7 +78,8 @@ class UserController extends Controller
     public function reports(Request $request)
     {
         $driver_id = Auth::user()->drivers->id;
-        $bookings = $this->enquiryService->assignedBookingsToDriver($driver_id);
+        $duty_closed = 1;
+        $bookings = $this->enquiryService->assignedBookingsToDriver($driver_id, $duty_closed);
         return view('users.reports')->with('bookings', $bookings);
     }
 }

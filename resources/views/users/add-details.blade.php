@@ -83,46 +83,60 @@
             $('#duty-form').validate({
                 rules:{
                     start_point_kilometer:{
-                        required: true,
                         digits: true,
                     },
                     duty_on_kilometer:{
-                        required: true,
                         digits: true,
                     },
-                    duty_start_time:{
-                        required: true,
-                    },
                     duty_closed_kilometer:{
-                        required: true,
+                        required:function(){
+                            if($("#duty_closed").prop('checked') == true) {
+                                return true;
+                            }
+                            return false;
+                        },
                         digits: true,
                     },
                     duty_end_time:{
-                        required: true,
+                        required:function(){
+                            if($("#duty_closed").prop('checked') == true) {
+                                return true;
+                            }
+                            return false;
+                        },
                     },
                     end_point_kilometer:{
-                        required: true,
+                        required:function(){
+                            if($("#duty_closed").prop('checked') == true) {
+                                return true;
+                            }
+                            return false;
+                        },
                         digits: true,
                     },
                     end_duty_date:{
-                        required: true,
+                        required:function(){
+                            if($("#duty_closed").prop('checked') == true) {
+                                return true;
+                            }
+                            return false;
+                        },
                     },
                     image: {
-                        required: true,
+                        required:function(){
+                            if($("#duty_closed").prop('checked') == true) {
+                                if($("#booking_image").val() == '') {
+                                    return true;
+                                }
+                                return false;
+                            }
+                            return false;
+                        },
                         extension: "png|jpg|jpeg",
                         maxsize: 2000000,
                     }
                 },
                 messages:{
-                    start_point_kilometer:{
-                        required: "Please enter start point kilometer",
-                    },
-                    duty_on_kilometer:{
-                        required: "Please enter duty on kilometer",
-                    },
-                    duty_start_time:{
-                        required: "Please select duty start time",
-                    },
                     duty_closed_kilometer:{
                         required: "Please enter duty closed kilometer",
                     },

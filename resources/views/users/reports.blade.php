@@ -4,7 +4,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Dashboard</h1>
+                    <h1 class="m-0">Reports</h1>
                 </div>
             </div>
         </div>
@@ -16,34 +16,86 @@
                     @include('shared.alert')
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">All Bookings</h3>
+                            <h3 class="card-title">All Reports</h3>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <table class="table table-bordered" id="dataTableReports" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
+                                            <th></th>
                                             <th>Booking ID</th>
-                                            <th>Journey Date</th>
-                                            <th>Customer Name</th>
-                                            <th>Customer Number</th>
+                                            <th>Name</th>
+                                            <th>Mobile</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th>Pickup Location</th>
+                                            <th>Drop Location</th>
+                                            <th>Vehicle Name</th>
+                                            <th>Vehicle Number</th>
+                                            <th>Journey Type</th>
+                                            <th>Start Point Kilometer</th>
+                                            <th>Duty Start Time</th>
+                                            <th>Duty On Kilometer</th>
+                                            <th>Duty End Time</th>
+                                            <th>Duty Closed Kilometer</th>
+                                            <th>End Point Kilometer</th>
+                                            <th>Company Name</th>
+                                            <th>Email</th>
+                                            <th>Image</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
+                                            <th></th>
                                             <th>Booking ID</th>
-                                            <th>Journey Date</th>
-                                            <th>Customer Name</th>
-                                            <th>Customer Number</th>
+                                            <th>Name</th>
+                                            <th>Mobile</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th>Pickup Location</th>
+                                            <th>Drop Location</th>
+                                            <th>Vehicle Name</th>
+                                            <th>Vehicle Number</th>
+                                            <th>Journey Type</th>
+                                            <th>Start Point Kilometer</th>
+                                            <th>Duty Start Time</th>
+                                            <th>Duty On Kilometer</th>
+                                            <th>Duty End Time</th>
+                                            <th>Duty Closed Kilometer</th>
+                                            <th>End Point Kilometer</th>
+                                            <th>Company Name</th>
+                                            <th>Email</th>
+                                            <th>Image</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
                                         @foreach($bookings as $booking)
                                             <tr>
+                                                <td></td>
                                                 <td>{{$booking->booking_id}}</td>
-                                                <td>{{Carbon\Carbon::parse($booking->journey_date)->format('d-m-Y')}}</td>
                                                 <td>{{$booking->name}}</td>
                                                 <td>{{$booking->mobile_number}}</td>
+                                                <td>{{Carbon\Carbon::parse($booking->journey_date)->format('d-m-Y')}}</td>
+                                                <td>{{Carbon\Carbon::parse($booking->end_duty_date)->format('d-m-Y')}}</td>
+                                                <td>{{$booking->pickup_location}}</td>
+                                                <td>{{$booking->drop_to}}</td>
+                                                <td>{{$booking->vehicle_name}}</td>
+                                                <td>{{$booking->vehicle_number}}</td>
+                                                <td>{{$booking->journey_type}}</td>
+                                                <td>{{$booking->start_point_kilometer}}</td>
+                                                <td>{{$booking->duty_start_time}}</td>
+                                                <td>{{$booking->duty_on_kilometer}}</td>
+                                                <td>{{$booking->duty_end_time}}</td>
+                                                <td>{{$booking->duty_closed_kilometer}}</td>
+                                                <td>{{$booking->end_point_kilometer}}</td>
+                                                <td>{{$booking->company_name}}</td>
+                                                <td>{{$booking->email}}</td>
+                                                <td>
+                                                    @if($booking->image)
+                                                        <img src="{{asset('assets/'.$booking->image)}}" width="100px" />
+                                                    @endif
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -57,4 +109,13 @@
     </div>
 @endsection
 @section('footer')
+<script type="text/javascript">
+    $(function(){
+        $('#dataTableReports').DataTable({
+            "buttons": ["csv", "excel"],
+            "destroy": true,
+            "responsive": true,
+        }).buttons().container().appendTo('#dataTableReports_wrapper .col-md-6:eq(0) label');
+    });
+</script>
 @endsection

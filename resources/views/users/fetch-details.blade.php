@@ -52,22 +52,22 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" id="duty_closed_kilometer" name="duty_closed_kilometer" placeholder="Duty Closed Kilometer">
+                                    <input type="text" class="form-control" id="duty_closed_kilometer" name="duty_closed_kilometer" placeholder="Duty Closed Kilometer" value="{{$booking_data->duty_closed_kilometer}}">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <input type="text" class="form-control datetimepicker-input" id="duty_end_time" name="duty_end_time" placeholder="Duty End Time" data-toggle="datetimepicker">
+                                    <input type="text" class="form-control datetimepicker-input" id="duty_end_time" name="duty_end_time" placeholder="Duty End Time" data-toggle="datetimepicker" value="{{$booking_data->duty_end_time}}">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" id="end_point_kilometer" name="end_point_kilometer" placeholder="End Point Kilometer">
+                                    <input type="text" class="form-control" id="end_point_kilometer" name="end_point_kilometer" placeholder="End Point Kilometer" value="{{$booking_data->end_point_kilometer}}">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" id="end_duty_date" name="end_duty_date" placeholder="End Date of Journey">
+                                    <input type="text" class="form-control" id="end_duty_date" name="end_duty_date" placeholder="End Date of Journey" value="{{$booking_data->end_duty_date ? Carbon\Carbon::parse($booking_data->end_duty_date)->format('d-m-Y') : ''}}">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -78,12 +78,26 @@
                                             <label class="custom-file-label" for="image">Driver Customer Image</label>
                                         </div>              
                                     </div>
+                                    @if($booking_data->image)
+                                        <img src="{{asset('assets/'.$booking_data->image)}}" width="200px" class="mt-2 d-block" />
+                                    @endif
+                                    <input type="hidden" id="booking_image" value="{{$booking_data->image ? $booking_data->image : ''}}">
                                 </div>
                             </div>
                             <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="custom-control custom-checkbox">
+                                      <input class="custom-control-input" type="checkbox" id="duty_closed" name="duty_closed">
+                                      <label for="duty_closed" class="custom-control-label">Duty Closed</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
                                 <input type="hidden" name="journey" value="end">
                                 <input type="hidden" name="start_date" id="start_date" value="{{Carbon\Carbon::parse($booking_data->journey_date)->format('m/d/Y')}}">
-                                <button type="submit" class="btn btn-primary" id="submitBtn">Submit</button>
+                                <button type="submit" class="btn btn-primary" id="submitBtn">Save</button>
                             </div>
                         </div>
                     </div>
@@ -97,22 +111,24 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" id="start_point_kilometer" name="start_point_kilometer" placeholder="Start Point Kilometer">
+                                    <input type="text" class="form-control" id="start_point_kilometer" name="start_point_kilometer" placeholder="Start Point Kilometer" value="{{$booking_data->start_point_kilometer}}">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" id="duty_on_kilometer" name="duty_on_kilometer" placeholder="Duty On Kilometer">
+                                    <input type="text" class="form-control" id="duty_on_kilometer" name="duty_on_kilometer" placeholder="Duty On Kilometer" value="{{$booking_data->duty_on_kilometer}}">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <input type="text" class="form-control datetimepicker-input" id="duty_start_time" name="duty_start_time" placeholder="Duty Start Time" data-toggle="datetimepicker">
+                                    <input type="text" class="form-control datetimepicker-input" id="duty_start_time" name="duty_start_time" placeholder="Duty Start Time" data-toggle="datetimepicker" value="{{$booking_data->duty_start_time}}">
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-6">
                                 <input type="hidden" name="journey" value="start">
-                                <button type="submit" class="btn btn-primary" id="submitBtn">Submit</button>
+                                <button type="submit" class="btn btn-primary" id="submitBtn">Save</button>
                             </div>
                         </div>
                     </div>
