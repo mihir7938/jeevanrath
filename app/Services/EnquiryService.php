@@ -76,4 +76,9 @@ class EnquiryService
     {
         return Enquiry::where('booking_id', $booking_id)->where('status', 2)->first(); 
     }
+
+    public function getClosedDutyData()
+    {
+        return Enquiry::orderBy('created_at', 'desc')->where('duty_closed', 1)->get(); 
+    }
 }

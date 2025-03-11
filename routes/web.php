@@ -48,6 +48,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::post('/inquiries/update', [AdminController::class, 'updateInquiry'])->name('admin.inquiries.update.save');
     Route::get('/inquiries/delete/{id}', [AdminController::class, 'deleteInquiry'])->name('admin.inquiries.delete');
     Route::get('/inquiries/all', [AdminController::class, 'allInquiry'])->name('admin.inquiries.all');
+    Route::get('/invoices', [AdminController::class, 'invoices'])->name('admin.invoices');
     Route::get('/cities', [AdminController::class, 'cities'])->name('admin.cities');
     Route::get('/cities/add', [AdminController::class, 'addCity'])->name('admin.cities.add');
     Route::post('/cities/save', [AdminController::class, 'saveCity'])->name('admin.cities.add.save');
@@ -78,6 +79,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/drivers/edit/{id}', [AdminController::class, 'editDriver'])->name('admin.drivers.edit');
     Route::post('/drivers/update', [AdminController::class, 'updateDriver'])->name('admin.drivers.update.save');
     Route::get('/drivers/delete/{id}', [AdminController::class, 'deleteDriver'])->name('admin.drivers.delete');
+    Route::get('/companies', [AdminController::class, 'companies'])->name('admin.companies');
+    Route::get('/companies/add', [AdminController::class, 'addCompany'])->name('admin.companies.add');
+    Route::post('/companies/save', [AdminController::class, 'saveCompany'])->name('admin.companies.add.save');
+    Route::get('/companies/edit/{id}', [AdminController::class, 'editCompany'])->name('admin.companies.edit');
+    Route::post('/companies/update', [AdminController::class, 'updateCompany'])->name('admin.companies.update.save');
+    Route::get('/companies/delete/{id}', [AdminController::class, 'deleteCompany'])->name('admin.companies.delete');
     Route::get('/all-vehicles', [AdminController::class, 'allVehicles'])->name('admin.details');
     Route::post('/fetch-list', [AdminController::class, 'fetchListByCategory'])->name('admin.list.fetch');
     Route::get('/vehicle-details/add', [AdminController::class, 'addVehicleDetails'])->name('admin.details.add');

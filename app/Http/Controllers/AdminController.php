@@ -11,6 +11,7 @@ use App\Services\VehicleService;
 use App\Services\CategoryService;
 use App\Services\VehicleDetailService;
 use App\Services\DriverService;
+use App\Services\CompanyService;
 use App\Services\UserService;
 use App\Models\State;
 use App\Models\Role;
@@ -20,7 +21,7 @@ use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class AdminController extends Controller 
 {
-    private $imageService, $enquiryService, $cityService, $typeService, $vehicleService, $categoryService, $vehicleDetailService, $driverService, $userService;
+    private $imageService, $enquiryService, $cityService, $typeService, $vehicleService, $categoryService, $vehicleDetailService, $driverService, $companyService, $userService;
 
     public function __construct ( 
         UploadImageService $imageService,
@@ -31,6 +32,7 @@ class AdminController extends Controller
         CategoryService $categoryService,
         VehicleDetailService $vehicleDetailService,
         DriverService $driverService,
+        CompanyService $companyService,
         UserService $userService
     )
     {
@@ -42,6 +44,7 @@ class AdminController extends Controller
         $this->categoryService = $categoryService;
         $this->vehicleDetailService = $vehicleDetailService;
         $this->driverService = $driverService;
+        $this->companyService = $companyService;
         $this->userService = $userService;
     }
 
@@ -498,6 +501,74 @@ class AdminController extends Controller
             return redirect()->route('admin.drivers');
         }
     }
+    public function companies(Request $request)
+    {
+        $companies = $this->companyService->getAllCompanies();
+        return view('admin.companies.index')->with('companies', $companies);
+    }
+    public function addCompany(Request $request)
+    {
+        return view('admin.companies.add');
+    }
+    public function saveCompany(Request $request)
+    {
+        $data['name'] = $request->name;
+        $data['db_name'] = $request->db_name;
+        $this->companyService->create($data);
+        $request->session()->put('message', 'Company has been added successfully.');
+        $request->session()->put('alert-type', 'alert-success');
+        return redirect()->route('admin.companies');
+    }
+    public function editCompany(Request $request, $id)
+    {
+        try{
+            $company = $this->companyService->getCompanyById($id);
+            if(!$company){
+                throw new BadRequestException('Invalid Request id');
+            }
+            return view('admin.companies.edit')->with('company', $company);
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.companies');
+        }
+    }
+    public function updateCompany(Request $request)
+    {
+        try{
+            $company = $this->companyService->getCompanyById($request->id);
+            if(!$company){
+                throw new BadRequestException('Invalid Request id');
+            }
+            $data['name'] = $request->name;
+            $data['db_name'] = $request->db_name;
+            $this->companyService->update($company, $data);
+            $request->session()->put('message', 'Company has been updated successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.companies');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.companies');
+        }
+    }
+    public function deleteCompany(Request $request, $id)
+    {
+        try{
+            $company = $this->companyService->getCompanyById($id);
+            if(!$company){
+                throw new BadRequestException('Invalid Request id.');
+            }
+            $this->companyService->delete($company);
+            $request->session()->put('message', 'Company has been deleted successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.companies');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.companies');
+        }
+    }
     public function getUsers()
     {
         $role_id = Role::ADMIN_ROLE_ID;
@@ -743,5 +814,10 @@ class AdminController extends Controller
         $category_id = $request->category_id;
         $types = $this->typeService->getAllTypes();
         return view('admin.vehicle_details.details-form')->with('category_id', $category_id)->with('types', $types)->render();
+    }
+    public function invoices(Request $request)
+    {
+        $bookings = $this->enquiryService->getClosedDutyData();
+        return view('admin.invoices')->with('bookings', $bookings);
     }
 }
