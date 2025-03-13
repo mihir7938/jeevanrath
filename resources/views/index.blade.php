@@ -535,7 +535,8 @@
                                         <option value="">Type of Journey</option>
                                         <option value="One Way Trip">One Way Trip</option>
                                         <option value="Round Trip">Round Trip</option>
-                                        <option value="Local Car Rental">Local Car Rental</option>
+                                        <option value="Local Car Rental (8 hrs/80 km)">Local Car Rental (8 hrs/80 km)</option>
+                                        <option value="Out Station (300 km avg)">Out Station (300 km avg)</option>
                                     </select>
                                 </div>
                                 <div class="col-12">

@@ -180,7 +180,8 @@
                                                 <option value="">Type of Journey</option>
                                                 <option value="One Way Trip" @if($enquiry->journey_type == "One Way Trip") selected @endif>One Way Trip</option>
                                                 <option value="Round Trip" @if($enquiry->journey_type == "Round Trip") selected @endif>Round Trip</option>
-                                                <option value="Local Car Rental" @if($enquiry->journey_type == "Local Car Rental") selected @endif>Local Car Rental</option>
+                                                <option value="Local Car Rental (8 hrs/80 km)" @if($enquiry->journey_type == "Local Car Rental (8 hrs/80 km)") selected @endif>Local Car Rental (8 hrs/80 km)</option>
+                                                <option value="Out Station (300 km avg)" @if($enquiry->journey_type == "Out Station (300 km avg)") selected @endif>Out Station (300 km avg)</option>
                                             </select>
                                         </div>
                                     </div>
