@@ -123,15 +123,6 @@
                         },
                     },
                     image: {
-                        required:function(){
-                            if($("#duty_closed").prop('checked') == true) {
-                                if($("#booking_image").val() == '') {
-                                    return true;
-                                }
-                                return false;
-                            }
-                            return false;
-                        },
                         extension: "png|jpg|jpeg",
                         maxsize: 2000000,
                     }
@@ -150,7 +141,6 @@
                         required: "Please select ending date."
                     },
                     image: {
-                        required: "Please upload image.",
                         extension: "Please select valid image.",
                         maxsize: "File size must be less than 2MB."
                     }

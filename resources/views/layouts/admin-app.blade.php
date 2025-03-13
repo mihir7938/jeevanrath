@@ -88,7 +88,7 @@
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <a href="{{route('admin.invoices')}}" class="nav-link {{(Route::currentRouteName() == 'admin.invoices') ? 'active' : '' }}">
+                                <a href="{{route('admin.invoices')}}" class="nav-link {{(Route::currentRouteName() == 'admin.invoices') || (Route::currentRouteName() == 'admin.invoices.approve') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-file-invoice"></i>
                                     <p>Invoices</p>
                                 </a>

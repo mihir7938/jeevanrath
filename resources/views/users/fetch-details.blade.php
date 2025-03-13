@@ -72,10 +72,15 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <textarea class="form-control" rows="3" id="remarks" name="remarks" placeholder="Remarks" style="height: 50px;">{{$booking_data->remarks}}</textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
                                     <div class="input-group">
                                         <div class="custom-file">             
                                             <input type="file" class="custom-file-input" id="image" name="image">
-                                            <label class="custom-file-label" for="image">Driver Customer Image</label>
+                                            <label class="custom-file-label" for="image">Duty Slip Image</label>
                                         </div>              
                                     </div>
                                     @if($booking_data->image)

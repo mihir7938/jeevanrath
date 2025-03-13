@@ -20,6 +20,8 @@
                         <th>Journey Type</th>
                         <th>User Type</th>
                         <th>Company Name</th>
+                        <th>Guest Name</th>
+                        <th>Guest Number</th>
                         <th>Email</th>
                         <th>Driver/Vendor</th>
                         <th>Vehicle Number</th>
@@ -40,6 +42,8 @@
                         <th>Journey Type</th>
                         <th>User Type</th>
                         <th>Company Name</th>
+                        <th>Guest Name</th>
+                        <th>Guest Number</th>
                         <th>Email</th>
                         <th>Driver/Vendor</th>
                         <th>Vehicle Number</th>
@@ -78,6 +82,8 @@
                             <td>{{$enquiry->journey_type}}</td>
                             <td>{{$enquiry->user_type}}</td>
                             <td>{{$enquiry->company_name}}</td>
+                            <td>{{$enquiry->guest_name}}</td>
+                            <td>{{$enquiry->guest_number}}</td>
                             <td>{{$enquiry->email}}</td>
                             @if($enquiry->status == 2)
                                 <td>({{$enquiry->drivers->type}} - {{$enquiry->drivers->name}} - {{$enquiry->drivers->mobile_number}})</td>

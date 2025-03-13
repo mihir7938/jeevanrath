@@ -49,6 +49,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/inquiries/delete/{id}', [AdminController::class, 'deleteInquiry'])->name('admin.inquiries.delete');
     Route::get('/inquiries/all', [AdminController::class, 'allInquiry'])->name('admin.inquiries.all');
     Route::get('/invoices', [AdminController::class, 'invoices'])->name('admin.invoices');
+    Route::get('/invoices/approve/{id}', [AdminController::class, 'approveInvoice'])->name('admin.invoices.approve');
+    Route::post('/invoices/update', [AdminController::class, 'updateInvoice'])->name('admin.invoices.approve.update');
     Route::get('/cities', [AdminController::class, 'cities'])->name('admin.cities');
     Route::get('/cities/add', [AdminController::class, 'addCity'])->name('admin.cities.add');
     Route::post('/cities/save', [AdminController::class, 'saveCity'])->name('admin.cities.add.save');

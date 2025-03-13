@@ -42,6 +42,7 @@
                                             <th>End Point Kilometer</th>
                                             <th>Company Name</th>
                                             <th>Email</th>
+                                            <th>Remarks</th>
                                             <th>Image</th>
                                         </tr>
                                     </thead>
@@ -66,6 +67,7 @@
                                             <th>End Point Kilometer</th>
                                             <th>Company Name</th>
                                             <th>Email</th>
+                                            <th>Remarks</th>
                                             <th>Image</th>
                                         </tr>
                                     </tfoot>
@@ -91,6 +93,7 @@
                                                 <td>{{$booking->end_point_kilometer}}</td>
                                                 <td>{{$booking->company_name}}</td>
                                                 <td>{{$booking->email}}</td>
+                                                <td>{{$booking->remarks}}</td>
                                                 <td>
                                                     @if($booking->image)
                                                         <img src="{{asset('assets/'.$booking->image)}}" width="100px" />

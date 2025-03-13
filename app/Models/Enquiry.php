@@ -46,9 +46,18 @@ class Enquiry extends Model
         'duty_end_time',
         'end_duty_date',
         'image',
+        'remarks',
+        'guest_name',
+        'guest_number',
+        'company_id',
+        'db_name',
         'duty_closed',
+        'duty_approved',
     ];
     public function drivers() {
         return $this->belongsTo(Driver::class, 'driver_id', 'id');
+    }
+    public function companies() {
+        return $this->belongsTo(Company::class, 'company_id', 'id');
     }
 }

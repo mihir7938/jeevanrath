@@ -83,6 +83,8 @@ class AdminController extends Controller
             $data['status'] = $request->status;
             if($request->user_type == 'Company') {
                 $data['company_name'] = $request->company_name;
+                $data['guest_name'] = $request->guest_name;
+                $data['guest_number'] = $request->guest_number;
             }
             if($request->status == '2') {
                 $data['driver_id'] = $request->driver;
@@ -819,5 +821,48 @@ class AdminController extends Controller
     {
         $bookings = $this->enquiryService->getClosedDutyData();
         return view('admin.invoices')->with('bookings', $bookings);
+    }
+    public function approveInvoice(Request $request, $id)
+    {
+        try{
+            $enquiry = $this->enquiryService->getClosedDutyById($id);
+            if(!$enquiry){
+                throw new BadRequestException('Invalid Request id');
+            }
+            $companies = $this->companyService->getAllCompanies();
+            return view('admin.approve-invoices')->with('enquiry', $enquiry)->with('companies', $companies);
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.invoices');
+        }
+    }
+    public function updateInvoice(Request $request)
+    {
+        try{
+            $enquiry = $this->enquiryService->getClosedDutyById($request->id);
+            if(!$enquiry){
+                throw new BadRequestException('Invalid Request id');
+            }
+            $data['duty_approved'] = $request->status;
+            $company = $this->companyService->getCompanyById($request->company_name);
+            $data['company_id'] = $request->company_name;
+            $data['db_name'] = $company->db_name;
+            if($request->has('image')){
+                $filepath = public_path('assets/' . $enquiry->image);
+                $this->imageService->deleteFile($filepath);
+                $filename = $this->imageService->uploadFile($request->image, "assets/duties");
+                $data['image'] = '/duties/'.$filename;
+            }
+            $data['remarks'] = $request->remarks;
+            $this->enquiryService->update($enquiry, $data);
+            $request->session()->put('message', 'Duty has been updated successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.invoices');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.invoices');
+        }
     }
 }

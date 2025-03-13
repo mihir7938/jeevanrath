@@ -65,6 +65,7 @@ class UserController extends Controller
                 $filename = $this->imageService->uploadFile($request->image, "assets/duties");
                 $data['image'] = '/duties/'.$filename;
             }
+            $data['remarks'] = $request->remarks;
             if($request->duty_closed) {
                 $data['duty_closed'] = 1;
             }

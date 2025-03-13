@@ -54,6 +54,22 @@
                                         </div>
                                     @endif
                                 </div>
+                                @if($enquiry->user_type == "Company")
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="guest_name">Guest Name*</label>
+                                                <input type="text" class="form-control" id="guest_name" name="guest_name" placeholder="Guest Name" value="{{$enquiry->guest_name}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="guest_number">Guest Number*</label>
+                                                <input type="text" class="form-control" id="guest_number" name="guest_number" placeholder="Guest Number" value="{{$enquiry->guest_number}}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                                 <div class="driver_box" style="{{($enquiry->status == '2') ? 'display: block;' : 'display: none;' }}">
                                     <div class="row">
                                         <div class="col-md-6">
@@ -219,6 +235,22 @@
                         return false;
                     },
                 },
+                guest_name: {
+                    required:function(){
+                        if($('#user_type').val()  == 'Company') {
+                            return true;
+                        }
+                        return false;
+                    },
+                },
+                guest_number: {
+                    required:function(){
+                        if($('#user_type').val()  == 'Company') {
+                            return true;
+                        }
+                        return false;
+                    },
+                },
                 driver: {
                     required:function(){
                         if($('#status').val()  == '2') {
@@ -290,6 +322,12 @@
             messages:{
                 company_name:{
                     required: "Please enter company name."
+                },
+                guest_name:{
+                    required: "Please enter guest name."
+                },
+                guest_number:{
+                    required: "Please enter guest number."
                 },
                 driver:{
                     required: "Please select driver/vendor."

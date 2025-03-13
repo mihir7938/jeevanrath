@@ -26,6 +26,7 @@
                                             <th></th>
                                             <th>Action</th>
                                             <th>Duty Status</th>
+                                            <th>DB Name (Company)</th>
                                             <th>Booking ID</th>
                                             <th>Driver/Vendor</th>
                                             <th>Contact Number</th>
@@ -46,6 +47,7 @@
                                             <th>Customer Mobile</th>
                                             <th>Company Name</th>
                                             <th>Email</th>
+                                            <th>Remarks</th>
                                             <th>Image</th>
                                         </tr>
                                     </thead>
@@ -54,6 +56,7 @@
                                             <th></th>
                                             <th>Action</th>
                                             <th>Duty Status</th>
+                                            <th>DB Name (Company)</th>
                                             <th>Booking ID</th>
                                             <th>Driver/Vendor</th>
                                             <th>Contact Number</th>
@@ -74,6 +77,7 @@
                                             <th>Customer Mobile</th>
                                             <th>Company Name</th>
                                             <th>Email</th>
+                                            <th>Remarks</th>
                                             <th>Image</th>
                                         </tr>
                                     </tfoot>
@@ -83,13 +87,14 @@
                                                 <td></td>
                                                 <td style="text-align: center;">
                                                     @if($booking->duty_approved == 0)
-                                                        <a href="{{route('admin.inquiries.edit', ['id' => $booking->id])}}" class="btn btn-outline-primary btn-circle">
-                                                            <i class="fas fa-check"></i>
+                                                        <a href="{{route('admin.invoices.approve', ['id' => $booking->id])}}" class="btn btn-outline-primary btn-circle">
+                                                            <i class="fas fa-pen"></i>
                                                         </a>
                                                     @else
-                                                        <a href="{{route('admin.inquiries.edit', ['id' => $booking->id])}}" class="btn btn-outline-primary btn-circle">
-                                                            <i class="far fa-thumbs-up"></i>
+                                                        <a href="{{route('admin.invoices.approve', ['id' => $booking->id])}}" class="btn btn-outline-primary btn-circle">
+                                                            <i class="fas fa-pen"></i>
                                                         </a>
+                                                        {{--<button type="button" class="btn btn-outline-primary btn-circle" disabled><i class="far fa-thumbs-up"></i></button>--}}
                                                     @endif
                                                 </td>
                                                 <td class="status">
@@ -99,6 +104,7 @@
                                                         <div class="bg-success d-inline-flex">Approved</div>
                                                     @endif
                                                 </td>
+                                                <td>{{$booking->companies ? $booking->companies->name : ''}}</td>
                                                 <td>{{$booking->booking_id}}</td>
                                                 <td>{{$booking->drivers->name}}</td>
                                                 <td>{{$booking->drivers->mobile_number}}</td>
@@ -119,6 +125,7 @@
                                                 <td>{{$booking->mobile_number}}</td>
                                                 <td>{{$booking->company_name}}</td>
                                                 <td>{{$booking->email}}</td>
+                                                <td>{{$booking->remarks}}</td>
                                                 <td>
                                                     @if($booking->image)
                                                         <img src="{{asset('assets/'.$booking->image)}}" width="100px" />

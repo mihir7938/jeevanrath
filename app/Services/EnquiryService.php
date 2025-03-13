@@ -81,4 +81,9 @@ class EnquiryService
     {
         return Enquiry::orderBy('created_at', 'desc')->where('duty_closed', 1)->get(); 
     }
+
+    public function getClosedDutyById($id)
+    {
+        return Enquiry::where('id', $id)->where('duty_closed', 1)->first(); 
+    }
 }
