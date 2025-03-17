@@ -12,6 +12,7 @@ use App\Services\CategoryService;
 use App\Services\VehicleDetailService;
 use App\Services\DriverService;
 use App\Services\CompanyService;
+use App\Services\JRVehicleService;
 use App\Services\UserService;
 use App\Models\State;
 use App\Models\Role;
@@ -21,7 +22,7 @@ use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class AdminController extends Controller 
 {
-    private $imageService, $enquiryService, $cityService, $typeService, $vehicleService, $categoryService, $vehicleDetailService, $driverService, $companyService, $userService;
+    private $imageService, $enquiryService, $cityService, $typeService, $vehicleService, $categoryService, $vehicleDetailService, $driverService, $companyService, $jRVehicleService, $userService;
 
     public function __construct ( 
         UploadImageService $imageService,
@@ -33,6 +34,7 @@ class AdminController extends Controller
         VehicleDetailService $vehicleDetailService,
         DriverService $driverService,
         CompanyService $companyService,
+        JRVehicleService $jRVehicleService,
         UserService $userService
     )
     {
@@ -45,6 +47,7 @@ class AdminController extends Controller
         $this->vehicleDetailService = $vehicleDetailService;
         $this->driverService = $driverService;
         $this->companyService = $companyService;
+        $this->jRVehicleService = $jRVehicleService;
         $this->userService = $userService;
     }
 
@@ -569,6 +572,85 @@ class AdminController extends Controller
             $request->session()->put('message', $e->getMessage());
             $request->session()->put('alert-type', 'alert-warning');
             return redirect()->route('admin.companies');
+        }
+    }
+    public function jRVehicles(Request $request)
+    {
+        $jrvehicles = $this->jRVehicleService->getAllJRVehicles();
+        return view('admin.jrvehicles.index')->with('jrvehicles', $jrvehicles);
+    }
+    public function addJRVehicle(Request $request)
+    {
+        $states = State::all();
+        return view('admin.jrvehicles.add')->with('states', $states);
+    }
+    public function saveJRVehicle(Request $request)
+    {
+        $data['vehicle_name'] = $request->vehicle_name;
+        $data['owner_name'] = $request->owner_name;
+        $data['mobile_number'] = $request->phone;
+        $data['alternative_number'] = $request->alternative_number;
+        $data['city_id'] = $request->city;
+        $data['vehicle_number'] = $request->vehicle_number;
+        $this->jRVehicleService->create($data);
+        $request->session()->put('message', 'Vehicle has been added successfully.');
+        $request->session()->put('alert-type', 'alert-success');
+        return redirect()->route('admin.jrvehicles');
+    }
+    public function editJRVehicle(Request $request, $id)
+    {
+        try{
+            $jrvehicle = $this->jRVehicleService->getJRVehicleById($id);
+            if(!$jrvehicle){
+                throw new BadRequestException('Invalid Request id');
+            }
+            $states = State::all();
+            $cities = $this->cityService->getCitiesByState($jrvehicle->cities->state_id);
+            return view('admin.jrvehicles.edit')->with('jrvehicle', $jrvehicle)->with('states', $states)->with('cities', $cities);
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.jrvehicles');
+        }
+    }
+    public function updateJRVehicle(Request $request)
+    {
+        try{
+            $jrvehicle = $this->jRVehicleService->getJRVehicleById($request->id);
+            if(!$jrvehicle){
+                throw new BadRequestException('Invalid Request id');
+            }
+            $data['vehicle_name'] = $request->vehicle_name;
+            $data['owner_name'] = $request->owner_name;
+            $data['mobile_number'] = $request->phone;
+            $data['alternative_number'] = $request->alternative_number;
+            $data['city_id'] = $request->city;
+            $data['vehicle_number'] = $request->vehicle_number;
+            $this->jRVehicleService->update($jrvehicle, $data);
+            $request->session()->put('message', 'Vehicle has been updated successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.jrvehicles');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.jrvehicles');
+        }
+    }
+    public function deleteJRVehicle(Request $request, $id)
+    {
+        try{
+            $jrvehicle = $this->jRVehicleService->getJRVehicleById($id);
+            if(!$jrvehicle){
+                throw new BadRequestException('Invalid Request id.');
+            }
+            $this->jRVehicleService->delete($jrvehicle);
+            $request->session()->put('message', 'Vehicle has been deleted successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.jrvehicles');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.jrvehicles');
         }
     }
     public function getUsers()
