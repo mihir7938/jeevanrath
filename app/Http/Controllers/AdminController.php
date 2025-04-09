@@ -14,15 +14,17 @@ use App\Services\DriverService;
 use App\Services\CompanyService;
 use App\Services\JRVehicleService;
 use App\Services\UserService;
+use App\Services\WhatsappService;
 use App\Models\State;
 use App\Models\Role;
+use App\Models\Whatsapp;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class AdminController extends Controller 
 {
-    private $imageService, $enquiryService, $cityService, $typeService, $vehicleService, $categoryService, $vehicleDetailService, $driverService, $companyService, $jRVehicleService, $userService;
+    private $imageService, $enquiryService, $cityService, $typeService, $vehicleService, $categoryService, $vehicleDetailService, $driverService, $companyService, $jRVehicleService, $userService, $whatsappService;
 
     public function __construct ( 
         UploadImageService $imageService,
@@ -35,7 +37,8 @@ class AdminController extends Controller
         DriverService $driverService,
         CompanyService $companyService,
         JRVehicleService $jRVehicleService,
-        UserService $userService
+        UserService $userService,
+        WhatsappService $whatsappService
     )
     {
         $this->imageService = $imageService;
@@ -49,6 +52,7 @@ class AdminController extends Controller
         $this->companyService = $companyService;
         $this->jRVehicleService = $jRVehicleService;
         $this->userService = $userService;
+        $this->whatsappService = $whatsappService;
     }
 
     public function index(Request $request)
@@ -946,5 +950,49 @@ class AdminController extends Controller
             $request->session()->put('alert-type', 'alert-warning');
             return redirect()->route('admin.invoices');
         }
+    }
+    public function whatsapp(Request $request)
+    {	
+		$qrcode_image = '';
+		$session_id = '';
+        return view('admin.whatsapp')->with('qrcode_image', $qrcode_image)->with('session_id', $session_id);
+    }
+    public function showQRCode(Request $request)
+    {
+        $session_id = 'jeevanrath'.rand(1000,9999);
+        $result = $this->whatsappService->createSession($session_id);
+		$qrcode_image = '';
+        if($result->success == 1) {
+			sleep(15);
+            $response = $this->whatsappService->getQR($session_id);
+			$data = json_decode($response);
+			if(!isset($data->error)) {
+				$qrcode_image = 'data:image/jpg;base64,'.base64_encode($response);
+			}
+        }
+		return view('admin.qr-code')->with('qrcode_image', $qrcode_image)->with('session_id', $session_id)->render();
+    }
+	public function checkStatus(Request $request)
+    {
+		$session_id = $request->session_id;
+        $result = $this->whatsappService->checkStatus($session_id);
+        if($result->status == 'active') {
+            $session_exists = $this->whatsappService->checkSessionExists($session_id);
+            if($session_exists) {
+                $whatsapp = $this->whatsappService->getWhatsappBySession($session_id);
+                $data['status'] = 1;
+                $this->whatsappService->update($whatsapp, $data);
+            } else {
+                Whatsapp::query()->update(['status' => 0]);
+                $data['user_id'] =  Auth::user()->id;
+                $data['session_id'] = $session_id;
+                $data['whatsapp_number'] = $result->user;
+                $data['status'] = 1;
+                $this->whatsappService->create($data);
+            }
+			return response()->json(['status' => true]);
+        } else {
+			return response()->json(['status' => false]);
+		}
     }
 }

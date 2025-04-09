@@ -169,6 +169,12 @@
                                     </li>
                                 </ul>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{route('admin.whatsapp')}}" class="nav-link {{(Route::currentRouteName() == 'admin.whatsapp') ? 'active' : '' }}">
+                                    <i class="nav-icon fab fa-whatsapp"></i>
+                                    <p>Whatsapp Setup</p>
+                                </a>
+                            </li>
                         @endif
                     </ul>
                 </nav>

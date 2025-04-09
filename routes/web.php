@@ -109,6 +109,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/users/delete/{id}', [AdminController::class, 'deleteUser'])->name('admin.users.delete');
     Route::get('/users/change/{id}', [AdminController::class, 'changePassword'])->name('admin.users.change');
     Route::post('/users/change-password', [AdminController::class, 'updateChangePassword'])->name('admin.users.password.change');
+    Route::get('/whatsapp', [AdminController::class, 'whatsapp'])->name('admin.whatsapp');
+    Route::get('/whatsapp/qrcode', [AdminController::class, 'showQRCode'])->name('admin.whatsapp.qrcode');		
+    Route::get('/whatsapp/check', [AdminController::class, 'checkStatus'])->name('admin.whatsapp.check');
 });
 
 Route::group(['prefix' => 'users', 'middleware' => 'user'], function () {
