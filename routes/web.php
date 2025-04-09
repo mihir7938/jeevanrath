@@ -112,6 +112,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/whatsapp', [AdminController::class, 'whatsapp'])->name('admin.whatsapp');
     Route::get('/whatsapp/qrcode', [AdminController::class, 'showQRCode'])->name('admin.whatsapp.qrcode');		
     Route::get('/whatsapp/check', [AdminController::class, 'checkStatus'])->name('admin.whatsapp.check');
+    Route::post('/whatsapp/send', [AdminController::class, 'sendMessage'])->name('admin.whatsapp.send');
 });
 
 Route::group(['prefix' => 'users', 'middleware' => 'user'], function () {

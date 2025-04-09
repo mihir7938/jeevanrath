@@ -955,7 +955,15 @@ class AdminController extends Controller
     {	
 		$qrcode_image = '';
 		$session_id = '';
-        return view('admin.whatsapp')->with('qrcode_image', $qrcode_image)->with('session_id', $session_id);
+        $active_whatsapp_number = '';
+        $active_session_id = '';
+        $active = $this->whatsappService->getActiveSession();
+        $result = $this->whatsappService->checkStatus($active->session_id);
+        if($result->status == 'active') {
+            $active_whatsapp_number = substr($active->whatsapp_number, 2);
+            $active_session_id = $active->session_id;
+        }
+        return view('admin.whatsapp')->with('qrcode_image', $qrcode_image)->with('session_id', $session_id)->with('active_whatsapp_number', $active_whatsapp_number)->with('active_session_id', $active_session_id);
     }
     public function showQRCode(Request $request)
     {
@@ -994,5 +1002,22 @@ class AdminController extends Controller
         } else {
 			return response()->json(['status' => false]);
 		}
+    }
+    public function sendMessage(Request $request)
+    {
+        $active = $this->whatsappService->getActiveSession();
+        $session_id = $active->session_id;
+        $mobile_number = '91'.$request->mobile;
+        $message = '*Hi*,\nTest message sent';
+        $response = $this->whatsappService->sendMessage($session_id, $mobile_number, $message);
+        if(isset($response->success) && $response->success == 1) {
+            $request->session()->put('message', 'Test message sent successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.whatsapp');
+        } else {
+            $request->session()->put('message', $response->error);
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.whatsapp');
+        }
     }
 }
