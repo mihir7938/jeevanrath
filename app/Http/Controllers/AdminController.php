@@ -959,7 +959,7 @@ class AdminController extends Controller
         $active_session_id = '';
         $active = $this->whatsappService->getActiveSession();
         $result = $this->whatsappService->checkStatus($active->session_id);
-        if($result->status == 'active') {
+        if(isset($result->status) && $result->status == 'active') {
             $active_whatsapp_number = substr($active->whatsapp_number, 2);
             $active_session_id = $active->session_id;
         }
