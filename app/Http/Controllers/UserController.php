@@ -61,6 +61,11 @@ class UserController extends Controller
             if($request->end_duty_date) {
                 $data['end_duty_date'] = date('Y-m-d', strtotime(strtr($request->end_duty_date, '/', '-')));
             }
+            $data['fastag_amount'] = $request->fastag_amount;
+            if($request->has('fastag_image')){
+                $filename = $this->imageService->uploadFile($request->fastag_image, "assets/fastag");
+                $data['fastag_image'] = '/fastag/'.$filename;
+            }
             if($request->has('image')){
                 $filename = $this->imageService->uploadFile($request->image, "assets/duties");
                 $data['image'] = '/duties/'.$filename;

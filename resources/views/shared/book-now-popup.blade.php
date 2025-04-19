@@ -24,22 +24,28 @@
                             <input type="text" class="form-control py-2 border-primary bg-transparent" placeholder="Company Name" name="company_name">
                         </div>
                         <div class="col-xl-6">
-                            <input type="text" class="form-control py-2 border-primary bg-transparent" placeholder="First Name" name="name">
-                        </div>
-                        <div class="col-xl-6">
-                            <input type="text" class="form-control py-2 border-primary bg-transparent" placeholder="Date of Journey" id="datepicker" name="journey_date">
+                            <input type="text" class="form-control py-2 border-primary bg-transparent" placeholder="Full Name" name="name">
                         </div>
                         <div class="col-xl-6">
                             <input type="phone" class="form-control py-2 border-primary bg-transparent" placeholder="Mobile" name="mobile">
                         </div>
                         <div class="col-xl-6">
-                            <input type="email" class="form-control py-2 border-primary bg-transparent" placeholder="Email" name="email">
+                            <input type="text" class="form-control py-2 border-primary bg-transparent" placeholder="Pickup Location" name="pickup_location">
                         </div>
                         <div class="col-xl-6">
-                            <input type="text" class="form-control py-2 border-primary bg-transparent" placeholder="Pickup From" name="pickup_from">
+                            <input type="text" class="form-control py-2 border-primary bg-transparent" placeholder="Drop Location" name="drop_location">
                         </div>
                         <div class="col-xl-6">
-                            <input type="text" class="form-control py-2 border-primary bg-transparent" placeholder="Drop To" name="drop_to">
+                            <input type="text" class="form-control py-2 border-primary bg-transparent" placeholder="Journey Start Date" id="journey_start_date" name="journey_start_date">
+                        </div>
+                        <div class="col-xl-6">
+                            <input type="text" class="form-control py-2 border-primary bg-transparent" placeholder="Journey End Date" id="journey_end_date" name="journey_end_date">
+                        </div>
+                        <div class="col-xl-6 hidden">
+                            <input type="text" class="form-control py-2 border-primary bg-transparent" placeholder="Booker Name" name="booker_name">
+                        </div>
+                        <div class="col-xl-6 hidden">
+                            <input type="phone" class="form-control py-2 border-primary bg-transparent" placeholder="Booker Mobile" name="booker_mobile">
                         </div>
                         <div class="col-xl-6">
                             <select class="form-select py-2 border-primary bg-transparent" aria-label="Default select car" name="car">
@@ -61,6 +67,9 @@
                                 <option value="Out Station (300 km avg)">Out Station (300 km avg)</option>
                             </select>
                         </div>
+                        <div class="col-xl-6">
+                            <input type="text" class="form-control py-2 border-primary bg-transparent datetimepicker-input" id="pickup_time" name="pickup_time" placeholder="Pickup Time" data-toggle="datetimepicker">
+                        </div>
                     </div>
 	            </div>
 	            <div class="modal-footer">
@@ -80,17 +89,35 @@
             $alertas.find('.error').removeClass('error');
             $("#book-now-form .message").html('');
         })
-        $('#book-now-form #datepicker').datepicker({
+        $('#book-now-form #journey_start_date').datepicker({
             startDate: '+0d',
             format: 'dd/mm/yyyy',
             autoclose: true
+        }).on('changeDate', function (selected) {
+            var minDate = new Date(selected.date.valueOf());
+            $('#journey_end_date').datepicker('setStartDate', minDate);
         });
+        $("#book-now-form #journey_end_date").datepicker({
+            startDate: '+0d',
+            format: 'dd/mm/yyyy',
+            autoclose: true
+        }).on('changeDate', function (selected) {
+            var minDate = new Date(selected.date.valueOf());
+            $('#journey_start_date').datepicker('setEndDate', minDate);
+        });
+        $('#pickup_time').datetimepicker({
+            'format': 'LT'
+        })
         $("#book-now-form input[name='user_type']").change(function(){
             if($(this).is(':checked')){
                 if($(this).val() == 'Company'){
                     $('#book-now-form .hidden').show();
+                    $("input[name='name']").attr("placeholder", "Guest Name");
+                    $("input[name='mobile']").attr("placeholder", "Guest Mobile");
                 }else{  
                     $('#book-now-form .hidden').hide();
+                    $("input[name='name']").attr("placeholder", "Full Name");
+                    $("input[name='mobile']").attr("placeholder", "Mobile");
                 }
             }
         });
@@ -107,20 +134,20 @@
                 name:{
                     required: true
                 },
-                journey_date:{
-                    required: true
-                },
                 mobile:{
                     required: true,
-          			digits: true,
+                    digits: true,
                 },
-                email: {
-		          	maxlength: 155,
-		        },
-                pickup_from:{
+                pickup_location:{
                     required: true
                 },
-                drop_to:{
+                drop_location:{
+                    required: true
+                },
+                journey_start_date:{
+                    required: true
+                },
+                journey_end_date:{
                     required: true
                 },
                 car:{
@@ -129,6 +156,26 @@
                 journey_type:{
                     required: true
                 },
+                booker_name: {
+                    required:function(){
+                        if($('#book-now-form input[name="user_type"]:checked').val()  == 'Company') {
+                            return true;
+                        }
+                        return false;
+                    },
+                },
+                booker_mobile: {
+                    required:function(){
+                        if($('#book-now-form input[name="user_type"]:checked').val()  == 'Company') {
+                            return true;
+                        }
+                        return false;
+                    },
+                    digits: true,
+                },
+                pickup_time: {
+                    required: true
+                }
             },
             messages:{
                 company_name:{
@@ -137,20 +184,20 @@
                 name:{
                     required: "Please enter name."
                 },
-                journey_date:{
-                    required: "Please select journey date."
-                },
                 mobile:{
                     required: "Plese enter mobile number.",
                 },
-                email:{
-		          	email: "Please provide a valid email."
-		        },
-                pickup_from:{
-                    required: "Please enter pickup from."
+                pickup_location:{
+                    required: "Please enter pickup location."
                 },
-                drop_to:{
-                    required: "Please enter drop to."
+                drop_location:{
+                    required: "Please enter drop location."
+                },
+                journey_start_date:{
+                    required: "Please select journey start date."
+                },
+                journey_end_date:{
+                    required: "Please select journey end date."
                 },
                 car:{
                     required: "Please select car."
@@ -158,6 +205,15 @@
                 journey_type:{
                     required: "Please select journey type."
                 },
+                booker_name:{
+                    required: "Please enter booker name."
+                },
+                booker_mobile:{
+                    required: "Plese enter booker mobile number.",
+                },
+                pickup_time:{
+                    required: "Please enter pickup time."
+                }
             },
             submitHandler: function (form) {
                 $('.loader').show();

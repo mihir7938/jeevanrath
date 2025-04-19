@@ -122,10 +122,16 @@
                             return false;
                         },
                     },
+                    fastag_amount:{
+                        digits: true,
+                    },
+                    fastag_image: {
+                        maxsize: 2000000,
+                    },
                     image: {
                         extension: "png|jpg|jpeg",
                         maxsize: 2000000,
-                    }
+                    },
                 },
                 messages:{
                     duty_closed_kilometer:{

@@ -116,6 +116,11 @@ table#dataTableVehicle.dtr-inline.collapsed > tbody > tr > th.dtr-control::befor
     display: none;
     margin-top: 10px;
 }
+.form .bootstrap-datetimepicker-widget table td, .form .bootstrap-datetimepicker-widget table td span {
+    height: 30px;
+    line-height: 30px;
+    width: 30px;
+}
 
 /* Layout changes Admin Panel End */
 

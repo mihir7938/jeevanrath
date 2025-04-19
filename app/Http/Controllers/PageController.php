@@ -90,19 +90,25 @@ class PageController extends Controller
             $data['user_type'] = $enqData['user_type'];
             if($enqData['user_type'] == 'Company') {
                 $data['company_name'] = $enqData['company_name'];
+                $data['booker_name'] = $enqData['booker_name'];
+                $data['booker_mobile'] = $enqData['booker_mobile'];
             }
             $data['name'] = $enqData['name'];
-            $data['journey_date'] = date('Y-m-d', strtotime(strtr($enqData['journey_date'], '/', '-')));
             $data['mobile_number'] = $enqData['mobile'];
-            $data['email'] = $enqData['email'];
-            $data['pickup_from'] = $enqData['pickup_from'];
-            $data['drop_to'] = $enqData['drop_to'];
+            $data['pickup_from'] = $enqData['pickup_location'];
+            $data['drop_to'] = $enqData['drop_location'];
+            $data['journey_date'] = date('Y-m-d', strtotime(strtr($enqData['journey_start_date'], '/', '-')));
+            $data['end_journey_date'] = date('Y-m-d', strtotime(strtr($enqData['journey_end_date'], '/', '-')));
+            $diff = strtotime(date("Y-m-d", strtotime(str_replace('/', '-', $enqData['journey_end_date'])))) - strtotime(date("Y-m-d", strtotime(str_replace('/', '-', $enqData['journey_start_date']))));
+            $total_days = floor($diff / (60 * 60 * 24));
+            $data['total_days'] = $total_days + 1;
             $data['vehicle_name'] = $enqData['car'];
             $data['journey_type'] = $enqData['journey_type'];
+            $data['pickup_time'] = $enqData['pickup_time'];
             $booking_id = $this->enquiryService->getBookingId($enqData['mobile']);
             $data['booking_id'] = $booking_id;
             $this->enquiryService->create($data);
-            $admin_email = env('CONTACT_EMAIL');
+            /*$admin_email = env('CONTACT_EMAIL');
             $subject = 'New Enquiry Submission';
             $result = [
                 'booking_id' => $booking_id,
@@ -117,7 +123,7 @@ class PageController extends Controller
                 'vehicle_name' => $enqData['car'],
                 'journey_type' => $enqData['journey_type'],
             ];
-            $this->emailService->sendEmail('emails.enquiry', $result, $admin_email, $subject);
+            $this->emailService->sendEmail('emails.enquiry', $result, $admin_email, $subject);*/
             return response()->json(['status' => true]);
         }catch(\Exception $e){
             return response()->json(['status' => false]);

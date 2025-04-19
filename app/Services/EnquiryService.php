@@ -37,7 +37,7 @@ class EnquiryService
 
     public function getAllEnquiriesByStatus($status)
     {
-        return Enquiry::orderBy('created_at', 'desc')->where('status', $status)->get(); 
+        return Enquiry::orderBy('created_at', 'desc')->whereIn('status', $status)->get(); 
     }
 
     public function getAllEnquiriesByFilter($request)
@@ -69,12 +69,12 @@ class EnquiryService
 
     public function assignedBookingsToDriver($driver_id, $duty_closed)
     {
-        return Enquiry::orderBy('created_at', 'desc')->where('driver_id', $driver_id)->where('status', 2)->where('duty_closed', $duty_closed)->get(); 
+        return Enquiry::orderBy('created_at', 'desc')->where('driver_id', $driver_id)->where('status', 3)->where('duty_closed', $duty_closed)->get(); 
     }
 
     public function getEnquiryByBookingId($booking_id)
     {
-        return Enquiry::where('booking_id', $booking_id)->where('status', 2)->first(); 
+        return Enquiry::where('booking_id', $booking_id)->where('status', 3)->first(); 
     }
 
     public function getClosedDutyData()
@@ -85,5 +85,10 @@ class EnquiryService
     public function getClosedDutyById($id)
     {
         return Enquiry::where('id', $id)->where('duty_closed', 1)->first(); 
+    }
+
+    public function getTripConfirmedById($id)
+    {
+        return Enquiry::where('id', $id)->where('status', 3)->first(); 
     }
 }

@@ -38,17 +38,18 @@
                                             <th>Duty On Kilometer</th>
                                             <th>Duty Closed Kilometer</th>
                                             <th>End Point Kilometer</th>
+                                            <th>Fastag Amount</th>
                                             <th>Pickup Location</th>
                                             <th>Drop Location</th>
                                             <th>Journey Type</th>
                                             <th>Vehicle Name</th>
                                             <th>Vehicle Number</th>
-                                            <th>Customer Name</th>
-                                            <th>Customer Mobile</th>
+                                            <th>Guest Name</th>
+                                            <th>Guest Mobile</th>
                                             <th>Company Name</th>
-                                            <th>Email</th>
                                             <th>Remarks</th>
                                             <th>Image</th>
+                                            <th>Fastag Statement</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
@@ -68,17 +69,18 @@
                                             <th>Duty On Kilometer</th>
                                             <th>Duty Closed Kilometer</th>
                                             <th>End Point Kilometer</th>
+                                            <th>Fastag Amount</th>
                                             <th>Pickup Location</th>
                                             <th>Drop Location</th>
                                             <th>Journey Type</th>
                                             <th>Vehicle Name</th>
                                             <th>Vehicle Number</th>
-                                            <th>Customer Name</th>
-                                            <th>Customer Mobile</th>
+                                            <th>Guest Name</th>
+                                            <th>Guest Mobile</th>
                                             <th>Company Name</th>
-                                            <th>Email</th>
                                             <th>Remarks</th>
                                             <th>Image</th>
+                                            <th>Fastag Statement</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
@@ -116,7 +118,8 @@
                                                 <td>{{$booking->duty_on_kilometer}}</td>
                                                 <td>{{$booking->duty_closed_kilometer}}</td>
                                                 <td>{{$booking->end_point_kilometer}}</td>
-                                                <td>{{$booking->pickup_location}}</td>
+                                                <td>{{$booking->fastag_amount}}</td>
+                                                <td>{{$booking->pickup_from}}</td>
                                                 <td>{{$booking->drop_to}}</td>
                                                 <td>{{$booking->journey_type}}</td>
                                                 <td>{{$booking->vehicle_name}}</td>
@@ -124,11 +127,15 @@
                                                 <td>{{$booking->name}}</td>
                                                 <td>{{$booking->mobile_number}}</td>
                                                 <td>{{$booking->company_name}}</td>
-                                                <td>{{$booking->email}}</td>
                                                 <td>{{$booking->remarks}}</td>
                                                 <td>
                                                     @if($booking->image)
                                                         <img src="{{asset('assets/'.$booking->image)}}" width="100px" />
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if($booking->fastag_image)
+                                                        <a href="{{asset('assets/'.$booking->fastag_image)}}" target="_blank"><i class="fas fa-download ml-1"></i></a>
                                                     @endif
                                                 </td>
                                             </tr>

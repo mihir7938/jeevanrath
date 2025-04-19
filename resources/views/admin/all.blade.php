@@ -35,8 +35,9 @@
                                                 <option value="">Select Status</option>
                                                 <option value="0">Pending</option>
                                                 <option value="1">Inprocess</option>
-                                                <option value="2">Confirmed</option>
-                                                <option value="3">Cancelled</option>
+                                                <option value="2">Booking Confirmed</option>
+                                                <option value="3">Trip Confirmed</option>
+                                                <option value="4">Cancelled</option>
                                             </select>
                                         </div>
                                     </div>

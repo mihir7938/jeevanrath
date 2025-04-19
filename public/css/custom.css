@@ -111,6 +111,58 @@
 .hidden {
     display: none;
 }
+.fixed-car-carousel {
+    position: relative; 
+}
+.fixed-car-carousel .owl-nav .owl-prev {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    background: var(--bs-primary);
+    color: var(--bs-white);
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.5s;
+}
+.fixed-car-carousel .owl-nav .owl-next {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    background: var(--bs-primary);
+    color: var(--bs-white);
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.5s;
+}
+.fixed-car-carousel .owl-nav .owl-prev,
+.fixed-car-carousel .owl-nav .owl-next {
+    transition: 0.5s;
+}
+.fixed-car-carousel .owl-nav .owl-prev:hover,
+.fixed-car-carousel .owl-nav .owl-next:hover {
+    box-shadow: inset 150px 0 0 0 var(--bs-light) !important;
+    color: var(--bs-primary) !important;
+}
+.bootstrap-datetimepicker-widget table td, .bootstrap-datetimepicker-widget table td span {
+    height: 30px;
+    line-height: 30px;
+    width: 30px;
+}
+.bootstrap-datetimepicker-widget .btn {
+    color: #fff;
+}
 @media (min-width: 1200px) {
     .display-7 {
         font-size: 2rem;

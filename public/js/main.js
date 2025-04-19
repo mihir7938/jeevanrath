@@ -41,6 +41,18 @@
         ],
     });
 
+    $(".fixed-car-carousel").owlCarousel({
+        items: 1,
+        smartSpeed: 1500,
+        dots: false,
+        loop: true,
+        nav : true,
+        navText : [
+            '<i class="bi bi-arrow-left"></i>',
+            '<i class="bi bi-arrow-right"></i>'
+        ],
+    });
+
     $(".local-car-carousel").owlCarousel({
         autoplay: true,
         items: 1,

@@ -53,26 +53,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <textarea class="form-control" rows="3" id="remarks" name="remarks" placeholder="Remarks" style="height: 50px;">{{$enquiry->remarks}}</textarea>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <div class="input-group">
-                                                <div class="custom-file">             
-                                                    <input type="file" class="custom-file-input" id="image" name="image">
-                                                    <label class="custom-file-label" for="image">Duty Slip Image</label>
-                                                </div>              
-                                            </div>
-                                            @if($enquiry->image)
-                                                <img src="{{asset('assets/'.$enquiry->image)}}" width="200px" class="mt-2 d-block" />
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-primary" id="btnsubmit" name="btnsubmit">Submit</button>
@@ -92,26 +72,11 @@
             rules:{
                 company_name:{
                     required: true
-                },
-                image:{
-                    extension: "png|jpg|jpeg",
-                    maxsize: 2000000,
                 }
             },
             messages:{
                 company_name:{
                     required: "Please select company name."
-                },
-                image: {
-                    extension: "Please select valid image.",
-                    maxsize: "File size must be less than 2MB."
-                }
-            },
-            errorPlacement: function(error, element) {
-                if (element.attr("name") == "image" ) {
-                    $(".input-group").after(error);
-                } else {
-                    error.insertAfter(element);
                 }
             }
         });

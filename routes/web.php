@@ -48,6 +48,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::post('/inquiries/update', [AdminController::class, 'updateInquiry'])->name('admin.inquiries.update.save');
     Route::get('/inquiries/delete/{id}', [AdminController::class, 'deleteInquiry'])->name('admin.inquiries.delete');
     Route::get('/inquiries/all', [AdminController::class, 'allInquiry'])->name('admin.inquiries.all');
+    Route::get('/duty', [AdminController::class, 'duty'])->name('admin.duty');
+    Route::get('/duty/edit/{id}', [AdminController::class, 'editDuty'])->name('admin.duty.edit');
+    Route::post('/duty/update', [AdminController::class, 'updateDuty'])->name('admin.duty.edit.update');
     Route::get('/invoices', [AdminController::class, 'invoices'])->name('admin.invoices');
     Route::get('/invoices/approve/{id}', [AdminController::class, 'approveInvoice'])->name('admin.invoices.approve');
     Route::post('/invoices/update', [AdminController::class, 'updateInvoice'])->name('admin.invoices.approve.update');

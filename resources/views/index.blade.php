@@ -243,8 +243,12 @@
                 @foreach($fixed_vehicles as $fixed)
                     <div class="col-md-6 col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="{{$i}}s">
                         <div class="blog-item rounded">
-                            <div class="blog-img">
-                                <img src="{{asset('assets/'.$fixed->vehicle_image)}}" class="img-fluid w-100" alt="Image">
+                            <div class="fixed-car-carousel owl-carousel">
+                                <div class="item">
+                                    <div class="blog-img">
+                                        <img src="{{asset('assets/'.$fixed->vehicle_image)}}" class="img-fluid w-100" alt="Image">
+                                    </div>
+                                </div>
                             </div>
                             <div class="blog-centent p-4 text-center">
                                 <h4>{{$fixed->origin_trip}}</h4>

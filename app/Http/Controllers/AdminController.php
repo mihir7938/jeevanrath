@@ -57,7 +57,8 @@ class AdminController extends Controller
 
     public function index(Request $request)
     {
-        $enquiries = $this->enquiryService->getAllEnquiriesByStatus(2);
+        $status = array(2,3);
+        $enquiries = $this->enquiryService->getAllEnquiriesByStatus($status);
         return view('admin.index')->with('enquiries', $enquiries);
     }
     public function fetchInquiries(Request $request)
@@ -90,27 +91,25 @@ class AdminController extends Controller
             $data['status'] = $request->status;
             if($request->user_type == 'Company') {
                 $data['company_name'] = $request->company_name;
-                $data['guest_name'] = $request->guest_name;
-                $data['guest_number'] = $request->guest_number;
+                $data['booker_name'] = $request->booker_name;
+                $data['booker_mobile'] = $request->booker_mobile;
             }
-            if($request->status == '2') {
+            if($request->status == '3') {
                 $data['driver_id'] = $request->driver;
                 $data['vehicle_number'] = $request->vehicle_number;
-                $data['pickup_location'] = $request->pickup_location;
-                $data['pickup_time'] = $request->pickup_time;
-                $data['end_journey_date'] = date('Y-m-d', strtotime(strtr($request->end_journey_date, '/', '-')));
-                $diff = strtotime(date("Y-m-d", strtotime(str_replace('/', '-', $request->end_journey_date)))) - strtotime(date("Y-m-d", strtotime(str_replace('/', '-', $request->journey_date))));
-                $total_days = floor($diff / (60 * 60 * 24));
-                $data['total_days'] = $total_days + 1;
             }
             $data['name'] = $request->name;
-            $data['journey_date'] = date('Y-m-d', strtotime(strtr($request->journey_date, '/', '-')));
             $data['mobile_number'] = $request->mobile;
-            $data['email'] = $request->email;
             $data['pickup_from'] = $request->pickup_from;
             $data['drop_to'] = $request->drop_to;
+            $data['journey_date'] = date('Y-m-d', strtotime(strtr($request->journey_date, '/', '-')));
+            $data['end_journey_date'] = date('Y-m-d', strtotime(strtr($request->end_journey_date, '/', '-')));
+            $diff = strtotime(date("Y-m-d", strtotime(str_replace('/', '-', $request->end_journey_date)))) - strtotime(date("Y-m-d", strtotime(str_replace('/', '-', $request->journey_date))));
+            $total_days = floor($diff / (60 * 60 * 24));
+            $data['total_days'] = $total_days + 1;
             $data['vehicle_name'] = $request->car;
             $data['journey_type'] = $request->journey_type;
+            $data['pickup_time'] = $request->pickup_time;
             $this->enquiryService->update($enquiry, $data);
             $request->session()->put('message', 'Inquiry has been updated successfully.');
             $request->session()->put('alert-type', 'alert-success');
@@ -934,13 +933,6 @@ class AdminController extends Controller
             $company = $this->companyService->getCompanyById($request->company_name);
             $data['company_id'] = $request->company_name;
             $data['db_name'] = $company->db_name;
-            if($request->has('image')){
-                $filepath = public_path('assets/' . $enquiry->image);
-                $this->imageService->deleteFile($filepath);
-                $filename = $this->imageService->uploadFile($request->image, "assets/duties");
-                $data['image'] = '/duties/'.$filename;
-            }
-            $data['remarks'] = $request->remarks;
             $this->enquiryService->update($enquiry, $data);
             $request->session()->put('message', 'Duty has been updated successfully.');
             $request->session()->put('alert-type', 'alert-success');
@@ -949,6 +941,67 @@ class AdminController extends Controller
             $request->session()->put('message', $e->getMessage());
             $request->session()->put('alert-type', 'alert-warning');
             return redirect()->route('admin.invoices');
+        }
+    }
+    public function duty(Request $request)
+    {
+        $status = array(3);
+        $bookings = $this->enquiryService->getAllEnquiriesByStatus($status);
+        return view('admin.duty')->with('bookings', $bookings);
+    }
+    public function editDuty(Request $request, $id)
+    {
+        try{
+            $enquiry = $this->enquiryService->getTripConfirmedById($id);
+            if(!$enquiry){
+                throw new BadRequestException('Invalid Request id');
+            }
+            return view('admin.edit-duty')->with('enquiry', $enquiry);
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.duty');
+        }
+    }
+    public function updateDuty(Request $request)
+    {
+        try{
+            $enquiry = $this->enquiryService->getTripConfirmedById($request->id);
+            if(!$enquiry){
+                throw new BadRequestException('Invalid Request id');
+            }
+            $data['start_point_kilometer'] = $request->start_point_kilometer;
+            $data['duty_on_kilometer'] = $request->duty_on_kilometer;
+            $data['duty_start_time'] = $request->duty_start_time;
+            $data['duty_end_time'] = $request->duty_end_time;
+            $data['duty_closed_kilometer'] = $request->duty_closed_kilometer;
+            $data['end_point_kilometer'] = $request->end_point_kilometer;
+            $data['end_duty_date'] = date('Y-m-d', strtotime(strtr($request->end_duty_date, '/', '-')));
+            $data['fastag_amount'] = $request->fastag_amount;
+            if($request->has('image')){
+                $filepath = public_path('assets/' . $enquiry->image);
+                $this->imageService->deleteFile($filepath);
+                $filename = $this->imageService->uploadFile($request->image, "assets/duties");
+                $data['image'] = '/duties/'.$filename;
+            }
+            if($request->has('fastag_image')){
+                $filepath2 = public_path('assets/' . $enquiry->fastag_image);
+                $this->imageService->deleteFile($filepath2);
+                $filename2 = $this->imageService->uploadFile($request->fastag_image, "assets/fastag");
+                $data['fastag_image'] = '/fastag/'.$filename2;
+            }
+            $data['remarks'] = $request->remarks;
+            if($request->duty_closed) {
+                $data['duty_closed'] = 1;
+            }
+            $this->enquiryService->update($enquiry, $data);
+            $request->session()->put('message', 'Duty details has been updated successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.duty');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.duty');
         }
     }
     public function whatsapp(Request $request)

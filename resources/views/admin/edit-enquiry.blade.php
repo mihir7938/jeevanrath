@@ -40,8 +40,9 @@
                                             <select id="status" name="status" class="form-control">
                                                 <option value="0" @if($enquiry->status == "0") selected @endif>Pending</option>
                                                 <option value="1" @if($enquiry->status == "1") selected @endif>Inprocess</option>
-                                                <option value="2" @if($enquiry->status == "2") selected @endif>Confirmed</option>
-                                                <option value="3" @if($enquiry->status == "3") selected @endif>Cancelled</option>
+                                                <option value="2" @if($enquiry->status == "2") selected @endif>Booking Confirmed</option>
+                                                <option value="3" @if($enquiry->status == "3") selected @endif>Trip Confirmed</option>
+                                                <option value="4" @if($enquiry->status == "4") selected @endif>Cancelled</option>
                                             </select>
                                         </div>
                                     </div>
@@ -58,24 +59,24 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="guest_name">Guest Name*</label>
-                                                <input type="text" class="form-control" id="guest_name" name="guest_name" placeholder="Guest Name" value="{{$enquiry->guest_name}}">
+                                                <label for="name">Booker Name*</label>
+                                                <input type="text" class="form-control" id="booker_name" name="booker_name" placeholder="Booker Name" value="{{$enquiry->booker_name}}">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="guest_number">Guest Number*</label>
-                                                <input type="text" class="form-control" id="guest_number" name="guest_number" placeholder="Guest Number" value="{{$enquiry->guest_number}}">
+                                                <label for="mobile">Booker Mobile*</label>
+                                                <input type="phone" class="form-control" id="booker_mobile" name="booker_mobile" placeholder="Booker Mobile" value="{{$enquiry->booker_mobile}}">
                                             </div>
                                         </div>
                                     </div>
                                 @endif
-                                <div class="driver_box" style="{{($enquiry->status == '2') ? 'display: block;' : 'display: none;' }}">
+                                <div class="driver_box" style="{{($enquiry->status == '3') ? 'display: block;' : 'display: none;' }}">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="driver">Driver/Vendor*</label>
-                                                <select id="driver" name="driver" class="form-control">
+                                                <label for="driver" class="text-danger">Driver/Vendor*</label>
+                                                <select id="driver" name="driver" class="form-control border border-danger">
                                                     <option value="">Select</option>
                                                     @foreach($drivers as $driver)
                                                         <option value="{{$driver->id}}" @if($enquiry->driver_id == $driver->id) selected @endif>{{$driver->type}} - {{$driver->name}} - {{$driver->mobile_number}}</option>
@@ -85,22 +86,8 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="vehicle_number">Vehicle Number*</label>
-                                                <input type="text" class="form-control" id="vehicle_number" name="vehicle_number" placeholder="Vehicle Number" value="{{$enquiry->vehicle_number}}" oninput="this.value = this.value.toUpperCase()">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="pickup_location">Pickup Location*</label>
-                                                <input type="text" class="form-control" id="pickup_location" name="pickup_location" placeholder="Pickup Location" value="{{$enquiry->pickup_location}}">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="pickup_time">Pickup Time*</label>
-                                                <input type="text" class="form-control datetimepicker-input" id="pickup_time" name="pickup_time" placeholder="Pickup Time" data-toggle="datetimepicker" value="{{$enquiry->pickup_time}}">
+                                                <label for="vehicle_number" class="text-danger">Vehicle Number*</label>
+                                                <input type="text" class="form-control border border-danger" id="vehicle_number" name="vehicle_number" placeholder="Vehicle Number" value="{{$enquiry->vehicle_number}}" oninput="this.value = this.value.toUpperCase()">
                                             </div>
                                         </div>
                                     </div>
@@ -108,53 +95,44 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="journey_date">Start Date of Journey*</label>
-                                            <input type="text" class="form-control" id="journey_date" name="journey_date" placeholder="Date of Journey" value="{{Carbon\Carbon::parse($enquiry->journey_date)->format('d/m/Y')}}">
+                                            <label for="name">Guest Name*</label>
+                                            <input type="text" class="form-control" id="name" name="name" placeholder="Guest Name" value="{{$enquiry->name}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="mobile">Guest Mobile*</label>
+                                            <input type="phone" class="form-control" id="mobile" name="mobile" placeholder="Mobile" value="{{$enquiry->mobile_number}}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="pickup_from">Pickup Location*</label>
+                                            <input type="text" class="form-control" id="pickup_from" name="pickup_from" placeholder="Pickup Location" value="{{$enquiry->pickup_from}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="drop_to">Drop Location*</label>
+                                            <input type="text" class="form-control" id="drop_to" name="drop_to" placeholder="Drop Location" value="{{$enquiry->drop_to}}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="journey_date">Journey Start Date*</label>
+                                            <input type="text" class="form-control" id="journey_date" name="journey_date" placeholder="Journey Start Date" value="{{Carbon\Carbon::parse($enquiry->journey_date)->format('d/m/Y')}}">
                                             <input type="hidden" name="start_journey_date" id="start_journey_date" value="{{Carbon\Carbon::parse($enquiry->journey_date)->format('m/d/Y')}}">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="name">First Name*</label>
-                                            <input type="text" class="form-control" id="name" name="name" placeholder="First Name" value="{{$enquiry->name}}">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="driver_box" style="{{($enquiry->status == '2') ? 'display: block;' : 'display: none;' }}">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="end_journey_date">End Date of Journey*</label>
-                                                <input type="text" class="form-control" id="end_journey_date" name="end_journey_date" placeholder="End Date of Journey" value="{{($enquiry->end_journey_date) ? Carbon\Carbon::parse($enquiry->end_journey_date)->format('d/m/Y') : ''}}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="mobile">Mobile*</label>
-                                            <input type="phone" class="form-control" id="mobile" name="mobile" placeholder="Mobile" value="{{$enquiry->mobile_number}}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="email">Email</label>
-                                            <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="{{$enquiry->email}}">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="pickup_from">Pickup From*</label>
-                                            <input type="text" class="form-control" id="pickup_from" name="pickup_from" placeholder="Pickup From" value="{{$enquiry->pickup_from}}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="drop_to">Drop To*</label>
-                                            <input type="text" class="form-control" id="drop_to" name="drop_to" placeholder="Drop To" value="{{$enquiry->drop_to}}">
+                                            <label for="end_journey_date">Journey End Date*</label>
+                                            <input type="text" class="form-control" id="end_journey_date" name="end_journey_date" placeholder="Journey End Date" value="{{Carbon\Carbon::parse($enquiry->end_journey_date)->format('d/m/Y')}}">
+                                            <input type="hidden" name="journey_date_end" id="journey_date_end" value="{{Carbon\Carbon::parse($enquiry->end_journey_date)->format('m/d/Y')}}">
                                         </div>
                                     </div>
                                 </div>
@@ -186,6 +164,14 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="pickup_time">Pickup Time*</label>
+                                            <input type="text" class="form-control datetimepicker-input" id="pickup_time" name="pickup_time" placeholder="Pickup Time" data-toggle="datetimepicker" value="{{$enquiry->pickup_time}}">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-primary" id="btnsubmit" name="btnsubmit">Submit</button>
@@ -201,21 +187,29 @@
 <script>
     $(function () {
         $(document).on('change', '#status', function(){
-            if($(this).val() == 2) {
+            if($(this).val() == 3) {
                 $(".driver_box").show();
             } else {
                 $(".driver_box").hide();
             }
         });
+        var endDate = new Date($("#journey_date_end").val());
         $("#journey_date").datepicker({
             'format': 'dd/mm/yyyy',
+            'endDate': endDate,
             'autoclose': true
+        }).on('changeDate', function (selected) {
+            var minDate = new Date(selected.date.valueOf());
+            $('#end_journey_date').datepicker('setStartDate', minDate);
         });
         var startDate = new Date($("#start_journey_date").val());
         $("#end_journey_date").datepicker({
             'format': 'dd/mm/yyyy',
             'startDate': startDate,
             'autoclose': true
+        }).on('changeDate', function (selected) {
+            var minDate = new Date(selected.date.valueOf());
+            $('#journey_date').datepicker('setEndDate', minDate);
         });
         $('#pickup_time').datetimepicker({
             'format': 'LT'
@@ -236,7 +230,7 @@
                         return false;
                     },
                 },
-                guest_name: {
+                booker_name: {
                     required:function(){
                         if($('#user_type').val()  == 'Company') {
                             return true;
@@ -244,17 +238,18 @@
                         return false;
                     },
                 },
-                guest_number: {
+                booker_mobile: {
                     required:function(){
                         if($('#user_type').val()  == 'Company') {
                             return true;
                         }
                         return false;
                     },
+                    digits: true,
                 },
                 driver: {
                     required:function(){
-                        if($('#status').val()  == '2') {
+                        if($('#status').val()  == '3') {
                             return true;
                         }
                         return false;
@@ -262,7 +257,7 @@
                 },
                 vehicle_number: {
                     required:function(){
-                        if($('#status').val()  == '2') {
+                        if($('#status').val()  == '3') {
                             return true;
                         }
                         return false;
@@ -270,42 +265,12 @@
                     noSpace: true,
                     alphaNumeric: true
                 },
-                pickup_location: {
-                    required:function(){
-                        if($('#status').val()  == '2') {
-                            return true;
-                        }
-                        return false;
-                    },
-                },
-                pickup_time: {
-                    required:function(){
-                        if($('#status').val()  == '2') {
-                            return true;
-                        }
-                        return false;
-                    },
-                },
                 name:{
                     required: true
-                },
-                journey_date:{
-                    required: true
-                },
-                end_journey_date: {
-                    required:function(){
-                        if($('#status').val()  == '2') {
-                            return true;
-                        }
-                        return false;
-                    },
                 },
                 mobile:{
                     required: true,
                     digits: true,
-                },
-                email: {
-                    maxlength: 155,
                 },
                 pickup_from:{
                     required: true
@@ -313,10 +278,19 @@
                 drop_to:{
                     required: true
                 },
+                journey_date:{
+                    required: true
+                },
+                end_journey_date: {
+                    required: true
+                },
                 car:{
                     required: true
                 },
                 journey_type:{
+                    required: true
+                },
+                pickup_time: {
                     required: true
                 }
             },
@@ -324,11 +298,11 @@
                 company_name:{
                     required: "Please enter company name."
                 },
-                guest_name:{
-                    required: "Please enter guest name."
+                booker_name:{
+                    required: "Please enter booker name."
                 },
-                guest_number:{
-                    required: "Please enter guest number."
+                booker_mobile:{
+                    required: "Please enter booker number."
                 },
                 driver:{
                     required: "Please select driver/vendor."
@@ -338,38 +312,32 @@
                     noSpace: "Space not allowed",
                     alphaNumeric: "Please enter only letters and numbers.",
                 },
-                pickup_location:{
-                    required: "Please enter pickup location."
-                },
-                pickup_time:{
-                    required: "Please select pickup time."
-                },
                 name:{
                     required: "Please enter name."
-                },
-                journey_date:{
-                    required: "Please select journey date."
-                },
-                end_journey_date:{
-                    required: "Please select end journey date."
                 },
                 mobile:{
                     required: "Please enter mobile number.",
                 },
-                email:{
-                    email: "Please provide a valid email."
-                },
                 pickup_from:{
-                    required: "Please enter pickup from."
+                    required: "Please enter pickup location."
                 },
                 drop_to:{
-                    required: "Please enter drop to."
+                    required: "Please enter drop location."
+                },
+                journey_date:{
+                    required: "Please select start journey date."
+                },
+                end_journey_date:{
+                    required: "Please select end journey date."
                 },
                 car:{
                     required: "Please select car."
                 },
                 journey_type:{
                     required: "Please select journey type."
+                },
+                pickup_time:{
+                    required: "Please select pickup time."
                 }
             }
         });
