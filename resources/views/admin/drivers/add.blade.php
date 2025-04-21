@@ -56,7 +56,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="address">Address*</label>
+                                            <label for="address">Address</label>
                                             <input type="text" class="form-control" id="address" name="address" placeholder="Address">
                                         </div>
                                     </div>
@@ -70,7 +70,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="alternative_number">Alternative Number*</label>
+                                            <label for="alternative_number">Alternative Number</label>
                                             <input type="phone" class="form-control" id="alternative_number" name="alternative_number" placeholder="Alternative Number">
                                         </div>
                                     </div>
@@ -101,7 +101,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="id_proof">ID Proof*</label>
+                                            <label for="id_proof">ID Proof</label>
                                             <select class="form-control" name="id_proof" id="id_proof">
                                                 <option value="">Select ID Proof</option>
                                                 <option value="aadhaar_card">Aadhaar Card</option>
@@ -112,7 +112,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="id_proof_document">Upload ID Proof*</label>
+                                            <label for="id_proof_document">Upload ID Proof</label>
                                             <div class="input-group">
                                                 <div class="custom-file">             
                                                     <input type="file" class="custom-file-input" id="id_proof_document" name="id_proof_document">
@@ -142,9 +142,6 @@
                 name: {
                     required: true
                 },
-                address: {
-                    required: true
-                },
                 phone: {
                     required: true,
                     digits: true,
@@ -152,14 +149,9 @@
                     maxlength: 10
                 },
                 alternative_number: {
-                    required: true,
                     digits: true,
                 },
-                id_proof: {
-                    required: true
-                },
                 id_proof_document: {
-                    required: true,
                     maxsize: 2000000
                 },
                 email: {
@@ -170,20 +162,10 @@
                 name:{
                     required: "Please enter driver/vendor name."
                 },
-                address:{
-                    required: "Please enter address."
-                },
                 phone:{
                     required: "Please enter mobile number."
                 },
-                alternative_number:{
-                    required: "Please enter alternative number."
-                },
-                id_proof:{
-                    required: "Please select id proof."
-                },
                 id_proof_document:{
-                    required: "Please upload id proof.",
                     maxsize: "File size must be less than 2MB."
                 },
                 email:{

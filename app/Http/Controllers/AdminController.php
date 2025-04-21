@@ -433,8 +433,10 @@ class AdminController extends Controller
         $user_id = $user->id;
         $data['user_id'] = $user_id;
         $data['mobile_number'] = $request->phone;
-        $filename = $this->imageService->uploadFile($request->id_proof_document, "assets/drivers");
-        $data['id_proof_document'] = '/drivers/'.$filename;
+        if($request->has('id_proof_document')){
+            $filename = $this->imageService->uploadFile($request->id_proof_document, "assets/drivers");
+            $data['id_proof_document'] = '/drivers/'.$filename;
+        }
         $this->driverService->create($data);
         $request->session()->put('message', 'Driver/Vendor has been added successfully.');
         $request->session()->put('alert-type', 'alert-success');
