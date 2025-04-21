@@ -676,7 +676,6 @@
 <script type="text/javascript">
     $(function(){
         $('#home-book-now-form #journey_start_date').datepicker({
-            startDate: '+0d',
             format: 'dd/mm/yyyy',
             autoclose: true
         }).on('changeDate', function (selected) {
@@ -684,7 +683,6 @@
             $('#home-book-now-form #journey_end_date').datepicker('setStartDate', minDate);
         });
         $("#home-book-now-form #journey_end_date").datepicker({
-            startDate: '+0d',
             format: 'dd/mm/yyyy',
             autoclose: true
         }).on('changeDate', function (selected) {
