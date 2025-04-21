@@ -142,12 +142,31 @@
                                             <label for="car">Car*</label>
                                             <select class="form-control" name="car" id="car">
                                                 <option value="">Select Car</option>
-                                                <option value="Hatchback" @if($enquiry->vehicle_name == "Hatchback") selected @endif>Hatchback</option>
-                                                <option value="Ac Sedan" @if($enquiry->vehicle_name == "Ac Sedan") selected @endif>Ac Sedan</option>
-                                                <option value="Ac Suv" @if($enquiry->vehicle_name == "Ac Suv") selected @endif>Ac Suv</option>
-                                                <option value="Ac Innova" @if($enquiry->vehicle_name == "Ac Innova") selected @endif>Ac Innova</option>
+                                                <option value="Honda Amaze" @if($enquiry->vehicle_name == "Honda Amaze") selected @endif>Honda Amaze</option>
+                                                <option value="Maruti Dzire" @if($enquiry->vehicle_name == "Maruti Dzire") selected @endif>Maruti Dzire</option>
+                                                <option value="Toyota Etios" @if($enquiry->vehicle_name == "Toyota Etios") selected @endif>Toyota Etios</option>
+                                                <option value="Tata Tigore" @if($enquiry->vehicle_name == "Tata Tigore") selected @endif>Tata Tigore</option>
+                                                <option value="Hyndai Aura" @if($enquiry->vehicle_name == "Hyndai Aura") selected @endif>Hyndai Aura</option>
+                                                <option value="Honda City" @if($enquiry->vehicle_name == "Honda City") selected @endif>Honda City</option>
+                                                <option value="Skoda Octavia" @if($enquiry->vehicle_name == "Skoda Octavia") selected @endif>Skoda Octavia</option>
+                                                <option value="Sedan Mercedes" @if($enquiry->vehicle_name == "Sedan Mercedes") selected @endif>Sedan Mercedes</option>
+                                                <option value="BMW" @if($enquiry->vehicle_name == "BMW") selected @endif>BMW</option>
+                                                <option value="Odi" @if($enquiry->vehicle_name == "Odi") selected @endif>Odi</option>
+                                                <option value="Jaguar" @if($enquiry->vehicle_name == "Jaguar") selected @endif>Jaguar</option>
+                                                <option value="Maruti Ertiga" @if($enquiry->vehicle_name == "Maruti Ertiga") selected @endif>Maruti Ertiga</option>
+                                                <option value="Bolero" @if($enquiry->vehicle_name == "Bolero") selected @endif>Bolero</option>
+                                                <option value="Innova" @if($enquiry->vehicle_name == "Innova") selected @endif>Innova</option>
+                                                <option value="Marazzo" @if($enquiry->vehicle_name == "Marazzo") selected @endif>Marazzo</option>
+                                                <option value="Carens" @if($enquiry->vehicle_name == "Carens") selected @endif>Carens</option>
                                                 <option value="Innova Crysta" @if($enquiry->vehicle_name == "Innova Crysta") selected @endif>Innova Crysta</option>
-                                                <option value="Tempo Traveller" @if($enquiry->vehicle_name == "Tempo Traveller") selected @endif>Tempo Traveller</option>
+                                                <option value="Innova Hycross" @if($enquiry->vehicle_name == "Innova Hycross") selected @endif>Innova Hycross</option>
+                                                <option value="Mahindra XUV 700" @if($enquiry->vehicle_name == "Mahindra XUV 700") selected @endif>Mahindra XUV 700</option>
+                                                <option value="Toyota Fortuner" @if($enquiry->vehicle_name == "Toyota Fortuner") selected @endif>Toyota Fortuner</option>
+                                                <option value="SUV Mercedes" @if($enquiry->vehicle_name == "SUV Mercedes") selected @endif>SUV Mercedes</option>
+                                                <option value="Tempo Traveller (12/17/20 Seater)" @if($enquiry->vehicle_name == "Tempo Traveller (12/17/20 Seater)") selected @endif>Tempo Traveller (12/17/20 Seater)</option>
+                                                <option value="Tata Winger (12/17/20 Seater)" @if($enquiry->vehicle_name == "Tata Winger (12/17/20 Seater)") selected @endif>Tata Winger (12/17/20 Seater)</option>
+                                                <option value="Force Urbania (12/17/20 Seater)" @if($enquiry->vehicle_name == "Force Urbania (12/17/20 Seater)") selected @endif>Force Urbania (12/17/20 Seater)</option>
+                                                <option value="Bus (29/56 seater)" @if($enquiry->vehicle_name == "Bus (29/56 seater)") selected @endif>Bus (29/56 seater)</option>
                                             </select>
                                         </div>
                                     </div>

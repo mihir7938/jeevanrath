@@ -506,32 +506,57 @@
                                     <input type="text" class="form-control py-3 border-primary bg-transparent" placeholder="Company Name" name="company_name">
                                 </div>
                                 <div class="col-xl-6">
-                                    <input type="text" class="form-control py-3 border-primary bg-transparent" placeholder="First Name" name="name">
-                                </div>
-                                <div class="col-xl-6">
-                                    <input type="text" class="form-control py-3 border-primary bg-transparent" placeholder="Date of Journey" id="datepicker" name="journey_date">
+                                    <input type="text" class="form-control py-3 border-primary bg-transparent" placeholder="Full Name" name="name">
                                 </div>
                                 <div class="col-xl-6">
                                     <input type="phone" class="form-control py-3 border-primary bg-transparent" placeholder="Mobile" name="mobile">
                                 </div>
                                 <div class="col-xl-6">
-                                    <input type="email" class="form-control py-3 border-primary bg-transparent" placeholder="Email" name="email">
+                                    <input type="text" class="form-control py-3 border-primary bg-transparent" placeholder="Pickup Location" name="pickup_location">
                                 </div>
                                 <div class="col-xl-6">
-                                    <input type="text" class="form-control py-3 border-primary bg-transparent" placeholder="Pickup From" name="pickup_from">
+                                    <input type="text" class="form-control py-3 border-primary bg-transparent" placeholder="Drop Location" name="drop_location">
                                 </div>
                                 <div class="col-xl-6">
-                                    <input type="text" class="form-control py-3 border-primary bg-transparent" placeholder="Drop To" name="drop_to">
+                                    <input type="text" class="form-control py-3 border-primary bg-transparent" placeholder="Journey Start Date" id="journey_start_date" name="journey_start_date">
+                                </div>
+                                <div class="col-xl-6">
+                                    <input type="text" class="form-control py-3 border-primary bg-transparent" placeholder="Journey End Date" id="journey_end_date" name="journey_end_date">
+                                </div>
+                                <div class="col-xl-6 hidden">
+                                    <input type="text" class="form-control py-3 border-primary bg-transparent" placeholder="Booker Name" name="booker_name">
+                                </div>
+                                <div class="col-xl-6 hidden">
+                                    <input type="phone" class="form-control py-3 border-primary bg-transparent" placeholder="Booker Mobile" name="booker_mobile">
                                 </div>
                                 <div class="col-xl-6">
                                     <select class="form-select py-3 border-primary bg-transparent" aria-label="Default select car" name="car">
                                         <option value="">Select Car</option>
-                                        <option value="Hatchback">Hatchback</option>
-                                        <option value="Ac Sedan">Ac Sedan</option>
-                                        <option value="Ac Suv">Ac Suv</option>
-                                        <option value="Ac Innova">Ac Innova</option>
+                                        <option value="Honda Amaze">Honda Amaze</option>
+                                        <option value="Maruti Dzire">Maruti Dzire</option>
+                                        <option value="Toyota Etios">Toyota Etios</option>
+                                        <option value="Tata Tigore">Tata Tigore</option>
+                                        <option value="Hyndai Aura">Hyndai Aura</option>
+                                        <option value="Honda City">Honda City</option>
+                                        <option value="Skoda Octavia">Skoda Octavia</option>
+                                        <option value="Sedan Mercedes">Sedan Mercedes</option>
+                                        <option value="BMW">BMW</option>
+                                        <option value="Odi">Odi</option>
+                                        <option value="Jaguar">Jaguar</option>
+                                        <option value="Maruti Ertiga">Maruti Ertiga</option>
+                                        <option value="Bolero">Bolero</option>
+                                        <option value="Innova">Innova</option>
+                                        <option value="Marazzo">Marazzo</option>
+                                        <option value="Carens">Carens</option>
                                         <option value="Innova Crysta">Innova Crysta</option>
-                                        <option value="Tempo Traveller">Tempo Traveller</option>
+                                        <option value="Innova Hycross">Innova Hycross</option>
+                                        <option value="Mahindra XUV 700">Mahindra XUV 700</option>
+                                        <option value="Toyota Fortuner">Toyota Fortuner</option>
+                                        <option value="SUV Mercedes">SUV Mercedes</option>
+                                        <option value="Tempo Traveller (12/17/20 Seater)">Tempo Traveller (12/17/20 Seater)</option>
+                                        <option value="Tata Winger (12/17/20 Seater)">Tata Winger (12/17/20 Seater)</option>
+                                        <option value="Force Urbania (12/17/20 Seater)">Force Urbania (12/17/20 Seater)</option>
+                                        <option value="Bus (29/56 seater)">Bus (29/56 seater)</option>
                                     </select>
                                 </div>
                                 <div class="col-xl-6">
@@ -542,6 +567,9 @@
                                         <option value="Local Car Rental (8 hrs/80 km)">Local Car Rental (8 hrs/80 km)</option>
                                         <option value="Out Station (300 km avg)">Out Station (300 km avg)</option>
                                     </select>
+                                </div>
+                                <div class="col-xl-6">
+                                    <input type="text" class="form-control py-3 border-primary bg-transparent datetimepicker-input" id="pickup_time" name="pickup_time" placeholder="Pickup Time" data-toggle="datetimepicker">
                                 </div>
                                 <div class="col-12">
                                     <button type="submit" class="btn btn-primary text-white w-100 py-3 px-5">SUBMIT NOW</button>
@@ -647,17 +675,35 @@
 @include('shared.book-now-popup')
 <script type="text/javascript">
     $(function(){
-        $('#home-book-now-form #datepicker').datepicker({
+        $('#home-book-now-form #journey_start_date').datepicker({
             startDate: '+0d',
             format: 'dd/mm/yyyy',
             autoclose: true
+        }).on('changeDate', function (selected) {
+            var minDate = new Date(selected.date.valueOf());
+            $('#home-book-now-form #journey_end_date').datepicker('setStartDate', minDate);
         });
+        $("#home-book-now-form #journey_end_date").datepicker({
+            startDate: '+0d',
+            format: 'dd/mm/yyyy',
+            autoclose: true
+        }).on('changeDate', function (selected) {
+            var minDate = new Date(selected.date.valueOf());
+            $('#home-book-now-form #journey_start_date').datepicker('setEndDate', minDate);
+        });
+        $('#home-book-now-form #pickup_time').datetimepicker({
+            'format': 'LT'
+        })
         $("#home-book-now-form input[name='user_type']").change(function(){
             if($(this).is(':checked')){
                 if($(this).val() == 'Company'){
                     $('#home-book-now-form .hidden').show();
+                    $("#home-book-now-form input[name='name']").attr("placeholder", "Guest Name");
+                    $("#home-book-now-form input[name='mobile']").attr("placeholder", "Guest Mobile");
                 }else{  
                     $('#home-book-now-form .hidden').hide();
+                    $("#home-book-now-form input[name='name']").attr("placeholder", "Full Name");
+                    $("#home-book-now-form input[name='mobile']").attr("placeholder", "Mobile");
                 }
             }
         });
@@ -674,20 +720,20 @@
                 name:{
                     required: true
                 },
-                journey_date:{
-                    required: true
-                },
                 mobile:{
                     required: true,
                     digits: true,
                 },
-                email: {
-                    maxlength: 155,
-                },
-                pickup_from:{
+                pickup_location:{
                     required: true
                 },
-                drop_to:{
+                drop_location:{
+                    required: true
+                },
+                journey_start_date:{
+                    required: true
+                },
+                journey_end_date:{
                     required: true
                 },
                 car:{
@@ -696,6 +742,26 @@
                 journey_type:{
                     required: true
                 },
+                booker_name: {
+                    required:function(){
+                        if($('#home-book-now-form input[name="user_type"]:checked').val()  == 'Company') {
+                            return true;
+                        }
+                        return false;
+                    },
+                },
+                booker_mobile: {
+                    required:function(){
+                        if($('#home-book-now-form input[name="user_type"]:checked').val()  == 'Company') {
+                            return true;
+                        }
+                        return false;
+                    },
+                    digits: true,
+                },
+                pickup_time: {
+                    required: true
+                }
             },
             messages:{
                 company_name:{
@@ -704,20 +770,20 @@
                 name:{
                     required: "Please enter name."
                 },
-                journey_date:{
-                    required: "Please select journey date."
-                },
                 mobile:{
                     required: "Plese enter mobile number.",
                 },
-                email:{
-                    email: "Please provide a valid email."
+                pickup_location:{
+                    required: "Please enter pickup location."
                 },
-                pickup_from:{
-                    required: "Please enter pickup from."
+                drop_location:{
+                    required: "Please enter drop location."
                 },
-                drop_to:{
-                    required: "Please enter drop to."
+                journey_start_date:{
+                    required: "Please select journey start date."
+                },
+                journey_end_date:{
+                    required: "Please select journey end date."
                 },
                 car:{
                     required: "Please select car."
@@ -725,6 +791,15 @@
                 journey_type:{
                     required: "Please select journey type."
                 },
+                booker_name:{
+                    required: "Please enter booker name."
+                },
+                booker_mobile:{
+                    required: "Plese enter booker mobile number.",
+                },
+                pickup_time:{
+                    required: "Please enter pickup time."
+                }
             },
             submitHandler: function (form) {
                 $('.loader').show();

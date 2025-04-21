@@ -50,12 +50,31 @@
                         <div class="col-xl-6">
                             <select class="form-select py-2 border-primary bg-transparent" aria-label="Default select car" name="car">
                                 <option value="">Select Car</option>
-                                <option value="Hatchback">Hatchback</option>
-                                <option value="Ac Sedan">Ac Sedan</option>
-                                <option value="Ac Suv">Ac Suv</option>
-                                <option value="Ac Innova">Ac Innova</option>
+                                <option value="Honda Amaze">Honda Amaze</option>
+                                <option value="Maruti Dzire">Maruti Dzire</option>
+                                <option value="Toyota Etios">Toyota Etios</option>
+                                <option value="Tata Tigore">Tata Tigore</option>
+                                <option value="Hyndai Aura">Hyndai Aura</option>
+                                <option value="Honda City">Honda City</option>
+                                <option value="Skoda Octavia">Skoda Octavia</option>
+                                <option value="Sedan Mercedes">Sedan Mercedes</option>
+                                <option value="BMW">BMW</option>
+                                <option value="Odi">Odi</option>
+                                <option value="Jaguar">Jaguar</option>
+                                <option value="Maruti Ertiga">Maruti Ertiga</option>
+                                <option value="Bolero">Bolero</option>
+                                <option value="Innova">Innova</option>
+                                <option value="Marazzo">Marazzo</option>
+                                <option value="Carens">Carens</option>
                                 <option value="Innova Crysta">Innova Crysta</option>
-                                <option value="Tempo Traveller">Tempo Traveller</option>
+                                <option value="Innova Hycross">Innova Hycross</option>
+                                <option value="Mahindra XUV 700">Mahindra XUV 700</option>
+                                <option value="Toyota Fortuner">Toyota Fortuner</option>
+                                <option value="SUV Mercedes">SUV Mercedes</option>
+                                <option value="Tempo Traveller (12/17/20 Seater)">Tempo Traveller (12/17/20 Seater)</option>
+                                <option value="Tata Winger (12/17/20 Seater)">Tata Winger (12/17/20 Seater)</option>
+                                <option value="Force Urbania (12/17/20 Seater)">Force Urbania (12/17/20 Seater)</option>
+                                <option value="Bus (29/56 seater)">Bus (29/56 seater)</option>
                             </select>
                         </div>
                         <div class="col-xl-6">
@@ -95,7 +114,7 @@
             autoclose: true
         }).on('changeDate', function (selected) {
             var minDate = new Date(selected.date.valueOf());
-            $('#journey_end_date').datepicker('setStartDate', minDate);
+            $('#book-now-form #journey_end_date').datepicker('setStartDate', minDate);
         });
         $("#book-now-form #journey_end_date").datepicker({
             startDate: '+0d',
@@ -103,21 +122,21 @@
             autoclose: true
         }).on('changeDate', function (selected) {
             var minDate = new Date(selected.date.valueOf());
-            $('#journey_start_date').datepicker('setEndDate', minDate);
+            $('#book-now-form #journey_start_date').datepicker('setEndDate', minDate);
         });
-        $('#pickup_time').datetimepicker({
+        $('#book-now-form #pickup_time').datetimepicker({
             'format': 'LT'
         })
         $("#book-now-form input[name='user_type']").change(function(){
             if($(this).is(':checked')){
                 if($(this).val() == 'Company'){
                     $('#book-now-form .hidden').show();
-                    $("input[name='name']").attr("placeholder", "Guest Name");
-                    $("input[name='mobile']").attr("placeholder", "Guest Mobile");
+                    $("#book-now-form input[name='name']").attr("placeholder", "Guest Name");
+                    $("#book-now-form input[name='mobile']").attr("placeholder", "Guest Mobile");
                 }else{  
                     $('#book-now-form .hidden').hide();
-                    $("input[name='name']").attr("placeholder", "Full Name");
-                    $("input[name='mobile']").attr("placeholder", "Mobile");
+                    $("#book-now-form input[name='name']").attr("placeholder", "Full Name");
+                    $("#book-now-form input[name='mobile']").attr("placeholder", "Mobile");
                 }
             }
         });
