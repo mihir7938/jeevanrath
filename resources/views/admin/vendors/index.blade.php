@@ -29,6 +29,7 @@
                                             <th width="100">Action</th>
                                             <th>Vendor Name</th>
                                             <th>Mobile</th>
+                                            <th>Email</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
@@ -36,6 +37,7 @@
                                             <th>Action</th>
                                             <th>Vendor Name</th>
                                             <th>Mobile</th>
+                                            <th>Email</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
@@ -51,6 +53,7 @@
                                                 </td>
                                                 <td>{{$vendor->name}}</td>
                                                 <td>{{$vendor->mobile_number}}</td>
+                                                <td>{{$vendor->email}}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>

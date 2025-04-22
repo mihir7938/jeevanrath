@@ -535,6 +535,7 @@ class AdminController extends Controller
         $data = $request->all();
         $data['name'] = $request->name;
         $data['mobile_number'] = $request->phone;
+        $data['email'] = $request->email;
         $this->vendorService->create($data);
         $request->session()->put('message', 'Vendor has been added successfully.');
         $request->session()->put('alert-type', 'alert-success');
@@ -563,6 +564,7 @@ class AdminController extends Controller
             }
             $data['name'] = $request->name;
             $data['mobile_number'] = $request->mobile_number;
+            $data['email'] = $request->email;
             $this->vendorService->update($vendor, $data);
             $request->session()->put('message', 'Vendor has been updated successfully.');
             $request->session()->put('alert-type', 'alert-success');

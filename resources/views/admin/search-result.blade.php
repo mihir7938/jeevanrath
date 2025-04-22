@@ -10,6 +10,7 @@
                         <th></th>
                         <th width="70">Action</th>
                         <th>Status</th>
+                        <th>Sr. No</th>
                         <th>Booking ID</th>
                         <th>Guest Name</th>
                         <th>Guest Mobile</th>
@@ -34,6 +35,7 @@
                         <th></th>
                         <th>Action</th>
                         <th>Status</th>
+                        <th>Sr. No</th>
                         <th>Booking ID</th>
                         <th>Guest Name</th>
                         <th>Guest Mobile</th>
@@ -78,6 +80,7 @@
                                     <div class="bg-danger d-inline-flex">Cancelled</div>
                                 @endif
                             </td>
+                            <td>{{$enquiry->id}}</td>
                             <td>{{$enquiry->booking_id}}</td>
                             <td>{{$enquiry->name}}</td>
                             <td>{{$enquiry->mobile_number}}</td>

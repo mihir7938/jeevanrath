@@ -45,6 +45,14 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="email">Email</label>
+                                            <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-primary" id="btnsubmit" name="btnsubmit">Submit</button>
@@ -69,6 +77,9 @@
                     digits: true,
                     minlength: 10,
                     maxlength: 10
+                },
+                email: {
+                    alphanumeric: true
                 }
             },
             messages:{
@@ -77,6 +88,9 @@
                 },
                 phone:{
                     required: "Please enter mobile number."
+                },
+                email:{
+                    email: "Please provide a valid email."
                 }
             }
         });
