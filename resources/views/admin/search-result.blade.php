@@ -15,7 +15,7 @@
                         <th>Guest Name</th>
                         <th>Guest Mobile</th>
                         <th>Pickup Location</th>
-                        <th>Drop Location</th>
+                        <th>Vehicle Number</th>
                         <th>Start Journey</th>
                         <th>End Journey</th>
                         <th>Vehicle Name</th>
@@ -27,7 +27,7 @@
                         <th>Booker Mobile</th>
                         <th>Vendor</th>
                         <th>Driver</th>
-                        <th>Vehicle Number</th>
+                        <th>Drop Location</th>
                     </tr>
                 </thead>
                 <tfoot>
@@ -40,7 +40,7 @@
                         <th>Guest Name</th>
                         <th>Guest Mobile</th>
                         <th>Pickup Location</th>
-                        <th>Drop Location</th>
+                        <th>Vehicle Number</th>
                         <th>Start Journey</th>
                         <th>End Journey</th>
                         <th>Vehicle Name</th>
@@ -52,7 +52,7 @@
                         <th>Booker Mobile</th>
                         <th>Vendor</th>
                         <th>Driver</th>
-                        <th>Vehicle Number</th>
+                        <th>Drop Location</th>
                     </tr>
                 </tfoot>
                 <tbody>
@@ -85,7 +85,11 @@
                             <td>{{$enquiry->name}}</td>
                             <td>{{$enquiry->mobile_number}}</td>
                             <td>{{$enquiry->pickup_from}}</td>
-                            <td>{{$enquiry->drop_to}}</td>
+                            @if($enquiry->status == 3)
+                                <td>{{$enquiry->vehicle_number}}</td>
+                            @else
+                                <td></td>
+                            @endif
                             <td>{{Carbon\Carbon::parse($enquiry->journey_date)->format('d/m/Y')}}</td>
                             <td>{{Carbon\Carbon::parse($enquiry->end_journey_date)->format('d/m/Y')}}</td>
                             <td>{{$enquiry->vehicle_name}}</td>
@@ -98,12 +102,11 @@
                             @if($enquiry->status == 3)
                                 <td>({{$enquiry->vendors->name}} - {{$enquiry->vendors->mobile_number}})</td>
                                 <td>({{$enquiry->drivers->name}} - {{$enquiry->drivers->mobile_number}})</td>
-                                <td>{{$enquiry->vehicle_number}}</td>
                             @else
                                 <td></td>
                                 <td></td>
-                                <td></td>
                             @endif
+                            <td>{{$enquiry->drop_to}}</td>
                         </tr>
                     @endforeach
                 </tbody>
