@@ -208,6 +208,16 @@
                     },
                     digits: true
                 },
+                image: {
+                    required:function(){
+                        if($('#category').val() == 1){
+                            return true;
+                        }
+                        return false;
+                    },
+                    extension: "png|jpg|jpeg",
+                    maxsize: 2000000,
+                },
                 origin_trip:{
                     required:function(){
                         if($('#category').val() == 2){
@@ -240,8 +250,29 @@
                         return false;
                     }
                 },
-                image: {
-                    required: true,
+                image1:{
+                    required:function(){
+                        if($('#category').val() == 2){
+                            return true;
+                        }
+                        return false;
+                    },
+                    extension: "png|jpg|jpeg",
+                    maxsize: 2000000,
+                },
+                image2:{
+                    extension: "png|jpg|jpeg",
+                    maxsize: 2000000,
+                },
+                image3:{
+                    extension: "png|jpg|jpeg",
+                    maxsize: 2000000,
+                },
+                image4:{
+                    extension: "png|jpg|jpeg",
+                    maxsize: 2000000,
+                },
+                image5:{
                     extension: "png|jpg|jpeg",
                     maxsize: 2000000,
                 }
@@ -274,6 +305,11 @@
                 luggage_carry:{
                     required: "Please enter total carry luggage."
                 },
+                image: {
+                    required: "Please select image.",
+                    extension: "Please select valid image.",
+                    maxsize: "File size must be less than 2MB."
+                },
                 origin_trip:{
                     required: "Please enter origin trip."
                 },
@@ -286,8 +322,24 @@
                 rate1:{
                     required: "Please enter rate."
                 },
-                image: {
+                image1: {
                     required: "Please select image.",
+                    extension: "Please select valid image.",
+                    maxsize: "File size must be less than 2MB."
+                },
+                image2: {
+                    extension: "Please select valid image.",
+                    maxsize: "File size must be less than 2MB."
+                },
+                image3: {
+                    extension: "Please select valid image.",
+                    maxsize: "File size must be less than 2MB."
+                },
+                image4: {
+                    extension: "Please select valid image.",
+                    maxsize: "File size must be less than 2MB."
+                },
+                image5: {
                     extension: "Please select valid image.",
                     maxsize: "File size must be less than 2MB."
                 }
@@ -295,6 +347,16 @@
             errorPlacement: function(error, element) {
                 if (element.attr("name") == "image" ) {
                     $(".input-group").after(error);
+                } else if (element.attr("name") == "image1" ) {
+                    $(".input-group1").after(error);
+                } else if (element.attr("name") == "image2" ) {
+                    $(".input-group2").after(error);
+                } else if (element.attr("name") == "image3" ) {
+                    $(".input-group3").after(error);
+                } else if (element.attr("name") == "image4" ) {
+                    $(".input-group4").after(error);
+                } else if (element.attr("name") == "image5" ) {
+                    $(".input-group5").after(error);
                 } else {
                     error.insertAfter(element);
                 }

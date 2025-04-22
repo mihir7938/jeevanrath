@@ -124,83 +124,125 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for="vehicle1">Vehicle*</label>
                     <input type="text" class="form-control" id="vehicle1" name="vehicle1" placeholder="Enter Vehicle Name/Type">
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for="rate1">Rate*</label>
                     <input type="number" class="form-control" id="rate1" name="rate1" placeholder="Enter Rate">
                 </div>
             </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="image1">Vehicle Image*</label>
+                    <div class="input-group1">
+                        <div class="custom-file">             
+                            <input type="file" class="custom-file-input" id="image1" name="image1">
+                            <label class="custom-file-label" for="image1">Choose file</label>
+                        </div>              
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for="vehicle2">Vehicle</label>
                     <input type="text" class="form-control" id="vehicle2" name="vehicle2" placeholder="Enter Vehicle Name/Type">
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for="rate2">Rate</label>
                     <input type="number" class="form-control" id="rate2" name="rate2" placeholder="Enter Rate">
                 </div>
             </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="image2">Vehicle Image</label>
+                    <div class="input-group2">
+                        <div class="custom-file">             
+                            <input type="file" class="custom-file-input" id="image2" name="image2">
+                            <label class="custom-file-label" for="image2">Choose file</label>
+                        </div>              
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for="vehicle3">Vehicle</label>
                     <input type="text" class="form-control" id="vehicle3" name="vehicle3" placeholder="Enter Vehicle Name/Type">
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for="rate3">Rate</label>
                     <input type="number" class="form-control" id="rate3" name="rate3" placeholder="Enter Rate">
                 </div>
             </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="image3">Vehicle Image</label>
+                    <div class="input-group3">
+                        <div class="custom-file">             
+                            <input type="file" class="custom-file-input" id="image3" name="image3">
+                            <label class="custom-file-label" for="image3">Choose file</label>
+                        </div>              
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for="vehicle4">Vehicle</label>
                     <input type="text" class="form-control" id="vehicle4" name="vehicle4" placeholder="Enter Vehicle Name/Type">
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for="rate4">Rate</label>
                     <input type="number" class="form-control" id="rate4" name="rate4" placeholder="Enter Rate">
                 </div>
             </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="image4">Vehicle Image</label>
+                    <div class="input-group4">
+                        <div class="custom-file">             
+                            <input type="file" class="custom-file-input" id="image4" name="image4">
+                            <label class="custom-file-label" for="image4">Choose file</label>
+                        </div>              
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for="vehicle5">Vehicle</label>
                     <input type="text" class="form-control" id="vehicle5" name="vehicle5" placeholder="Enter Vehicle Name/Type">
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for="rate5">Rate</label>
                     <input type="number" class="form-control" id="rate5" name="rate5" placeholder="Enter Rate">
                 </div>
             </div>
-        </div>
-        <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="image">Vehicle Image* (allowed only JPG,JPEG &amp; PNG files)</label>
-                    <div class="input-group">
+                    <label for="image5">Vehicle Image</label>
+                    <div class="input-group5">
                         <div class="custom-file">             
-                            <input type="file" class="custom-file-input" id="image" name="image">
-                            <label class="custom-file-label" for="image">Choose file</label>
+                            <input type="file" class="custom-file-input" id="image5" name="image5">
+                            <label class="custom-file-label" for="image5">Choose file</label>
                         </div>              
                     </div>
                 </div>

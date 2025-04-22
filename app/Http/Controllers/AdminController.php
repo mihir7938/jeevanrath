@@ -877,8 +877,24 @@ class AdminController extends Controller
             $data['rate4'] = $request->rate4;
             $data['vehicle5'] = $request->vehicle5;
             $data['rate5'] = $request->rate5;
-            $filename = $this->imageService->uploadFile($request->image, "assets/vehicles/fixed");
-            $data['vehicle_image'] = '/vehicles/fixed/'.$filename;
+            $filename1 = $this->imageService->uploadFile($request->image1, "assets/vehicles/fixed");
+            $data['fixed_image_1'] = '/vehicles/fixed/'.$filename1;
+            if($request->has('image2')){
+                $filename2 = $this->imageService->uploadFile($request->image2, "assets/vehicles/fixed");
+                $data['fixed_image_2'] = '/vehicles/fixed/'.$filename2;
+            }
+            if($request->has('image3')){
+                $filename3 = $this->imageService->uploadFile($request->image3, "assets/vehicles/fixed");
+                $data['fixed_image_3'] = '/vehicles/fixed/'.$filename3;
+            }
+            if($request->has('image4')){
+                $filename4 = $this->imageService->uploadFile($request->image4, "assets/vehicles/fixed");
+                $data['fixed_image_4'] = '/vehicles/fixed/'.$filename4;
+            }
+            if($request->has('image5')){
+                $filename5 = $this->imageService->uploadFile($request->image5, "assets/vehicles/fixed");
+                $data['fixed_image_5'] = '/vehicles/fixed/'.$filename5;
+            }
         }
         $this->vehicleDetailService->create($data);
         $request->session()->put('message', 'Vehicle details has been added successfully.');
@@ -943,11 +959,35 @@ class AdminController extends Controller
                 $data['rate4'] = $request->rate4;
                 $data['vehicle5'] = $request->vehicle5;
                 $data['rate5'] = $request->rate5;
-                if($request->has('image')){
-                    $filepath = public_path('assets/' . $vehicle_detail->vehicle_image);
-                    $this->imageService->deleteFile($filepath);
-                    $filename = $this->imageService->uploadFile($request->image, "assets/vehicles/fixed");
-                    $data['vehicle_image'] = '/vehicles/fixed/'.$filename;
+                if($request->has('image1')){
+                    $filepath1 = public_path('assets/' . $vehicle_detail->fixed_image_1);
+                    $this->imageService->deleteFile($filepath1);
+                    $filename1 = $this->imageService->uploadFile($request->image1, "assets/vehicles/fixed");
+                    $data['fixed_image_1'] = '/vehicles/fixed/'.$filename1;
+                }
+                if($request->has('image2')){
+                    $filepath2 = public_path('assets/' . $vehicle_detail->fixed_image_2);
+                    $this->imageService->deleteFile($filepath2);
+                    $filename2 = $this->imageService->uploadFile($request->image2, "assets/vehicles/fixed");
+                    $data['fixed_image_2'] = '/vehicles/fixed/'.$filename2;
+                }
+                if($request->has('image3')){
+                    $filepath3 = public_path('assets/' . $vehicle_detail->fixed_image_3);
+                    $this->imageService->deleteFile($filepath3);
+                    $filename3 = $this->imageService->uploadFile($request->image3, "assets/vehicles/fixed");
+                    $data['fixed_image_3'] = '/vehicles/fixed/'.$filename3;
+                }
+                if($request->has('image4')){
+                    $filepath4 = public_path('assets/' . $vehicle_detail->fixed_image_4);
+                    $this->imageService->deleteFile($filepath4);
+                    $filename4 = $this->imageService->uploadFile($request->image4, "assets/vehicles/fixed");
+                    $data['fixed_image_4'] = '/vehicles/fixed/'.$filename4;
+                }
+                if($request->has('image5')){
+                    $filepath5 = public_path('assets/' . $vehicle_detail->fixed_image_5);
+                    $this->imageService->deleteFile($filepath5);
+                    $filename5 = $this->imageService->uploadFile($request->image5, "assets/vehicles/fixed");
+                    $data['fixed_image_5'] = '/vehicles/fixed/'.$filename5;
                 }
             }
             $this->vehicleDetailService->update($vehicle_detail, $data);

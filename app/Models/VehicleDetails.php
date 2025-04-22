@@ -43,6 +43,11 @@ class VehicleDetails extends Model
         'rate4',
         'vehicle5',
         'rate5',
+        'fixed_image_1',
+        'fixed_image_2',
+        'fixed_image_3',
+        'fixed_image_4',
+        'fixed_image_5',
         'vehicle_image',
     ];
     public function vehicles() {
