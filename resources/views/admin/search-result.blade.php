@@ -24,7 +24,8 @@
                         <th>Company Name</th>
                         <th>Booker Name</th>
                         <th>Booker Mobile</th>
-                        <th>Driver/Vendor</th>
+                        <th>Vendor</th>
+                        <th>Driver</th>
                         <th>Vehicle Number</th>
                     </tr>
                 </thead>
@@ -47,7 +48,8 @@
                         <th>Company Name</th>
                         <th>Booker Name</th>
                         <th>Booker Mobile</th>
-                        <th>Driver/Vendor</th>
+                        <th>Vendor</th>
+                        <th>Driver</th>
                         <th>Vehicle Number</th>
                     </tr>
                 </tfoot>
@@ -91,9 +93,11 @@
                             <td>{{$enquiry->booker_name}}</td>
                             <td>{{$enquiry->booker_mobile}}</td>
                             @if($enquiry->status == 3)
-                                <td>({{$enquiry->drivers->type}} - {{$enquiry->drivers->name}} - {{$enquiry->drivers->mobile_number}})</td>
+                                <td>({{$enquiry->vendors->name}} - {{$enquiry->vendors->mobile_number}})</td>
+                                <td>({{$enquiry->drivers->name}} - {{$enquiry->drivers->mobile_number}})</td>
                                 <td>{{$enquiry->vehicle_number}}</td>
                             @else
+                                <td></td>
                                 <td></td>
                                 <td></td>
                             @endif

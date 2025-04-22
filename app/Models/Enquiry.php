@@ -37,6 +37,7 @@ class Enquiry extends Model
         'status',
         'booking_id',
         'driver_id',
+        'vendor_id',
         'vehicle_number',
         'pickup_location',
         'pickup_time',
@@ -58,6 +59,9 @@ class Enquiry extends Model
         'duty_closed',
         'duty_approved',
     ];
+    public function vendors() {
+        return $this->belongsTo(Vendor::class, 'vendor_id', 'id');
+    }
     public function drivers() {
         return $this->belongsTo(Driver::class, 'driver_id', 'id');
     }

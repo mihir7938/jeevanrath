@@ -4,7 +4,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Drivers/Vendors</h1>
+                    <h1 class="m-0">Drivers</h1>
                 </div>
             </div>
         </div>
@@ -29,11 +29,11 @@
                         @endif
                         <div class="card card-primary">
                             <div class="card-header">
-                                <h3 class="card-title">Edit Driver/Vendor</h3>
+                                <h3 class="card-title">Edit Driver</h3>
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    {{--<div class="col-md-6">
                                         <div class="form-group">
                                             <div class="d-flex align-items-center">
                                                 <div class="custom-control custom-radio mr-3">
@@ -45,6 +45,17 @@
                                                   <label for="vendor_radio" class="custom-control-label">Vendor</label>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>--}}
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="vendor">Vendor*</label>
+                                            <select id="vendor" name="vendor" class="form-control">
+                                                <option value="">Select</option>
+                                                @foreach($vendors as $vendor)
+                                                    <option value="{{$vendor->id}}" @if($driver->vendor_id == $vendor->id) selected @endif>{{$vendor->name}}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -143,6 +154,9 @@
         bsCustomFileInput.init();
         $('#edit-drivers-form').validate({
             rules:{
+                vendor: {
+                    required: true
+                },
                 name: {
                     required: true
                 },
@@ -163,8 +177,11 @@
                 }
             },
             messages:{
+                vendor:{
+                    required: "Please select vendor name."
+                },
                 name:{
-                    required: "Please enter driver/vendor name."
+                    required: "Please enter driver name."
                 },
                 mobile_number:{
                     required: "Please enter mobile number."

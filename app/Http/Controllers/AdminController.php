@@ -11,6 +11,7 @@ use App\Services\VehicleService;
 use App\Services\CategoryService;
 use App\Services\VehicleDetailService;
 use App\Services\DriverService;
+use App\Services\VendorService;
 use App\Services\CompanyService;
 use App\Services\JRVehicleService;
 use App\Services\UserService;
@@ -24,7 +25,7 @@ use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class AdminController extends Controller 
 {
-    private $imageService, $enquiryService, $cityService, $typeService, $vehicleService, $categoryService, $vehicleDetailService, $driverService, $companyService, $jRVehicleService, $userService, $whatsappService;
+    private $imageService, $enquiryService, $cityService, $typeService, $vehicleService, $categoryService, $vehicleDetailService, $driverService, $vendorService, $companyService, $jRVehicleService, $userService, $whatsappService;
 
     public function __construct ( 
         UploadImageService $imageService,
@@ -35,6 +36,7 @@ class AdminController extends Controller
         CategoryService $categoryService,
         VehicleDetailService $vehicleDetailService,
         DriverService $driverService,
+        VendorService $vendorService,
         CompanyService $companyService,
         JRVehicleService $jRVehicleService,
         UserService $userService,
@@ -49,6 +51,7 @@ class AdminController extends Controller
         $this->categoryService = $categoryService;
         $this->vehicleDetailService = $vehicleDetailService;
         $this->driverService = $driverService;
+        $this->vendorService = $vendorService;
         $this->companyService = $companyService;
         $this->jRVehicleService = $jRVehicleService;
         $this->userService = $userService;
@@ -73,8 +76,9 @@ class AdminController extends Controller
             if(!$enquiry){
                 throw new BadRequestException('Invalid Request id');
             }
+            $vendors = $this->vendorService->getAllVendors();
             $drivers = $this->driverService->getAllDrivers();
-            return view('admin.edit-enquiry')->with('enquiry', $enquiry)->with('drivers', $drivers);
+            return view('admin.edit-enquiry')->with('enquiry', $enquiry)->with('vendors', $vendors)->with('drivers', $drivers);
         }catch(\Exception $e){
             $request->session()->put('message', $e->getMessage());
             $request->session()->put('alert-type', 'alert-warning');
@@ -95,6 +99,7 @@ class AdminController extends Controller
                 $data['booker_mobile'] = $request->booker_mobile;
             }
             if($request->status == '3') {
+                $data['vendor_id'] = $request->vendor;
                 $data['driver_id'] = $request->driver;
                 $data['vehicle_number'] = $request->vehicle_number;
             }
@@ -422,7 +427,8 @@ class AdminController extends Controller
     }
     public function addDriver(Request $request)
     {
-        return view('admin.drivers.add');
+        $vendors = $this->vendorService->getAllVendors();
+        return view('admin.drivers.add')->with('vendors', $vendors);
     }
     public function saveDriver(UserRequest $request)
     {
@@ -432,13 +438,15 @@ class AdminController extends Controller
         $user = $this->userService->create($request, $role_id, $password);
         $user_id = $user->id;
         $data['user_id'] = $user_id;
+        $data['vendor_id'] = $request->vendor;
+        $data['type'] = 'Driver';
         $data['mobile_number'] = $request->phone;
         if($request->has('id_proof_document')){
             $filename = $this->imageService->uploadFile($request->id_proof_document, "assets/drivers");
             $data['id_proof_document'] = '/drivers/'.$filename;
         }
         $this->driverService->create($data);
-        $request->session()->put('message', 'Driver/Vendor has been added successfully.');
+        $request->session()->put('message', 'Driver has been added successfully.');
         $request->session()->put('alert-type', 'alert-success');
         return redirect()->route('admin.drivers');
     }
@@ -449,7 +457,8 @@ class AdminController extends Controller
             if(!$driver){
                 throw new BadRequestException('Invalid Request id');
             }
-            return view('admin.drivers.edit')->with('driver', $driver);
+            $vendors = $this->vendorService->getAllVendors();
+            return view('admin.drivers.edit')->with('driver', $driver)->with('vendors', $vendors);
         }catch(\Exception $e){
             $request->session()->put('message', $e->getMessage());
             $request->session()->put('alert-type', 'alert-warning');
@@ -463,7 +472,8 @@ class AdminController extends Controller
             if(!$driver){
                 throw new BadRequestException('Invalid Request id');
             }
-            $data['type'] = $request->type;
+            $data['type'] = 'Driver';
+            $data['vendor_id'] = $request->vendor;
             $data['name'] = $request->name;
             $data['address'] = $request->address;
             $data['alternative_number'] = $request->alternative_number;
@@ -481,7 +491,7 @@ class AdminController extends Controller
             $userdata['email'] = $request->email;
             $userdata['status'] = $request->active;
             $this->userService->update($user, $userdata);
-            $request->session()->put('message', 'Driver/Vendor has been updated successfully.');
+            $request->session()->put('message', 'Driver has been updated successfully.');
             $request->session()->put('alert-type', 'alert-success');
             return redirect()->route('admin.drivers');
         }catch(\Exception $e){
@@ -502,13 +512,82 @@ class AdminController extends Controller
             $this->driverService->delete($driver);
             $user = $this->userService->getUserById($driver->user_id);
             $this->userService->delete($user);
-            $request->session()->put('message', 'Driver/Vendor has been deleted successfully.');
+            $request->session()->put('message', 'Driver has been deleted successfully.');
             $request->session()->put('alert-type', 'alert-success');
             return redirect()->route('admin.drivers');
         }catch(\Exception $e){
             $request->session()->put('message', $e->getMessage());
             $request->session()->put('alert-type', 'alert-warning');
             return redirect()->route('admin.drivers');
+        }
+    }
+    public function vendors(Request $request)
+    {
+        $vendors = $this->vendorService->getAllVendors();
+        return view('admin.vendors.index')->with('vendors', $vendors);
+    }
+    public function addVendor(Request $request)
+    {
+        return view('admin.vendors.add');
+    }
+    public function saveVendor(Request $request)
+    {
+        $data = $request->all();
+        $data['name'] = $request->name;
+        $data['mobile_number'] = $request->phone;
+        $this->vendorService->create($data);
+        $request->session()->put('message', 'Vendor has been added successfully.');
+        $request->session()->put('alert-type', 'alert-success');
+        return redirect()->route('admin.vendors');
+    }
+    public function editVendor(Request $request, $id)
+    {
+        try{
+            $vendor = $this->vendorService->getVendorById($id);
+            if(!$vendor){
+                throw new BadRequestException('Invalid Request id');
+            }
+            return view('admin.vendors.edit')->with('vendor', $vendor);
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.vendors');
+        }
+    }
+    public function updateVendor(Request $request)
+    {
+        try{
+            $vendor = $this->vendorService->getVendorById($request->id);
+            if(!$vendor){
+                throw new BadRequestException('Invalid Request id');
+            }
+            $data['name'] = $request->name;
+            $data['mobile_number'] = $request->mobile_number;
+            $this->vendorService->update($vendor, $data);
+            $request->session()->put('message', 'Vendor has been updated successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.vendors');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.vendors');
+        }
+    }
+    public function deleteVendor(Request $request, $id)
+    {
+        try{
+            $vendor = $this->vendorService->getVendorById($id);
+            if(!$vendor){
+                throw new BadRequestException('Invalid Request id.');
+            }
+            $this->vendorService->delete($vendor);
+            $request->session()->put('message', 'Vendor has been deleted successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.vendors');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.vendors');
         }
     }
     public function companies(Request $request)

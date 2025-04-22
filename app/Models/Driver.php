@@ -19,6 +19,7 @@ class Driver extends Model
      */
     protected $fillable = [
         'user_id',
+        'vendor_id',
         'type',
         'name',
         'address',
@@ -29,5 +30,8 @@ class Driver extends Model
     ];
     public function users() {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+    public function vendors() {
+        return $this->belongsTo(Vendor::class, 'vendor_id', 'id');
     }
 }

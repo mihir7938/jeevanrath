@@ -28,7 +28,8 @@
                                             <th>Duty Status</th>
                                             <th>DB Name (Company)</th>
                                             <th>Booking ID</th>
-                                            <th>Driver/Vendor</th>
+                                            <th>Vendor</th>
+                                            <th>Driver</th>
                                             <th>Contact Number</th>
                                             <th>Start Date</th>
                                             <th>End Date</th>
@@ -59,7 +60,8 @@
                                             <th>Duty Status</th>
                                             <th>DB Name (Company)</th>
                                             <th>Booking ID</th>
-                                            <th>Driver/Vendor</th>
+                                            <th>Vendor</th>
+                                            <th>Driver</th>
                                             <th>Contact Number</th>
                                             <th>Start Date</th>
                                             <th>End Date</th>
@@ -108,6 +110,7 @@
                                                 </td>
                                                 <td>{{$booking->companies ? $booking->companies->name : ''}}</td>
                                                 <td>{{$booking->booking_id}}</td>
+                                                <td>{{$booking->vendors->name}}</td>
                                                 <td>{{$booking->drivers->name}}</td>
                                                 <td>{{$booking->drivers->mobile_number}}</td>
                                                 <td>{{Carbon\Carbon::parse($booking->journey_date)->format('d-m-Y')}}</td>

@@ -5,8 +5,8 @@
             <div class="row mb-2">
                 <div class="col-sm-12">
                     <div class="d-flex justify-content-between">
-                        <h1 class="m-0">Drivers/Vendors</h1>
-                        <a href="{{route('admin.drivers.add')}}" class="btn btn-primary">Add New Driver/Vendor</a>
+                        <h1 class="m-0">Drivers</h1>
+                        <a href="{{route('admin.drivers.add')}}" class="btn btn-primary">Add New Driver</a>
                     </div>
                 </div>
             </div>
@@ -19,7 +19,7 @@
                     @include('shared.alert')
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">All Drivers/Vendors</h3>
+                            <h3 class="card-title">All Drivers</h3>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -27,8 +27,8 @@
                                     <thead>
                                         <tr>
                                             <th width="100">Action</th>
-                                            <th>Type</th>
-                                            <th>Driver/Vendor Name</th>
+                                            <th>Driver Name</th>
+                                            <th>Vendor Name</th>
                                             <th>Address</th>
                                             <th>Mobile</th>
                                             <th>Alternative</th>
@@ -40,8 +40,8 @@
                                     <tfoot>
                                         <tr>
                                             <th>Action</th>
-                                            <th>Type</th>
-                                            <th>Driver/Vendor Name</th>
+                                            <th>Driver Name</th>
+                                            <th>Vendor Name</th>
                                             <th>Address</th>
                                             <th>Mobile</th>
                                             <th>Alternative</th>
@@ -64,8 +64,8 @@
                                                         <i class="fas fa-trash"></i>
                                                     </a>
                                                 </td>
-                                                <td>{{$driver->type}}</td>
                                                 <td>{{$driver->name}}</td>
+                                                <td>{{$driver->vendors->name}}</td>
                                                 <td>{{$driver->address}}</td>
                                                 <td>{{$driver->mobile_number}}</td>
                                                 <td>{{$driver->alternative_number}}</td>

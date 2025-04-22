@@ -26,8 +26,9 @@
                                             <th></th>
                                             <th>Action</th>
                                             <th>Booking ID</th>
-                                            <th>Driver/Vendor</th>
-                                            <th>Contact Number</th>
+                                            <th>Vendor</th>
+                                            <th>Driver</th>
+                                            <th>Driver Number</th>
                                             <th>Start Date</th>
                                             <th>End Date</th>
                                             <th>Duty Start Time</th>
@@ -55,8 +56,9 @@
                                             <th></th>
                                             <th>Action</th>
                                             <th>Booking ID</th>
-                                            <th>Driver/Vendor</th>
-                                            <th>Contact Number</th>
+                                            <th>Vendor</th>
+                                            <th>Driver</th>
+                                            <th>Driver Number</th>
                                             <th>Start Date</th>
                                             <th>End Date</th>
                                             <th>Duty Start Time</th>
@@ -89,6 +91,7 @@
                                                     </a>
                                                 </td>
                                                 <td>{{$booking->booking_id}}</td>
+                                                <td>{{$booking->vendors->name}}</td>
                                                 <td>{{$booking->drivers->name}}</td>
                                                 <td>{{$booking->drivers->mobile_number}}</td>
                                                 <td>{{Carbon\Carbon::parse($booking->journey_date)->format('d-m-Y')}}</td>

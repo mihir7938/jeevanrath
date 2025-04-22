@@ -84,6 +84,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/drivers/edit/{id}', [AdminController::class, 'editDriver'])->name('admin.drivers.edit');
     Route::post('/drivers/update', [AdminController::class, 'updateDriver'])->name('admin.drivers.update.save');
     Route::get('/drivers/delete/{id}', [AdminController::class, 'deleteDriver'])->name('admin.drivers.delete');
+    Route::get('/vendors', [AdminController::class, 'vendors'])->name('admin.vendors');
+    Route::get('/vendors/add', [AdminController::class, 'addVendor'])->name('admin.vendors.add');
+    Route::post('/vendors/save', [AdminController::class, 'saveVendor'])->name('admin.vendors.add.save');
+    Route::get('/vendors/edit/{id}', [AdminController::class, 'editVendor'])->name('admin.vendors.edit');
+    Route::post('/vendors/update', [AdminController::class, 'updateVendor'])->name('admin.vendors.update.save');
+    Route::get('/vendors/delete/{id}', [AdminController::class, 'deleteVendor'])->name('admin.vendors.delete');
     Route::get('/companies', [AdminController::class, 'companies'])->name('admin.companies');
     Route::get('/companies/add', [AdminController::class, 'addCompany'])->name('admin.companies.add');
     Route::post('/companies/save', [AdminController::class, 'saveCompany'])->name('admin.companies.add.save');

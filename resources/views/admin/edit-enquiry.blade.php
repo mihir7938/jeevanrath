@@ -75,11 +75,22 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="driver" class="text-danger">Driver/Vendor*</label>
+                                                <label for="vendor" class="text-danger">Vendor*</label>
+                                                <select id="vendor" name="vendor" class="form-control border border-danger">
+                                                    <option value="">Select</option>
+                                                    @foreach($vendors as $vendor)
+                                                        <option value="{{$vendor->id}}" @if($enquiry->vendor_id == $vendor->id) selected @endif>{{$vendor->name}} - {{$vendor->mobile_number}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="driver" class="text-danger">Driver*</label>
                                                 <select id="driver" name="driver" class="form-control border border-danger">
                                                     <option value="">Select</option>
                                                     @foreach($drivers as $driver)
-                                                        <option value="{{$driver->id}}" @if($enquiry->driver_id == $driver->id) selected @endif>{{$driver->type}} - {{$driver->name}} - {{$driver->mobile_number}}</option>
+                                                        <option value="{{$driver->id}}" @if($enquiry->driver_id == $driver->id) selected @endif>{{$driver->name}} - {{$driver->mobile_number}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -266,6 +277,14 @@
                     },
                     digits: true,
                 },
+                vendor: {
+                    required:function(){
+                        if($('#status').val()  == '3') {
+                            return true;
+                        }
+                        return false;
+                    },
+                },
                 driver: {
                     required:function(){
                         if($('#status').val()  == '3') {
@@ -323,8 +342,11 @@
                 booker_mobile:{
                     required: "Please enter booker number."
                 },
+                vendor:{
+                    required: "Please select vendor."
+                },
                 driver:{
-                    required: "Please select driver/vendor."
+                    required: "Please select driver."
                 },
                 vehicle_number:{
                     required: "Please enter vehicle number.",
