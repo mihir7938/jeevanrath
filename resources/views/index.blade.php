@@ -246,9 +246,37 @@
                             <div class="fixed-car-carousel owl-carousel">
                                 <div class="item">
                                     <div class="blog-img">
-                                        <img src="{{asset('assets/'.$fixed->vehicle_image)}}" class="img-fluid w-100" alt="Image">
+                                        <img src="{{asset('assets/'.$fixed->fixed_image_1)}}" class="img-fluid w-100" alt="Image">
                                     </div>
                                 </div>
+                                @if ($fixed->fixed_image_2)
+                                    <div class="item">
+                                        <div class="blog-img">
+                                            <img src="{{asset('assets/'.$fixed->fixed_image_2)}}" class="img-fluid w-100" alt="Image">
+                                        </div>
+                                    </div>
+                                @endif
+                                @if ($fixed->fixed_image_3)
+                                    <div class="item">
+                                        <div class="blog-img">
+                                            <img src="{{asset('assets/'.$fixed->fixed_image_3)}}" class="img-fluid w-100" alt="Image">
+                                        </div>
+                                    </div>
+                                @endif
+                                @if ($fixed->fixed_image_4)
+                                    <div class="item">
+                                        <div class="blog-img">
+                                            <img src="{{asset('assets/'.$fixed->fixed_image_4)}}" class="img-fluid w-100" alt="Image">
+                                        </div>
+                                    </div>
+                                @endif
+                                @if ($fixed->fixed_image_5)
+                                    <div class="item">
+                                        <div class="blog-img">
+                                            <img src="{{asset('assets/'.$fixed->fixed_image_5)}}" class="img-fluid w-100" alt="Image">
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                             <div class="blog-centent p-4 text-center">
                                 <h4>{{$fixed->origin_trip}}</h4>

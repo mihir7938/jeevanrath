@@ -132,7 +132,7 @@
                                     <i class="fas fa-trash"></i>
                                 </a>
                             </td>
-                            <td>@if($fixed->vehicle_image) <img src="{{asset('assets/'.$fixed->vehicle_image)}}" width="100px"/> @endif</td>
+                            <td>@if($fixed->fixed_image_1) <img src="{{asset('assets/'.$fixed->fixed_image_1)}}" width="100px"/> @endif</td>
                             <td>{{$fixed->states->name}}</td>
                             <td>{{$fixed->cities->name}}</td>
                             <td>{{$fixed->origin_trip}}</td>
