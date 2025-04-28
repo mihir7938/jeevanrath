@@ -84,6 +84,8 @@
                                 <option value="Round Trip">Round Trip</option>
                                 <option value="Local Car Rental (8 hrs/80 km)">Local Car Rental (8 hrs/80 km)</option>
                                 <option value="Out Station (300 km avg)">Out Station (300 km avg)</option>
+                                <option value="Airport Pickup & Drop">Airport Pickup & Drop</option>
+                                <option value="Railway Station Pickup & Drop">Railway Station Pickup & Drop</option>
                             </select>
                         </div>
                         <div class="col-xl-6">

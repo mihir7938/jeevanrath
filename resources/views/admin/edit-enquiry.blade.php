@@ -190,6 +190,8 @@
                                                 <option value="Round Trip" @if($enquiry->journey_type == "Round Trip") selected @endif>Round Trip</option>
                                                 <option value="Local Car Rental (8 hrs/80 km)" @if($enquiry->journey_type == "Local Car Rental (8 hrs/80 km)") selected @endif>Local Car Rental (8 hrs/80 km)</option>
                                                 <option value="Out Station (300 km avg)" @if($enquiry->journey_type == "Out Station (300 km avg)") selected @endif>Out Station (300 km avg)</option>
+                                                <option value="Airport Pickup & Drop" @if($enquiry->journey_type == "Airport Pickup & Drop") selected @endif>Airport Pickup & Drop</option>
+                                                <option value="Railway Station Pickup & Drop" @if($enquiry->journey_type == "Railway Station Pickup & Drop") selected @endif>Railway Station Pickup & Drop</option>
                                             </select>
                                         </div>
                                     </div>
