@@ -99,8 +99,12 @@ class AdminController extends Controller
                 $data['booker_mobile'] = $request->booker_mobile;
             }
             if($request->status == '3') {
+                $vendor_data = $this->vendorService->getVendorById($request->vendor);
+                $driver_data = $this->driverService->getDriverById($request->driver);
                 $data['vendor_id'] = $request->vendor;
+                $data['vendor_name'] = $vendor_data->name;
                 $data['driver_id'] = $request->driver;
+                $data['driver_name'] = $driver_data->name;
                 $data['vehicle_number'] = $request->vehicle_number;
             }
             $data['name'] = $request->name;
