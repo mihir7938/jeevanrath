@@ -72,6 +72,11 @@ class EnquiryService
         return Enquiry::orderBy('created_at', 'desc')->where('driver_id', $driver_id)->where('status', 3)->where('duty_closed', $duty_closed)->get(); 
     }
 
+    public function assignedBookingsToVendor($vendor_id, $duty_closed)
+    {
+        return Enquiry::orderBy('created_at', 'desc')->where('vendor_id', $vendor_id)->where('status', 3)->where('duty_closed', $duty_closed)->get(); 
+    }
+
     public function getEnquiryByBookingId($booking_id)
     {
         return Enquiry::where('booking_id', $booking_id)->where('status', 3)->first(); 

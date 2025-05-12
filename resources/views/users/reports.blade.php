@@ -25,6 +25,10 @@
                                         <tr>
                                             <th></th>
                                             <th>Booking ID</th>
+                                            @if(Auth::user()->category_id == 1)
+                                                <th>Driver Name</th>
+                                                <th>Driver Mobile</th>
+                                            @endif
                                             <th>Guest Name</th>
                                             <th>Guest Mobile</th>
                                             <th>Start Date</th>
@@ -51,8 +55,12 @@
                                         <tr>
                                             <th></th>
                                             <th>Booking ID</th>
-                                            <th>Name</th>
-                                            <th>Mobile</th>
+                                            @if(Auth::user()->category_id == 1)
+                                                <th>Driver Name</th>
+                                                <th>Driver Mobile</th>
+                                            @endif
+                                            <th>Guest Name</th>
+                                            <th>Guest Mobile</th>
                                             <th>Start Date</th>
                                             <th>End Date</th>
                                             <th>Pickup Location</th>
@@ -78,6 +86,10 @@
                                             <tr>
                                                 <td></td>
                                                 <td>{{$booking->booking_id}}</td>
+                                                @if(Auth::user()->category_id == 1)
+                                                    <td>{{$booking->driver_name}}</td>
+                                                    <td>{{$booking->drivers->mobile_number}}</td>
+                                                @endif
                                                 <td>{{$booking->name}}</td>
                                                 <td>{{$booking->mobile_number}}</td>
                                                 <td>{{Carbon\Carbon::parse($booking->journey_date)->format('d-m-Y')}}</td>

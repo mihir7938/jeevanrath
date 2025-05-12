@@ -32,9 +32,14 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        $driver_id = Auth::user()->drivers->id;
         $duty_closed = 0;
-        $bookings = $this->enquiryService->assignedBookingsToDriver($driver_id, $duty_closed);
+        if(Auth::user()->category_id == 1) {
+            $vendor_id = Auth::user()->vendors->id;
+            $bookings = $this->enquiryService->assignedBookingsToVendor($vendor_id, $duty_closed);
+        } else {
+            $driver_id = Auth::user()->drivers->id;
+            $bookings = $this->enquiryService->assignedBookingsToDriver($driver_id, $duty_closed);
+        }
         $booking_data = '';
         return view('users.add-details')->with('bookings', $bookings)->with('booking_data', $booking_data);
     }
@@ -83,9 +88,14 @@ class UserController extends Controller
 
     public function reports(Request $request)
     {
-        $driver_id = Auth::user()->drivers->id;
         $duty_closed = 1;
-        $bookings = $this->enquiryService->assignedBookingsToDriver($driver_id, $duty_closed);
+        if(Auth::user()->category_id == 1) {
+            $vendor_id = Auth::user()->vendors->id;
+            $bookings = $this->enquiryService->assignedBookingsToVendor($vendor_id, $duty_closed);
+        } else {
+            $driver_id = Auth::user()->drivers->id;
+            $bookings = $this->enquiryService->assignedBookingsToDriver($driver_id, $duty_closed);
+        }
         return view('users.reports')->with('bookings', $bookings);
     }
 }

@@ -75,8 +75,8 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="phone">Mobile Number*</label>
-                                            <input type="phone" class="form-control" id="phone" name="phone" placeholder="Mobile Number">
+                                            <label for="mobile_number">Mobile Number*</label>
+                                            <input type="phone" class="form-control" id="mobile_number" name="mobile_number" placeholder="Mobile Number">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -156,7 +156,7 @@
                 name: {
                     required: true
                 },
-                phone: {
+                mobile_number: {
                     required: true,
                     digits: true,
                     minlength: 10,
@@ -179,7 +179,7 @@
                 name:{
                     required: "Please enter driver name."
                 },
-                phone:{
+                mobile_number:{
                     required: "Please enter mobile number."
                 },
                 id_proof_document:{

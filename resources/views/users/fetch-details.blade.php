@@ -7,6 +7,10 @@
             <div class="row summary">
                 <div class="col-md-6">
                     <div><label>Booking ID :</label> {{$booking_data->booking_id}}</div>
+                    @if(Auth::user()->category_id == 1)
+                        <div><label>Driver Name :</label> {{$booking_data->driver_name}}</div>
+                        <div><label>Driver Mobile Number :</label> {{$booking_data->drivers->mobile_number}}</div>
+                    @endif
                     <div><label>Guest Name :</label> {{$booking_data->name}}</div>
                     <div><label>Guest Mobile Number :</label> {{$booking_data->mobile_number}}</div>
                     @if($booking_data->company_name)

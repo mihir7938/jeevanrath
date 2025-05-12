@@ -18,8 +18,12 @@ class Vendor extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'user_id',
         'name',
         'mobile_number',
         'email',
     ];
+    public function users() {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 }

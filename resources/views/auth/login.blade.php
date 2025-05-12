@@ -31,6 +31,18 @@
 						</ul>
 					</div>
 					@endif
+					<div class="input-group mb-1">
+                        <div class="group">
+                            <input type="radio" id="vendor" name="category" value="1" checked>
+                            <label for="vendor">Vendor</label>
+                            <span class="mx-2"></span>
+                            <input type="radio" id="driver" name="category" value="2">
+                            <label for="driver">Driver</label>
+                            <span class="mx-2"></span>
+                            <input type="radio" id="admin" name="category" value="0">
+                            <label for="admin">Admin</label>
+                        </div>
+                    </div>
 			        <div class="input-group mb-3">
 			          	<input type="text" class="form-control" id="phone" name="phone" placeholder="Mobile Number">
 			          	<div class="input-group-append">

@@ -55,4 +55,8 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Driver::class, 'id', 'user_id');
     }
+    public function vendors()
+    {
+        return $this->belongsTo(Vendor::class, 'id', 'user_id');
+    }
 }

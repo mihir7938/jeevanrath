@@ -46,7 +46,8 @@ class AuthController extends Controller
             $input = [
                 'phone' => $request->phone,
                 'password' => $request->password,
-                'status' => true
+                'status' => true,
+                'category_id' => $request->category,
             ];
             $is_auth = Auth::attempt($input, $request->has('remember_me') ? true : false);
             if ($is_auth) {

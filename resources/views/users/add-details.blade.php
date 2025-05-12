@@ -19,12 +19,21 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <select class="form-control" name="booking_id" id="booking_id">
-                                            <option value="">Select Booking ID</option>
-                                            @foreach($bookings as $booking)
-                                                <option value="{{$booking->booking_id}}">{{$booking->booking_id}} - {{$booking->name}}</option>
-                                            @endforeach
-                                        </select>
+                                        @if(Auth::user()->category_id == 1)
+                                            <select class="form-control" name="booking_id" id="booking_id">
+                                                <option value="">Select Booking ID</option>
+                                                @foreach($bookings as $booking)
+                                                    <option value="{{$booking->booking_id}}">BID : {{$booking->booking_id}} - Driver : {{$booking->driver_name}}</option>
+                                                @endforeach
+                                            </select>
+                                        @else
+                                            <select class="form-control" name="booking_id" id="booking_id">
+                                                <option value="">Select Booking ID</option>
+                                                @foreach($bookings as $booking)
+                                                    <option value="{{$booking->booking_id}}">BID : {{$booking->booking_id}} - Guest : {{$booking->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

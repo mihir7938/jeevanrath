@@ -11,9 +11,9 @@ class UserService
 {
     public function __construct(){}
 
-    public function create($request, $role_id, $password = '')
+    public function create($request, $role_id, $password = '', $category_id = 0)
     {
-        return DB::transaction(function () use ($request, $role_id, $password) {
+        return DB::transaction(function () use ($request, $role_id, $password, $category_id) {
             $user = new User();
             $user->role_id = $role_id;
             $user->name = $request->name;
@@ -23,8 +23,13 @@ class UserService
             } else {
                 $user->password = Hash::make($request->password);
             }
-            $user->phone = $request->phone;
+            if(isset($request->phone)) {
+                $user->phone = $request->phone;
+            } else {
+                $user->phone = $request->mobile_number;
+            }
             $user->status = $request->active;
+            $user->category_id = $category_id;
             $user->save();
             return $user;
         });

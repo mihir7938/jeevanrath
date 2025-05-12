@@ -42,7 +42,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="mobile_number">Mobile Number*</label>
-                                            <input type="phone" class="form-control" id="mobile_number" name="mobile_number" placeholder="Mobile Number" value="{{$vendor->mobile_number}}">
+                                            <input type="phone" class="form-control" id="mobile_number" name="mobile_number" placeholder="Mobile Number" value="{{$vendor->mobile_number}}" disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -51,6 +51,21 @@
                                         <div class="form-group">
                                             <label for="email">Email</label>
                                             <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="{{$vendor->email}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="active">Active</label>
+                                            <div class="d-flex align-items-center">
+                                                <div class="custom-control custom-radio mr-3">
+                                                  <input class="custom-control-input" type="radio" id="yes" name="active" value="1" @if($vendor->users->status == '1') checked @endif>
+                                                  <label for="yes" class="custom-control-label">Yes</label>
+                                                </div>
+                                                <div class="custom-control custom-radio">
+                                                  <input class="custom-control-input" type="radio" id="no" name="active" value="0" @if($vendor->users->status == '0') checked @endif>
+                                                  <label for="no" class="custom-control-label">No</label>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

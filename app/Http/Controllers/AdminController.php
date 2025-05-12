@@ -3,6 +3,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
+use App\Http\Requests\VendorRequest;
+use App\Http\Requests\DriverRequest;
 use App\Services\UploadImageService;
 use App\Services\EnquiryService;
 use App\Services\CityService;
@@ -434,17 +436,18 @@ class AdminController extends Controller
         $vendors = $this->vendorService->getAllVendors();
         return view('admin.drivers.add')->with('vendors', $vendors);
     }
-    public function saveDriver(UserRequest $request)
+    public function saveDriver(DriverRequest $request)
     {
         $data = $request->all();
         $role_id = Role::USER_ROLE_ID;
-        $password = 'jr'.substr($request->phone, -3);
-        $user = $this->userService->create($request, $role_id, $password);
+        $category_id = 2;
+        $password = 'jr'.substr($request->mobile_number, -3);
+        $user = $this->userService->create($request, $role_id, $password, $category_id);
         $user_id = $user->id;
         $data['user_id'] = $user_id;
         $data['vendor_id'] = $request->vendor;
         $data['type'] = 'Driver';
-        $data['mobile_number'] = $request->phone;
+        $data['mobile_number'] = $request->mobile_number;
         if($request->has('id_proof_document')){
             $filename = $this->imageService->uploadFile($request->id_proof_document, "assets/drivers");
             $data['id_proof_document'] = '/drivers/'.$filename;
@@ -534,11 +537,17 @@ class AdminController extends Controller
     {
         return view('admin.vendors.add');
     }
-    public function saveVendor(Request $request)
+    public function saveVendor(VendorRequest $request)
     {
         $data = $request->all();
+        $role_id = Role::USER_ROLE_ID;
+        $category_id = 1;
+        $password = 'vendor'.substr($request->mobile_number, -3);
+        $user = $this->userService->create($request, $role_id, $password, $category_id);
+        $user_id = $user->id;
+        $data['user_id'] = $user_id;
         $data['name'] = $request->name;
-        $data['mobile_number'] = $request->phone;
+        $data['mobile_number'] = $request->mobile_number;
         $data['email'] = $request->email;
         $this->vendorService->create($data);
         $request->session()->put('message', 'Vendor has been added successfully.');
@@ -567,9 +576,14 @@ class AdminController extends Controller
                 throw new BadRequestException('Invalid Request id');
             }
             $data['name'] = $request->name;
-            $data['mobile_number'] = $request->mobile_number;
             $data['email'] = $request->email;
             $this->vendorService->update($vendor, $data);
+            $user_id = $vendor->user_id;
+            $user = $this->userService->getUserById($user_id);
+            $userdata['name'] = $request->name;
+            $userdata['email'] = $request->email;
+            $userdata['status'] = $request->active;
+            $this->userService->update($user, $userdata);
             $request->session()->put('message', 'Vendor has been updated successfully.');
             $request->session()->put('alert-type', 'alert-success');
             return redirect()->route('admin.vendors');
