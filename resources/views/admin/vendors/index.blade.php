@@ -44,6 +44,9 @@
                                         @foreach($vendors as $vendor)
                                             <tr>
                                                 <td class="text-center">
+                                                    <a href="{{route('admin.users.change', ['id' => $vendor->user_id])}}" class="btn btn-outline-dark btn-circle">
+                                                        <i class="fas fa-unlock"></i>
+                                                    </a>
                                                     <a href="{{route('admin.vendors.edit', ['id' => $vendor->id])}}" class="btn btn-outline-primary btn-circle">
                                                         <i class="fas fa-pen"></i>
                                                     </a>

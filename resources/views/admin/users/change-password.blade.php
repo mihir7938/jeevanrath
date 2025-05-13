@@ -32,7 +32,17 @@
                                 <h3 class="card-title">Edit Record</h3>
                             </div>
                             <div class="card-body">
-                                <h5>{{($user->role_id == 1) ? 'Admin' : $user->drivers->type}} - {{ $user->name }}</h5>
+                                <h5>
+                                    @if($user->role_id == 1)
+                                        Admin
+                                    @else
+                                        @if($user->category_id == 1)
+                                            Vendor - {{ $user->name }}
+                                        @else
+                                            Driver - {{ $user->name }}
+                                        @endif
+                                    @endif
+                                </h5>
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
