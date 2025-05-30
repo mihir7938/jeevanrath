@@ -63,7 +63,7 @@
                                 <a href="{{route('admin.inquiries.edit', ['id' => $enquiry->id])}}" class="btn btn-outline-primary btn-circle">
                                     <i class="fas fa-pen"></i>
                                 </a>
-                                <a href="{{route('admin.inquiries.delete', ['id' => $enquiry->id])}}" class="btn btn-outline-danger btn-circle">
+                                <a href="{{route('admin.inquiries.delete', ['id' => $enquiry->id])}}" class="btn btn-outline-danger btn-circle btn-delete">
                                     <i class="fas fa-trash"></i>
                                 </a>
                             </td>

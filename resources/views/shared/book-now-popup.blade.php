@@ -156,6 +156,8 @@
                 mobile:{
                     required: true,
                     digits: true,
+                    minlength: 10,
+                    maxlength: 10
                 },
                 pickup_location:{
                     required: true
@@ -191,6 +193,8 @@
                         return false;
                     },
                     digits: true,
+                    minlength: 10,
+                    maxlength: 10
                 },
                 pickup_time: {
                     required: true

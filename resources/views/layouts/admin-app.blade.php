@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="{{asset('adminlte/css/all.min.css')}}">
+    <link rel="stylesheet" href="{{asset('adminlte/css/sweetalert2.min.css')}}">
     <link rel="stylesheet" href="{{asset('adminlte/css/adminlte.min.css')}}">
     <link rel="stylesheet" href="{{asset('adminlte/css/custom.css')}}">
     <link rel="stylesheet" href="{{asset('adminlte/css/OverlayScrollbars.min.css')}}">
@@ -67,14 +68,20 @@
                                 </a>
                             </li>
                         @elseif(Auth::check() && Auth::user()->isAdmin())
-                            <li class="nav-item {{(Route::currentRouteName() == 'admin.index') || (Route::currentRouteName() == 'admin.inquiries.edit') || (Route::currentRouteName() == 'admin.inquiries.all') ? 'menu-open' : '' }}">
-                                <a href="#" class="nav-link {{(Route::currentRouteName() == 'admin.index') || (Route::currentRouteName() == 'admin.inquiries.edit') || (Route::currentRouteName() == 'admin.inquiries.all') ? 'active' : '' }}">
+                            <li class="nav-item">
+                                <a href="{{route('admin.index')}}" class="nav-link {{(Route::currentRouteName() == 'admin.index') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-tachometer-alt"></i>
+                                    <p>Dashboard</p>
+                                </a>
+                            </li>
+                            <li class="nav-item {{(Route::currentRouteName() == 'admin.inquiries.confirmed') || (Route::currentRouteName() == 'admin.inquiries.edit') || (Route::currentRouteName() == 'admin.inquiries.all') ? 'menu-open' : '' }}">
+                                <a href="#" class="nav-link {{(Route::currentRouteName() == 'admin.inquiries.confirmed') || (Route::currentRouteName() == 'admin.inquiries.edit') || (Route::currentRouteName() == 'admin.inquiries.all') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-question-circle"></i>
                                     <p>Inquiries<i class="right fas fa-angle-left"></i></p>
                                 </a>
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
-                                        <a href="{{route('admin.index')}}" class="nav-link {{(Route::currentRouteName() == 'admin.index') || (Route::currentRouteName() == 'admin.inquiries.edit') ? 'active' : '' }}">
+                                        <a href="{{route('admin.inquiries.confirmed')}}" class="nav-link {{(Route::currentRouteName() == 'admin.inquiries.confirmed') || (Route::currentRouteName() == 'admin.inquiries.edit') ? 'active' : '' }}">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Confirm Inquiries</p>
                                         </a>
@@ -200,6 +207,7 @@
         </footer>
     </div>
     <script src="{{asset('adminlte/js/jquery.min.js')}}"></script>
+    <script src="{{asset('adminlte/js/sweetalert2.min.js')}}"></script>
     <script src="{{asset('adminlte/js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{asset('adminlte/js/bs-custom-file-input.min.js')}}"></script>
     <script src="{{asset('adminlte/js/jquery.dataTables.min.js')}}"></script>

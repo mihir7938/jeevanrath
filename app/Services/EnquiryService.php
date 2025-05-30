@@ -10,9 +10,9 @@ class EnquiryService
     public function getAllEnquiries($per_page = -1)
     {
         if($per_page == -1){
-            return Enquiry::orderBy('created_at', 'desc')->get();    
+            return Enquiry::orderBy('created_at', 'desc')->where('duty_closed', 0)->get();    
         }
-        return Enquiry::orderBy('created_at', 'desc')->paginate($per_page);
+        return Enquiry::orderBy('created_at', 'desc')->where('duty_closed', 0)->paginate($per_page);
     }
 
     public function getEnquiryById($id)
@@ -35,16 +35,37 @@ class EnquiryService
         return $enquiries->delete($enquiries);
     }
 
-    public function getAllEnquiriesByStatus($status)
+    public function getAllEnquiriesByStatus($status, $duty_closed = '')
     {
-        return Enquiry::orderBy('created_at', 'desc')->whereIn('status', $status)->get(); 
+        $query = Enquiry::orderBy('created_at', 'desc')->whereIn('status', $status);
+        if ($duty_closed !== '') {
+            $query = $query->where('duty_closed', $duty_closed);
+        }
+        return $query->select('*')->get();
     }
 
     public function getAllEnquiriesByFilter($request)
     {
-        $query = Enquiry::orderBy('created_at', 'desc');
-        if($request->has('status') && $request->status != ''){
-            $query = $query->where('status', $request->status);
+        $query = Enquiry::where('duty_closed', 0)->orderBy('created_at', 'desc');
+        if($request->has('status') && $request->status != '' && isset($request->status[0])){
+            $query = $query->whereIn('status', $request->status);
+        }
+        if($request->has('booking_id') && $request->booking_id != ''){
+            $query = $query->where('booking_id', $request->booking_id);
+        }
+        if($request->start_date && $request->end_date){
+            $startDate = date("Y-m-d", strtotime(str_replace('/', '-', $request->start_date)));
+            $endDate = date("Y-m-d", strtotime(str_replace('/', '-', $request->end_date)));
+            $query = $query->whereBetween('journey_date', [$startDate, $endDate]);
+        }
+        return $query->select('*')->get();
+    }
+
+    public function getAllDutiesByFilter($request, $status)
+    {
+        $query = Enquiry::orderBy('created_at', 'desc')->whereIn('status', $status);
+        if($request->has('duty_status') && $request->duty_status != ''){
+            $query = $query->where('duty_closed', $request->duty_status);
         }
         if($request->has('booking_id') && $request->booking_id != ''){
             $query = $query->where('booking_id', $request->booking_id);
@@ -95,5 +116,25 @@ class EnquiryService
     public function getTripConfirmedById($id)
     {
         return Enquiry::where('id', $id)->where('status', 3)->first(); 
+    }
+
+    public function getTotalEnquiries()
+    {
+        return Enquiry::where('duty_closed', 0)->count(); 
+    }
+
+    public function getTotalInquiriesByStatus($status_id)
+    {
+        return Enquiry::where('status', $status_id)->where('duty_closed', 0)->count();
+    }
+
+    public function getTotalDuties()
+    {
+        return Enquiry::where('status', 3)->count(); 
+    }
+
+    public function getTotalDutiesByStatus($duty_status_id)
+    {
+        return Enquiry::where('status', 3)->where('duty_closed', $duty_status_id)->count();
     }
 }

@@ -2,7 +2,7 @@
 @section('content')
     <div class="content-header">
         <div class="container-fluid">
-            <div class="row mb-2">
+            <div class="row">
                 <div class="col-sm-6">
                     <h1 class="m-0">Driver Duty Details</h1>
                 </div>
@@ -13,125 +13,55 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    @include('shared.alert')
-                    <div class="card card-primary">
-                        <div class="card-header">
-                            <h3 class="card-title">All Duty Details</h3>
+                    <form method="POST" action="{{route('admin.duty.fetch')}}" class="form" id="fetch-inquiries-form" enctype="multipart/form-data">
+                        @csrf
+                        @include('shared.alert')
+                        @if (count($errors) > 0)
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
                         </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTableReports" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>Action</th>
-                                            <th>Booking ID</th>
-                                            <th>Guest Name</th>
-                                            <th>Driver Name</th>
-                                            <th>Vehicle Number</th>
-                                            <th>Start Date</th>
-                                            <th>End Date</th>
-                                            <th>Duty Start Time</th>
-                                            <th>Duty End Time</th>
-                                            <th>Duty On Kilometer</th>
-                                            <th>Duty Closed Kilometer</th>
-                                            <th>Start Point Kilometer</th>
-                                            <th>End Point Kilometer</th>
-                                            <th>Fastag Amount</th>
-                                            <th>Pickup Location</th>
-                                            <th>Drop Location</th>
-                                            <th>Journey Type</th>
-                                            <th>Vehicle Name</th>
-                                            <th>Guest Mobile</th>
-                                            <th>Driver Mobile</th>
-                                            <th>Company Name</th>
-                                            <th>Vendor</th>
-                                            <th>Remarks</th>
-                                            <th>Image</th>
-                                            <th>Fastag Statement</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th></th>
-                                            <th>Action</th>
-                                            <th>Booking ID</th>
-                                            <th>Guest Name</th>
-                                            <th>Driver Name</th>
-                                            <th>Vehicle Number</th>
-                                            <th>Start Date</th>
-                                            <th>End Date</th>
-                                            <th>Duty Start Time</th>
-                                            <th>Duty End Time</th>
-                                            <th>Duty On Kilometer</th>
-                                            <th>Duty Closed Kilometer</th>
-                                            <th>Start Point Kilometer</th>
-                                            <th>End Point Kilometer</th>
-                                            <th>Fastag Amount</th>
-                                            <th>Pickup Location</th>
-                                            <th>Drop Location</th>
-                                            <th>Journey Type</th>
-                                            <th>Vehicle Name</th>
-                                            <th>Guest Mobile</th>
-                                            <th>Driver Mobile</th>
-                                            <th>Company Name</th>
-                                            <th>Vendor</th>
-                                            <th>Remarks</th>
-                                            <th>Image</th>
-                                            <th>Fastag Statement</th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                        @foreach($bookings as $booking)
-                                            <tr>
-                                                <td></td>
-                                                <td style="text-align: center;">
-                                                    <a href="{{route('admin.duty.edit', ['id' => $booking->id])}}" class="btn btn-outline-primary btn-circle">
-                                                        <i class="fas fa-pen"></i>
-                                                    </a>
-                                                </td>
-                                                <td>{{$booking->booking_id}}</td>
-                                                <td>{{$booking->name}}</td>
-                                                <td>{{$booking->drivers->name}}</td>
-                                                <td>{{$booking->vehicle_number}}</td>
-                                                <td>{{Carbon\Carbon::parse($booking->journey_date)->format('d-m-Y')}}</td>
-                                                <td>
-                                                    @if($booking->end_duty_date)
-                                                        {{Carbon\Carbon::parse($booking->end_duty_date)->format('d-m-Y')}}
-                                                    @endif
-                                                </td>
-                                                <td>{{$booking->duty_start_time}}</td>
-                                                <td>{{$booking->duty_end_time}}</td>
-                                                <td>{{$booking->duty_on_kilometer}}</td>
-                                                <td>{{$booking->duty_closed_kilometer}}</td>
-                                                <td>{{$booking->start_point_kilometer}}</td>
-                                                <td>{{$booking->end_point_kilometer}}</td>
-                                                <td>{{$booking->fastag_amount}}</td>
-                                                <td>{{$booking->pickup_from}}</td>
-                                                <td>{{$booking->drop_to}}</td>
-                                                <td>{{$booking->journey_type}}</td>
-                                                <td>{{$booking->vehicle_name}}</td>
-                                                <td>{{$booking->mobile_number}}</td>
-                                                <td>{{$booking->drivers->mobile_number}}</td>
-                                                <td>{{$booking->company_name}}</td>
-                                                <td>{{$booking->vendors->name}}</td>
-                                                <td>{{$booking->remarks}}</td>
-                                                <td>
-                                                    @if($booking->image)
-                                                        <img src="{{asset('assets/'.$booking->image)}}" width="100px" />
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if($booking->fastag_image)
-                                                        <a href="{{asset('assets/'.$booking->fastag_image)}}" target="_blank"><i class="fas fa-download ml-1"></i></a>
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                        @endif
+                        <div class="card card-primary">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <select id="duty_status" name="duty_status" class="form-control">
+                                                <option value="">Select Duty Status</option>
+                                                <option value="0" @if($duty_closed == 0) selected @endif>Not Closed</option>
+                                                <option value="1" @if($duty_closed == 1) selected @endif>Closed</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" id="booking_id" name="booking_id" placeholder="Booking ID">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" id="start_date" name="start_date" placeholder="Start Date">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" id="end_date" name="end_date" placeholder="End Date">
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary" id="btnsubmit" name="btnsubmit">Search</button>
                             </div>
                         </div>
+                    </form>
+                    <div id="search_result">
+                        @include('admin.duty-search-result', ['bookings' => $bookings])
                     </div>
                 </div>
             </div>
@@ -141,11 +71,74 @@
 @section('footer')
 <script type="text/javascript">
     $(function(){
+        $("#start_date").datepicker({
+            'format': 'dd/mm/yyyy',
+            'autoclose': true
+        }).on('changeDate', function (selected) {
+            var minDate = new Date(selected.date.valueOf());
+            $('#end_date').datepicker('setStartDate', minDate);
+            $(this).valid();
+        });
+        $("#end_date").datepicker({
+            'format': 'dd/mm/yyyy',
+            'autoclose': true
+        }).on('changeDate', function (selected) {
+            var maxDate = new Date(selected.date.valueOf());
+            $('#start_date').datepicker('setEndDate', maxDate);
+            $(this).valid();
+        });
         $('#dataTableReports').DataTable({
             "buttons": ["csv", "excel"],
             "destroy": true,
             "responsive": true,
         }).buttons().container().appendTo('#dataTableReports_wrapper .col-md-6:eq(0) label');
+        $('#fetch-inquiries-form').validate({
+            rules:{
+                booking_id: {
+                    digits: true,
+                },
+                start_date:{
+                    required:function(){
+                        if($('#end_date').val()!='') {
+                            return true;
+                        }
+                        return false;
+                    },
+                },
+                end_date:{
+                    required:function(){
+                        if($('#start_date').val()!='') {
+                            return true;
+                        }
+                        return false;
+                    },
+                }
+            },
+            messages:{
+                start_date:{
+                    required: "Please select start date."
+                },
+                end_date:{
+                    required: "Please select end date."
+                }
+            },
+            submitHandler: function (form) {
+                url = "{{ route('admin.duty.fetch') }}";
+                var append = url.indexOf("?") == -1 ? "?" : "&";
+                var finalURL = url + append + $('#fetch-inquiries-form').serialize();
+                $('.loader').show();
+                $.get(finalURL, function(data) {
+                    $('.loader').hide();
+                    $("#search_result").html('');
+                    $('#search_result').append(data);
+                    $('#dataTableReports').DataTable({
+                        "buttons": ["csv", "excel"],
+                        "destroy": true,
+                        "responsive": true,
+                    }).buttons().container().appendTo('#dataTableReports_wrapper .col-md-6:eq(0) label');
+                });
+            }
+        }); 
     });
 </script>
 @endsection

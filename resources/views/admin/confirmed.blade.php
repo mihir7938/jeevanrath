@@ -4,7 +4,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h1 class="m-0">All Inquiries</h1>
+                    <h1 class="m-0">Confirm Inquiries</h1>
                 </div>
             </div>
         </div>
@@ -15,6 +15,8 @@
                 <div class="col-md-12">
                     <form method="POST" action="{{route('admin.inquiries.fetch')}}" class="form" id="fetch-inquiries-form" enctype="multipart/form-data">
                         @csrf
+                        <input type="hidden" name="status[]" value="2" />
+                        <input type="hidden" name="status[]" value="3" />
                         @include('shared.alert')
                         @if (count($errors) > 0)
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -28,25 +30,6 @@
                         @endif
                         <div class="card card-primary">
                             <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <select id="status" name="status[]" class="form-control">
-                                                <option value="">Select Status</option>
-                                                <option value="0" @if($status_id == 0) selected @endif>Pending</option>
-                                                <option value="1" @if($status_id == 1) selected @endif>Inprocess</option>
-                                                <option value="2" @if($status_id == 2) selected @endif>Booking Confirmed</option>
-                                                <option value="3" @if($status_id == 3) selected @endif>Trip Confirmed</option>
-                                                <option value="4" @if($status_id == 4) selected @endif>Cancelled</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" id="booking_id" name="booking_id" placeholder="Booking ID">
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -96,9 +79,6 @@
         }).buttons().container().appendTo('#fetch_inquiry_data_wrapper .col-md-6:eq(0) label');
         $('#fetch-inquiries-form').validate({
             rules:{
-                booking_id: {
-                    digits: true,
-                },
                 start_date:{
                     required:function(){
                         if($('#end_date').val()!='') {
@@ -140,7 +120,7 @@
                     }).buttons().container().appendTo('#fetch_inquiry_data_wrapper .col-md-6:eq(0) label');
                 });
             }
-        });
+        }); 
         $('.btn-delete').on('click',function(e){
             e.preventDefault();
             var url = e.currentTarget.getAttribute('href')

@@ -62,9 +62,23 @@ class AdminController extends Controller
 
     public function index(Request $request)
     {
+        $total_enquiry = $this->enquiryService->getTotalEnquiries();
+        $total_pending_inquiry = $this->enquiryService->getTotalInquiriesByStatus(0);
+        $total_inprocess_inquiry = $this->enquiryService->getTotalInquiriesByStatus(1);
+        $total_booking_confirmed = $this->enquiryService->getTotalInquiriesByStatus(2);
+        $total_trip_confirmed = $this->enquiryService->getTotalInquiriesByStatus(3);
+        $total_cancelled_inquiry = $this->enquiryService->getTotalInquiriesByStatus(4);
+        $total_duties = $this->enquiryService->getTotalDuties();
+        $total_not_duty_closed = $this->enquiryService->getTotalDutiesByStatus(0);
+        $total_duty_closed = $this->enquiryService->getTotalDutiesByStatus(1);
+        return view('admin.index')->with('total_enquiry', $total_enquiry)->with('total_pending_inquiry', $total_pending_inquiry)->with('total_inprocess_inquiry', $total_inprocess_inquiry)->with('total_booking_confirmed', $total_booking_confirmed)->with('total_trip_confirmed', $total_trip_confirmed)->with('total_cancelled_inquiry', $total_cancelled_inquiry)->with('total_duties', $total_duties)->with('total_not_duty_closed', $total_not_duty_closed)->with('total_duty_closed', $total_duty_closed);
+    }
+    public function confirmedInquiry(Request $request)
+    {
         $status = array(2,3);
-        $enquiries = $this->enquiryService->getAllEnquiriesByStatus($status);
-        return view('admin.index')->with('enquiries', $enquiries);
+        $duty_closed = 0;
+        $enquiries = $this->enquiryService->getAllEnquiriesByStatus($status, $duty_closed);
+        return view('admin.confirmed')->with('enquiries', $enquiries);
     }
     public function fetchInquiries(Request $request)
     {
@@ -150,8 +164,16 @@ class AdminController extends Controller
     }
     public function allInquiry(Request $request)
     {
-        $enquiries = $this->enquiryService->getAllEnquiries();
-        return view('admin.all')->with('enquiries', $enquiries);
+        $status_id = "-1";
+        if( $request->has('status') ) {
+            $status_id = $request->input('status');
+            $status = array($status_id);
+            $duty_closed = 0;
+            $enquiries = $this->enquiryService->getAllEnquiriesByStatus($status, $duty_closed);
+        } else {
+            $enquiries = $this->enquiryService->getAllEnquiries();
+        }
+        return view('admin.all')->with('enquiries', $enquiries)->with('status_id', $status_id);
     }
     public function cities(Request $request)
     {
@@ -1087,8 +1109,20 @@ class AdminController extends Controller
     public function duty(Request $request)
     {
         $status = array(3);
-        $bookings = $this->enquiryService->getAllEnquiriesByStatus($status);
-        return view('admin.duty')->with('bookings', $bookings);
+        $duty_closed = '-1';
+        if( $request->has('status') ) {
+            $duty_closed = $request->input('status');
+            $bookings = $this->enquiryService->getAllEnquiriesByStatus($status, $duty_closed);
+        } else {
+            $bookings = $this->enquiryService->getAllEnquiriesByStatus($status);
+        }
+        return view('admin.duty')->with('bookings', $bookings)->with('duty_closed', $duty_closed);
+    }
+    public function fetchDuties(Request $request)
+    {
+        $status = array(3);
+        $bookings = $this->enquiryService->getAllDutiesByFilter($request, $status);
+        return view('admin.duty-search-result')->with('bookings', $bookings)->render();
     }
     public function editDuty(Request $request, $id)
     {

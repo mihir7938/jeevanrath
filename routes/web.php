@@ -43,12 +43,14 @@ Route::group(['prefix' => 'password'], function () {
 
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
+    Route::get('/inquiries/confirmed', [AdminController::class, 'confirmedInquiry'])->name('admin.inquiries.confirmed');
     Route::get('/fetch-inquiries', [AdminController::class, 'fetchInquiries'])->name('admin.inquiries.fetch');
     Route::get('/inquiries/edit/{id}', [AdminController::class, 'editInquiry'])->name('admin.inquiries.edit');
     Route::post('/inquiries/update', [AdminController::class, 'updateInquiry'])->name('admin.inquiries.update.save');
     Route::get('/inquiries/delete/{id}', [AdminController::class, 'deleteInquiry'])->name('admin.inquiries.delete');
     Route::get('/inquiries/all', [AdminController::class, 'allInquiry'])->name('admin.inquiries.all');
     Route::get('/duty', [AdminController::class, 'duty'])->name('admin.duty');
+    Route::get('/fetch-duties', [AdminController::class, 'fetchDuties'])->name('admin.duty.fetch');
     Route::get('/duty/edit/{id}', [AdminController::class, 'editDuty'])->name('admin.duty.edit');
     Route::post('/duty/update', [AdminController::class, 'updateDuty'])->name('admin.duty.edit.update');
     Route::get('/invoices', [AdminController::class, 'invoices'])->name('admin.invoices');
