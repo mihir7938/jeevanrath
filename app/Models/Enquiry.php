@@ -31,6 +31,7 @@ class Enquiry extends Model
         'pickup_from',
         'drop_to',
         'vehicle_name',
+        'vehicle',
         'journey_type',
         'booker_name',
         'booker_mobile',
@@ -60,6 +61,14 @@ class Enquiry extends Model
         'db_name',
         'duty_closed',
         'duty_approved',
+        'duty_approved_date',
+        'total_kilometer',
+        'package_company_id',
+        'package_company_name',
+        'package_category_id',
+        'package_category_name',
+        'package_id',
+        'package_name',
     ];
     public function vendors() {
         return $this->belongsTo(Vendor::class, 'vendor_id', 'id');
@@ -69,5 +78,8 @@ class Enquiry extends Model
     }
     public function companies() {
         return $this->belongsTo(Company::class, 'company_id', 'id');
+    }
+    public function packages() {
+        return $this->hasMany(PackageGrid::class, 'enquiry_id', 'id');
     }
 }

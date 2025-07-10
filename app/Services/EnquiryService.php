@@ -35,11 +35,14 @@ class EnquiryService
         return $enquiries->delete($enquiries);
     }
 
-    public function getAllEnquiriesByStatus($status, $duty_closed = '')
+    public function getAllEnquiriesByStatus($status, $duty_closed = '', $journey_type = '')
     {
         $query = Enquiry::orderBy('created_at', 'desc')->whereIn('status', $status);
         if ($duty_closed !== '') {
             $query = $query->where('duty_closed', $duty_closed);
+        }
+        if ($journey_type == 'oncall') {
+            $query = $query->where('journey_type','!=','Monthly');
         }
         return $query->select('*')->get();
     }
@@ -63,7 +66,7 @@ class EnquiryService
 
     public function getAllDutiesByFilter($request, $status)
     {
-        $query = Enquiry::orderBy('created_at', 'desc')->whereIn('status', $status);
+        $query = Enquiry::orderBy('created_at', 'desc')->whereIn('status', $status)->where('journey_type','!=','Monthly');
         if($request->has('duty_status') && $request->duty_status != ''){
             $query = $query->where('duty_closed', $request->duty_status);
         }
@@ -130,11 +133,20 @@ class EnquiryService
 
     public function getTotalDuties()
     {
-        return Enquiry::where('status', 3)->count(); 
+        return Enquiry::where('status', 3)->where('journey_type', '!=', 'Monthly')->count(); 
     }
 
     public function getTotalDutiesByStatus($duty_status_id)
     {
-        return Enquiry::where('status', 3)->where('duty_closed', $duty_status_id)->count();
+        return Enquiry::where('status', 3)->where('duty_closed', $duty_status_id)->where('journey_type', '!=', 'Monthly')->count();
+    }
+
+    public function getMonthlyPackags()
+    {
+        return Enquiry::orderBy('created_at', 'desc')->where('journey_type', 'Monthly')->where('status', 3)->get(); 
+    }
+    public function getMonthlyPackageById($id)
+    {
+        return Enquiry::where('id', $id)->where('journey_type', 'Monthly')->where('status', 3)->first(); 
     }
 }

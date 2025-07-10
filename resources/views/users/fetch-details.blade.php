@@ -16,7 +16,8 @@
                     @if($booking_data->company_name)
                         <div><label>Company Name :</label> {{$booking_data->company_name}}</div>
                     @endif
-                    <div><label>Vehicle Name :</label> {{$booking_data->vehicle_name}}</div>
+                    <div><label>Vehicle Type :</label> {{$booking_data->vehicle_name}}</div>
+                    <div><label>Vehicle Name :</label> {{$booking_data->vehicle}}</div>
                     <div><label>Vehicle Number :</label> {{$booking_data->vehicle_number}}</div>
                 </div>
                 <div class="col-md-6">

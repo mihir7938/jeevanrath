@@ -121,6 +121,9 @@ table#dataTableVehicle.dtr-inline.collapsed > tbody > tr > th.dtr-control::befor
     line-height: 30px;
     width: 30px;
 }
+#approve-invoices-form label {
+    margin-bottom: 0.2rem;
+}
 
 /* Layout changes Admin Panel End */
 

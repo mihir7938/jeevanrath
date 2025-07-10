@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Company extends Model
+class Account extends Model
 {
     use HasFactory;
 
-    protected $table = 'db_companies';
+    protected $table = 'companies';
     public $timestamps = true;
 
     /**
@@ -19,6 +19,12 @@ class Company extends Model
      */
     protected $fillable = [
         'name',
-        'db_name',
+        'acc_id',
+        'mobile_number',
     ];
+
+    public function company_assign_packages()
+    {
+        return $this->hasMany(AssignPackage::class, 'company_id', 'id');
+    }
 }

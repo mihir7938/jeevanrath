@@ -530,8 +530,19 @@
                                         <label for="company">Company</label>
                                     </div>
                                 </div>
-                                <div class="col-xl-12 hidden">
+                                <div class="col-xl-6">
                                     <input type="text" class="form-control py-3 border-primary bg-transparent" placeholder="Company Name" name="company_name">
+                                </div>
+                                <div class="col-xl-6">
+                                    <select class="form-select py-3 border-primary bg-transparent" aria-label="Default select type of journey" name="journey_type" id="journey_type">
+                                        <option value="">Type of Journey</option>
+                                        <option value="One Way Trip">One Way Trip</option>
+                                        <option value="Local Car Rental (8 hrs/80 km)">Local Car Rental (8 hrs/80 km)</option>
+                                        <option value="Out Station (300 km avg)">Out Station (300 km avg)</option>
+                                        <option value="Airport Pickup & Drop">Airport Pickup & Drop</option>
+                                        <option value="Railway Station Pickup & Drop">Railway Station Pickup & Drop</option>
+                                        <option value="Monthly">Monthly</option>
+                                    </select>
                                 </div>
                                 <div class="col-xl-6">
                                     <input type="text" class="form-control py-3 border-primary bg-transparent" placeholder="Full Name" name="name">
@@ -559,43 +570,14 @@
                                 </div>
                                 <div class="col-xl-6">
                                     <select class="form-select py-3 border-primary bg-transparent" aria-label="Default select car" name="car">
-                                        <option value="">Select Car</option>
-                                        <option value="Honda Amaze">Honda Amaze</option>
-                                        <option value="Maruti Dzire">Maruti Dzire</option>
-                                        <option value="Toyota Etios">Toyota Etios</option>
-                                        <option value="Tata Tigore">Tata Tigore</option>
-                                        <option value="Hyndai Aura">Hyndai Aura</option>
-                                        <option value="Honda City">Honda City</option>
-                                        <option value="Skoda Octavia">Skoda Octavia</option>
-                                        <option value="Sedan Mercedes">Sedan Mercedes</option>
-                                        <option value="BMW">BMW</option>
-                                        <option value="Odi">Odi</option>
-                                        <option value="Jaguar">Jaguar</option>
-                                        <option value="Maruti Ertiga">Maruti Ertiga</option>
-                                        <option value="Bolero">Bolero</option>
-                                        <option value="Innova">Innova</option>
-                                        <option value="Marazzo">Marazzo</option>
-                                        <option value="Carens">Carens</option>
-                                        <option value="Innova Crysta">Innova Crysta</option>
-                                        <option value="Innova Hycross">Innova Hycross</option>
-                                        <option value="Mahindra XUV 700">Mahindra XUV 700</option>
-                                        <option value="Toyota Fortuner">Toyota Fortuner</option>
-                                        <option value="SUV Mercedes">SUV Mercedes</option>
-                                        <option value="Tempo Traveller (12/17/20 Seater)">Tempo Traveller (12/17/20 Seater)</option>
-                                        <option value="Tata Winger (12/17/20 Seater)">Tata Winger (12/17/20 Seater)</option>
-                                        <option value="Force Urbania (12/17/20 Seater)">Force Urbania (12/17/20 Seater)</option>
-                                        <option value="Bus (29/56 seater)">Bus (29/56 seater)</option>
-                                    </select>
-                                </div>
-                                <div class="col-xl-6">
-                                    <select class="form-select py-3 border-primary bg-transparent" aria-label="Default select type of journey" name="journey_type">
-                                        <option value="">Type of Journey</option>
-                                        <option value="One Way Trip">One Way Trip</option>
-                                        <option value="Round Trip">Round Trip</option>
-                                        <option value="Local Car Rental (8 hrs/80 km)">Local Car Rental (8 hrs/80 km)</option>
-                                        <option value="Out Station (300 km avg)">Out Station (300 km avg)</option>
-                                        <option value="Airport Pickup & Drop">Airport Pickup & Drop</option>
-                                        <option value="Railway Station Pickup & Drop">Railway Station Pickup & Drop</option>
+                                        <option value="">Select Vehicle Type</option>
+                                        <option value="Hatchback">Hatchback</option>
+                                        <option value="Sedan">Sedan</option>
+                                        <option value="MUV">MUV</option>
+                                        <option value="SUV">SUV</option>
+                                        <option value="Premium SUV">Premium SUV</option>
+                                        <option value="Luxury Car">Luxury Car</option>
+                                        <option value="Bus">Bus</option>
                                     </select>
                                 </div>
                                 <div class="col-xl-6">
@@ -746,19 +728,39 @@
                     },
                 },
                 name:{
-                    required: true
+                    required:function(){
+                        if($('#home-book-now-form input[name="user_type"]:checked').val()  == 'Company' && $("#journey_type").val() == 'Monthly') {
+                            return false;
+                        }
+                        return true;
+                    }
                 },
                 mobile:{
-                    required: true,
+                    required:function(){
+                        if($('#home-book-now-form input[name="user_type"]:checked').val()  == 'Company' && $("#journey_type").val() == 'Monthly') {
+                            return false;
+                        }
+                        return true;
+                    },
                     digits: true,
                     minlength: 10,
                     maxlength: 10
                 },
                 pickup_location:{
-                    required: true
+                    required:function(){
+                        if($("#journey_type").val() == 'Monthly') {
+                            return false;
+                        }
+                        return true;
+                    }
                 },
                 drop_location:{
-                    required: true
+                    required:function(){
+                        if($("#journey_type").val() == 'Monthly') {
+                            return false;
+                        }
+                        return true;
+                    }
                 },
                 journey_start_date:{
                     required: true
@@ -792,7 +794,12 @@
                     maxlength: 10
                 },
                 pickup_time: {
-                    required: true
+                    required:function(){
+                        if($("#journey_type").val() == 'Monthly') {
+                            return false;
+                        }
+                        return true;
+                    }
                 }
             },
             messages:{
@@ -818,7 +825,7 @@
                     required: "Please select journey end date."
                 },
                 car:{
-                    required: "Please select car."
+                    required: "Please select vehicle."
                 },
                 journey_type:{
                     required: "Please select journey type."

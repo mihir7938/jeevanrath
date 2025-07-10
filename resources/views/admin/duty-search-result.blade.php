@@ -25,6 +25,7 @@
                         <th>Pickup Location</th>
                         <th>Drop Location</th>
                         <th>Journey Type</th>
+                        <th>Vehicle Type</th>
                         <th>Vehicle Name</th>
                         <th>Guest Mobile</th>
                         <th>Driver Mobile</th>
@@ -55,6 +56,7 @@
                         <th>Pickup Location</th>
                         <th>Drop Location</th>
                         <th>Journey Type</th>
+                        <th>Vehicle Type</th>
                         <th>Vehicle Name</th>
                         <th>Guest Mobile</th>
                         <th>Driver Mobile</th>
@@ -95,6 +97,7 @@
                             <td>{{$booking->drop_to}}</td>
                             <td>{{$booking->journey_type}}</td>
                             <td>{{$booking->vehicle_name}}</td>
+                            <td>{{$booking->vehicle}}</td>
                             <td>{{$booking->mobile_number}}</td>
                             <td>{{$booking->drivers->mobile_number}}</td>
                             <td>{{$booking->company_name}}</td>

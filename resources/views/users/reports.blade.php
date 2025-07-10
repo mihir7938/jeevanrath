@@ -35,6 +35,7 @@
                                             <th>End Date</th>
                                             <th>Pickup Location</th>
                                             <th>Drop Location</th>
+                                            <th>Vehicle Type</th>
                                             <th>Vehicle Name</th>
                                             <th>Vehicle Number</th>
                                             <th>Journey Type</th>
@@ -65,6 +66,7 @@
                                             <th>End Date</th>
                                             <th>Pickup Location</th>
                                             <th>Drop Location</th>
+                                            <th>Vehicle Type</th>
                                             <th>Vehicle Name</th>
                                             <th>Vehicle Number</th>
                                             <th>Journey Type</th>
@@ -97,6 +99,7 @@
                                                 <td>{{$booking->pickup_from}}</td>
                                                 <td>{{$booking->drop_to}}</td>
                                                 <td>{{$booking->vehicle_name}}</td>
+                                                <td>{{$booking->vehicle}}</td>
                                                 <td>{{$booking->vehicle_number}}</td>
                                                 <td>{{$booking->journey_type}}</td>
                                                 <td>{{$booking->start_point_kilometer}}</td>

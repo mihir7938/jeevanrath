@@ -7,6 +7,12 @@ use App\Http\Requests\VendorRequest;
 use App\Http\Requests\DriverRequest;
 use App\Services\UploadImageService;
 use App\Services\EnquiryService;
+use App\Services\PackageGridService;
+use App\Services\PackageCategoryService;
+use App\Services\PackageService;
+use App\Services\AssignPackageService;
+use App\Services\AccountService;
+use App\Services\DailyEntryService;
 use App\Services\CityService;
 use App\Services\TypeService;
 use App\Services\VehicleService;
@@ -27,11 +33,17 @@ use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class AdminController extends Controller 
 {
-    private $imageService, $enquiryService, $cityService, $typeService, $vehicleService, $categoryService, $vehicleDetailService, $driverService, $vendorService, $companyService, $jRVehicleService, $userService, $whatsappService;
+    private $imageService, $enquiryService, $packageGridService, $packageCategoryService, $packageService, $assignPackageService, $accountService, $dailyEntryService, $cityService, $typeService, $vehicleService, $categoryService, $vehicleDetailService, $driverService, $vendorService, $companyService, $jRVehicleService, $userService, $whatsappService;
 
     public function __construct ( 
         UploadImageService $imageService,
         EnquiryService $enquiryService,
+        PackageGridService $packageGridService,
+        PackageCategoryService $packageCategoryService,
+        PackageService $packageService,
+        AssignPackageService $assignPackageService,
+        AccountService $accountService,
+        DailyEntryService $dailyEntryService,
         CityService $cityService,
         TypeService $typeService,
         VehicleService $vehicleService,
@@ -47,6 +59,12 @@ class AdminController extends Controller
     {
         $this->imageService = $imageService;
         $this->enquiryService = $enquiryService;
+        $this->packageGridService = $packageGridService;
+        $this->packageCategoryService = $packageCategoryService;
+        $this->packageService = $packageService;
+        $this->assignPackageService = $assignPackageService;
+        $this->accountService = $accountService;
+        $this->dailyEntryService = $dailyEntryService;
         $this->cityService = $cityService;
         $this->typeService = $typeService;
         $this->vehicleService = $vehicleService;
@@ -85,6 +103,11 @@ class AdminController extends Controller
         $enquiries = $this->enquiryService->getAllEnquiriesByFilter($request);
         return view('admin.search-result')->with('enquiries', $enquiries)->render();
     }
+    public function getPackagesByCategory(Request $request)
+    {
+        $packages = $this->packageService->getPackagesByCategory($request->category_id);
+        return response()->json(['status' => true, 'packages' => $packages]);
+    }
     public function editInquiry(Request $request, $id)
     {
         try{
@@ -94,7 +117,10 @@ class AdminController extends Controller
             }
             $vendors = $this->vendorService->getAllVendors();
             $drivers = $this->driverService->getAllDrivers();
-            return view('admin.edit-enquiry')->with('enquiry', $enquiry)->with('vendors', $vendors)->with('drivers', $drivers);
+            $companies = $this->accountService->getAllAccounts();
+            $package_categories = $this->packageCategoryService->getAllPackageCategories();
+            $packages = $this->packageService->getPackagesByCategory($enquiry->package_category_id);
+            return view('admin.edit-enquiry')->with('enquiry', $enquiry)->with('vendors', $vendors)->with('drivers', $drivers)->with('companies', $companies)->with('package_categories', $package_categories)->with('packages', $packages);
         }catch(\Exception $e){
             $request->session()->put('message', $e->getMessage());
             $request->session()->put('alert-type', 'alert-warning');
@@ -109,18 +135,35 @@ class AdminController extends Controller
                 throw new BadRequestException('Invalid Request id');
             }
             $data['status'] = $request->status;
-            if($request->user_type == 'Company') {
+            if($request->company_name) {
                 $data['company_name'] = $request->company_name;
+            }
+            if($request->user_type == 'Company') {
                 $data['booker_name'] = $request->booker_name;
                 $data['booker_mobile'] = $request->booker_mobile;
             }
+            if($request->status == '2') {
+                $account_data = $this->accountService->getAccountById($request->account);
+                $data['package_company_id'] = $request->account;
+                $data['package_company_name'] = $account_data->name;
+            }
             if($request->status == '3') {
+                $account_data = $this->accountService->getAccountById($request->account);
                 $vendor_data = $this->vendorService->getVendorById($request->vendor);
                 $driver_data = $this->driverService->getDriverById($request->driver);
+                $package_category_data = $this->packageCategoryService->getPackageCategoryById($request->category);
+                $package_data = $this->packageService->getPackageById($request->package_name);
+                $data['package_company_id'] = $request->account;
+                $data['package_company_name'] = $account_data->name;
                 $data['vendor_id'] = $request->vendor;
                 $data['vendor_name'] = $vendor_data->name;
                 $data['driver_id'] = $request->driver;
                 $data['driver_name'] = $driver_data->name;
+                $data['package_category_id'] = $request->category;
+                $data['package_category_name'] = $package_category_data->name;
+                $data['package_id'] = $request->package_name;
+                $data['package_name'] = $package_data->name;
+                $data['vehicle'] = $request->car;
                 $data['vehicle_number'] = $request->vehicle_number;
             }
             $data['name'] = $request->name;
@@ -132,7 +175,7 @@ class AdminController extends Controller
             $diff = strtotime(date("Y-m-d", strtotime(str_replace('/', '-', $request->end_journey_date)))) - strtotime(date("Y-m-d", strtotime(str_replace('/', '-', $request->journey_date))));
             $total_days = floor($diff / (60 * 60 * 24));
             $data['total_days'] = $total_days + 1;
-            $data['vehicle_name'] = $request->car;
+            $data['vehicle_name'] = $request->vehicle_type;
             $data['journey_type'] = $request->journey_type;
             $data['pickup_time'] = $request->pickup_time;
             $this->enquiryService->update($enquiry, $data);
@@ -174,6 +217,251 @@ class AdminController extends Controller
             $enquiries = $this->enquiryService->getAllEnquiries();
         }
         return view('admin.all')->with('enquiries', $enquiries)->with('status_id', $status_id);
+    }
+    public function accounts(Request $request)
+    {
+        $accounts = $this->accountService->getAllAccounts();
+        return view('admin.companies.index')->with('accounts', $accounts);
+    }
+    public function addAccount(Request $request)
+    {
+        return view('admin.companies.add');
+    }
+    public function saveAccount(Request $request)
+    {
+        $data['name'] = $request->name;
+        $data['acc_id'] = $request->acc_id;
+        $data['mobile_number'] = $request->mobile_number;
+        $this->accountService->create($data);
+        $request->session()->put('message', 'Company has been added successfully.');
+        $request->session()->put('alert-type', 'alert-success');
+        return redirect()->route('admin.accounts');
+    }
+    public function editAccount(Request $request, $id)
+    {
+        try{
+            $account = $this->accountService->getAccountById($id);
+            if(!$account){
+                throw new BadRequestException('Invalid Request id');
+            }
+            return view('admin.companies.edit')->with('account', $account);
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.accounts');
+        }
+    }
+    public function updateAccount(Request $request)
+    {
+        try{
+            $account = $this->accountService->getAccountById($request->id);
+            if(!$account){
+                throw new BadRequestException('Invalid Request id');
+            }
+            $data['name'] = $request->name;
+            $data['acc_id'] = $request->acc_id;
+            $data['mobile_number'] = $request->mobile_number;
+            $this->accountService->update($account, $data);
+            $request->session()->put('message', 'Company has been updated successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.accounts');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.accounts');
+        }
+    }
+    public function deleteAccount(Request $request, $id)
+    {
+        try{
+            $account = $this->accountService->getAccountById($id);
+            if(!$account){
+                throw new BadRequestException('Invalid Request id.');
+            }
+            $this->accountService->delete($account);
+            $request->session()->put('message', 'Company has been deleted successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.accounts');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.accounts');
+        }
+    }
+    public function packageCategories(Request $request)
+    {
+        $package_categories = $this->packageCategoryService->getAllPackageCategories();
+        return view('admin.package_categories.index')->with('package_categories', $package_categories);
+    }
+    public function addPackageCategory(Request $request)
+    {
+        return view('admin.package_categories.add');
+    }
+    public function savePackageCategory(Request $request)
+    {
+        $data['name'] = $request->name;
+        $this->packageCategoryService->create($data);
+        $request->session()->put('message', 'Package Category has been added successfully.');
+        $request->session()->put('alert-type', 'alert-success');
+        return redirect()->route('admin.package.categories');
+    }
+    public function editPackageCategory(Request $request, $id)
+    {
+        try{
+            $package_category = $this->packageCategoryService->getPackageCategoryById($id);
+            if(!$package_category){
+                throw new BadRequestException('Invalid Request id');
+            }
+            return view('admin.package_categories.edit')->with('package_category', $package_category);
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.package.categories');
+        }
+    }
+    public function updatePackageCategory(Request $request)
+    {
+        try{
+            $package_category = $this->packageCategoryService->getPackageCategoryById($request->id);
+            if(!$package_category){
+                throw new BadRequestException('Invalid Request id');
+            }
+            $data['name'] = $request->name;
+            $this->packageCategoryService->update($package_category, $data);
+            $request->session()->put('message', 'Package Category has been updated successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.package.categories');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.package.categories');
+        }
+    }
+    public function deletePackageCategory(Request $request, $id)
+    {
+        try{
+            $package_category = $this->packageCategoryService->getPackageCategoryById($id);
+            if(!$package_category){
+                throw new BadRequestException('Invalid Request id.');
+            }
+            $this->packageCategoryService->delete($package_category);
+            $request->session()->put('message', 'Package Category has been deleted successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.package.categories');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.package.categories');
+        }
+    }
+    public function getPackages()
+    {
+        $packages = $this->packageService->getAllPackages();
+        return view('admin.packages.index')->with('packages', $packages);
+    }
+    public function addPackage()
+    {
+        $package_categories = $this->packageCategoryService->getAllPackageCategories();
+        return view('admin.packages.add')->with('package_categories', $package_categories);;
+    }
+    public function savePackage(Request $request)
+    {
+        $data = $request->all();
+        $data['category_id'] = $request->package_category;
+        $this->packageService->create($data);
+        $request->session()->put('message', 'Packege has been added successfully.');
+        $request->session()->put('alert-type', 'alert-success');
+        return redirect()->route('admin.packages');
+    }
+    public function editPackage(Request $request, $id)
+    {
+        try{
+            $package = $this->packageService->getPackageById($id);
+            if(!$package){
+                throw new BadRequestException('Invalid Request id');
+            }
+            $package_categories = $this->packageCategoryService->getAllPackageCategories();
+            return view('admin.packages.edit')->with('package', $package)->with('package_categories', $package_categories);
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.packages');
+        }
+    }
+    public function updatePackage(Request $request)
+    {
+        try{
+            $package = $this->packageService->getPackageById($request->id);
+            if(!$package){
+                throw new BadRequestException('Invalid Request id');
+            }
+            $data = $request->all();
+            $data['category_id'] = $request->package_category;
+            $this->packageService->update($package, $data);
+            $request->session()->put('message', 'Packege has been updated successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.packages');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.packages');
+        }
+    }
+    public function deletePackage(Request $request, $id)
+    {
+        try{
+            $package = $this->packageService->getPackageById($id);
+            if(!$package){
+                throw new BadRequestException('Invalid Request id.');
+            }
+            $this->packageService->delete($package);
+            $request->session()->put('message', 'Packege has been deleted successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.packages');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.packages');
+        }
+    }
+    public function assignPackages(Request $request)
+    {
+        $accounts = $this->accountService->getAllAccounts();
+        $company = '';
+        $packages = [];
+        return view('admin.assign_packages.index')->with('accounts', $accounts)->with('company', $company)->with('packages', $packages);
+    }
+    public function fetchPackages(Request $request)
+    {
+        $company_id = $request->company_id;
+        $company = $this->accountService->getAccountById($company_id);
+        $packages = $this->packageService->getAllPackagesOrderByName();
+        return view('admin.assign_packages.result')->with('company', $company)->with('packages', $packages)->render();
+    }
+    public function updateAssignPackages(Request $request)
+    {
+        try{
+            foreach ($request->package as $key => $row) {
+                $data['company_id'] = $request->company;
+                $data['package_id'] = $row['id'];
+                $data['rate'] = $row['rate'];
+                $data['ex_km_rate'] = $row['ex_km_rate'];
+                $data['ex_hr_rate'] = $row['ex_hr_rate'];
+                if ($row['status'] == 'yes') {
+                    $assign_package = $this->assignPackageService->getAssignPackageById($row['assign_id']);
+                    $this->assignPackageService->update($assign_package, $data);
+                } else {
+                    $this->assignPackageService->create($data);
+                }
+            }
+            $request->session()->put('message', 'Package has been assigned successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.packages.assign');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.packages.assign');
+        }
     }
     public function cities(Request $request)
     {
@@ -635,11 +923,11 @@ class AdminController extends Controller
     public function companies(Request $request)
     {
         $companies = $this->companyService->getAllCompanies();
-        return view('admin.companies.index')->with('companies', $companies);
+        return view('admin.db_companies.index')->with('companies', $companies);
     }
     public function addCompany(Request $request)
     {
-        return view('admin.companies.add');
+        return view('admin.db_companies.add');
     }
     public function saveCompany(Request $request)
     {
@@ -657,7 +945,7 @@ class AdminController extends Controller
             if(!$company){
                 throw new BadRequestException('Invalid Request id');
             }
-            return view('admin.companies.edit')->with('company', $company);
+            return view('admin.db_companies.edit')->with('company', $company);
         }catch(\Exception $e){
             $request->session()->put('message', $e->getMessage());
             $request->session()->put('alert-type', 'alert-warning');
@@ -1078,12 +1366,36 @@ class AdminController extends Controller
                 throw new BadRequestException('Invalid Request id');
             }
             $companies = $this->companyService->getAllCompanies();
-            return view('admin.approve-invoices')->with('enquiry', $enquiry)->with('companies', $companies);
+            $package_categories = $this->packageCategoryService->getAllPackageCategories();
+            $package_grid = $this->packageGridService->getPackagesByEnqId($enquiry->id);
+            $total_packages = count($package_grid);
+            if ($total_packages > 0) {
+                $category_id = $package_grid[0]->package_category_id;
+                $packages = $this->packageService->getPackagesByCategory($category_id);
+            } else {
+                $category_id = '';
+                $packages = [];
+            }
+            return view('admin.approve-invoices')->with('enquiry', $enquiry)->with('companies', $companies)->with('package_categories', $package_categories)->with('category_id', $category_id)->with('packages', $packages)->with('package_grid', $package_grid)->with('total_packages', $total_packages);
         }catch(\Exception $e){
             $request->session()->put('message', $e->getMessage());
             $request->session()->put('alert-type', 'alert-warning');
             return redirect()->route('admin.invoices');
         }
+    }
+    public function fetchPackagesByCategory(Request $request)
+    {
+        $enquiry = $this->enquiryService->getClosedDutyById($request->enquiry_id);
+        $category_id = $request->category_id;
+        $packages = $this->packageService->getPackagesByCategory($category_id);
+        $package_grid = [];
+        $total_packages = count($package_grid);
+        return view('admin.package-grid')->with('enquiry', $enquiry)->with('category_id', $category_id)->with('packages', $packages)->with('package_grid', $package_grid)->with('total_packages', $total_packages)->render();
+    }
+    public function fetchRateByPackage(Request $request)
+    {
+        $package = $this->packageService->getPackageById($request->package_id);
+        return response()->json(['status' => true, 'package' => $package]);
     }
     public function updateInvoice(Request $request)
     {
@@ -1092,12 +1404,35 @@ class AdminController extends Controller
             if(!$enquiry){
                 throw new BadRequestException('Invalid Request id');
             }
-            $data['duty_approved'] = $request->status;
+            if($request->duty_approved) {
+                $data['duty_approved'] = 1;
+                $data['duty_approved_date'] = date('Y-m-d', strtotime(strtr($request->duty_approved_date, '/', '-')));
+            }
             $company = $this->companyService->getCompanyById($request->company_name);
             $data['company_id'] = $request->company_name;
             $data['db_name'] = $company->db_name;
+            if($enquiry->total_kilometer == '') {
+                $data['total_kilometer'] = ($enquiry->duty_closed_kilometer - $enquiry->duty_on_kilometer);
+            }
             $this->enquiryService->update($enquiry, $data);
-            $request->session()->put('message', 'Duty has been updated successfully.');
+            $enquiry->packages()->delete();
+            foreach ($request->package as $key => $row) {
+                if($row['name'] && $row['quantity'] && $row['rate']) {
+                    $package_category = $this->packageCategoryService->getPackageCategoryById($request->package_category);
+                    $package = $this->packageService->getPackageById($row['name']);
+                    $grid_data['enquiry_id'] = $enquiry->id;
+                    $grid_data['package_category_id'] = $request->package_category;
+                    $grid_data['package_category_name'] = $package_category->name;
+                    $grid_data['package_id'] = $row['name'];
+                    $grid_data['package_name'] = $package->name;
+                    $grid_data['quantity'] = $row['quantity'];
+                    $grid_data['rate'] = $row['rate'];
+                    $grid_data['amount'] = $row['amount'];
+                    $grid_data['remarks'] = $row['remarks'];
+                    $this->packageGridService->create($grid_data);
+                }
+            }
+            $request->session()->put('message', 'Package has been updated successfully.');
             $request->session()->put('alert-type', 'alert-success');
             return redirect()->route('admin.invoices');
         }catch(\Exception $e){
@@ -1109,12 +1444,13 @@ class AdminController extends Controller
     public function duty(Request $request)
     {
         $status = array(3);
-        $duty_closed = '-1';
+        $journey_type = 'oncall';
         if( $request->has('status') ) {
             $duty_closed = $request->input('status');
-            $bookings = $this->enquiryService->getAllEnquiriesByStatus($status, $duty_closed);
+            $bookings = $this->enquiryService->getAllEnquiriesByStatus($status, $duty_closed, $journey_type);
         } else {
-            $bookings = $this->enquiryService->getAllEnquiriesByStatus($status);
+            $bookings = $this->enquiryService->getAllEnquiriesByStatus($status, $duty_closed = '', $journey_type);
+            $duty_closed = '-1';
         }
         return view('admin.duty')->with('bookings', $bookings)->with('duty_closed', $duty_closed);
     }
@@ -1179,6 +1515,196 @@ class AdminController extends Controller
             return redirect()->route('admin.duty');
         }
     }
+    public function entries(Request $request)
+    {
+        $packages = $this->enquiryService->getMonthlyPackags();
+        return view('admin.entries.index')->with('packages', $packages);
+    }
+    public function editEntries(Request $request, $id)
+    {
+        try{
+            $enquiry = $this->enquiryService->getMonthlyPackageById($id);
+            if(!$enquiry){
+                throw new BadRequestException('Invalid Request id.');
+            }
+            return view('admin.entries.edit-entry')->with('enquiry', $enquiry);
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.entries');
+        }
+    }
+    public function updateEntries(Request $request)
+    {
+        try{
+            $enquiry = $this->enquiryService->getMonthlyPackageById($request->id);
+            if(!$enquiry){
+                throw new BadRequestException('Invalid Request id.');
+            }
+            if($request->duty_closed) {
+                $daily_entries = $this->dailyEntryService->getDailyEntriesByEnqId($request->id);
+                $data['duty_closed'] = 1;
+                $difference = 0;
+                foreach ($daily_entries as $entries) {
+                    $difference = $difference + $entries->difference;
+                }
+                $data['total_kilometer'] = $difference;
+                $request->session()->put('message', 'Duty has been closed successfully.');
+                $request->session()->put('alert-type', 'alert-success');
+            } else {
+                $data['duty_closed'] = 0;
+                $request->session()->put('message', 'Duty has been unclosed.');
+                $request->session()->put('alert-type', 'alert-danger');
+            }
+            $this->enquiryService->update($enquiry, $data);
+            return redirect()->route('admin.entries');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+           return redirect()->route('admin.entries');
+        }
+    }
+    public function listDailyEntries(Request $request, $id)
+    {
+        try{
+            $enquiry = $this->enquiryService->getMonthlyPackageById($id);
+            if(!$enquiry){
+                throw new BadRequestException('Invalid Request id');
+            }
+            $daily_entries = $this->dailyEntryService->getDailyEntriesByEnqId($id);
+            $difference = 0;
+            $totaltime = 0;
+            $extra_ot = "0:00";
+            foreach ($daily_entries as $entries) {
+                $difference = $difference + $entries->difference;
+                $temp = explode(":", $entries->ot_hrs);
+                if($temp[0]) {
+                    $totaltime += (int) $temp[0] * 3600;
+                    $totaltime += (int) $temp[1] * 60;
+                }
+            }
+            $extra_ot = sprintf('%02d:%02d',($totaltime / 3600),($totaltime / 60 % 60));
+            return view('admin.entries.list')->with('enquiry', $enquiry)->with('daily_entries', $daily_entries)->with('difference', $difference)->with('extra_ot', $extra_ot);
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.entries');
+        }
+    }
+    public function fetchDailyEntries(Request $request)
+    {
+        $daily_entries = $this->dailyEntryService->getAllEntriesByFilter($request);
+        $difference = 0;
+        $totaltime = 0;
+        $extra_ot = "0:00";
+        foreach ($daily_entries as $entries) {
+            $difference = $difference + $entries->difference;
+            $temp = explode(":", $entries->ot_hrs);
+            if($temp[0]) {
+                $totaltime += (int) $temp[0] * 3600;
+                $totaltime += (int) $temp[1] * 60;
+            }
+        }
+        $extra_ot = sprintf('%02d:%02d',($totaltime / 3600),($totaltime / 60 % 60));
+        return view('admin.entries.fetch-result')->with('daily_entries', $daily_entries)->with('difference', $difference)->with('extra_ot', $extra_ot)->render();
+    }
+    public function addDailyEntries(Request $request, $id)
+    {
+        try{
+            $enquiry = $this->enquiryService->getMonthlyPackageById($id);
+            if(!$enquiry){
+                throw new BadRequestException('Invalid Request id');
+            }
+            return view('admin.entries.add')->with('enquiry', $enquiry);
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->back();
+        }
+    }
+    public function saveDailyEntries(Request $request)
+    {
+        try{
+            $enquiry = $this->enquiryService->getMonthlyPackageById($request->id);
+            if(!$enquiry){
+                throw new BadRequestException('Invalid Request id');
+            }
+            $journey_date = date('Y-m-d', strtotime(strtr($request->journey_date, '/', '-')));
+            $check_entry = $this->dailyEntryService->checkEntryExists($request->id, $journey_date);
+            if($check_entry > 0) {
+                throw new BadRequestException('Data of '.$request->journey_date.' is already inserted');
+            }
+            $data = $request->all();
+            $data['enquiry_id'] = $enquiry->id;
+            $data['booking_id'] = $enquiry->booking_id;
+            $data['journey_date'] = $journey_date;
+            $data['difference'] = $request->closing_kilometer - $request->starting_kilometer;
+            $this->dailyEntryService->create($data);
+            $edata['duty_closed'] = 0;
+            $this->enquiryService->update($enquiry, $edata);
+            $request->session()->put('message', 'Entry has been inserted successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.entries.list', ['id' => $enquiry->id]);
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->back();
+        }
+    }
+    public function editDailyEntries(Request $request, $id)
+    {
+        try{
+            $daily_entry = $this->dailyEntryService->getDailyEntryById($id);
+            if(!$daily_entry){
+                throw new BadRequestException('Invalid Request id');
+            }
+            return view('admin.entries.edit')->with('daily_entry', $daily_entry);
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->back();
+        }
+    }
+    public function updateDailyEntries(Request $request)
+    {
+        try{
+            $daily_entry = $this->dailyEntryService->getDailyEntryById($request->id);
+            if(!$daily_entry){
+                throw new BadRequestException('Invalid Request id');
+            }
+            $data = $request->all();
+            $data['difference'] = $request->closing_kilometer - $request->starting_kilometer;
+            $this->dailyEntryService->update($daily_entry, $data);
+            $enquiry = $this->enquiryService->getEnquiryById($daily_entry->enquiry_id);
+            $edata['duty_closed'] = 0;
+            $this->enquiryService->update($enquiry, $edata);
+            $request->session()->put('message', 'Entry has been updated successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.entries.list', ['id' => $daily_entry->enquiry_id]);
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->back();
+        }
+    }
+    public function deleteDailyEntries(Request $request, $id)
+    {
+        try{
+            $daily_entry = $this->dailyEntryService->getDailyEntryById($id);
+            if(!$daily_entry){
+                throw new BadRequestException('Invalid Request id');
+            }
+            $enquiry_id = $daily_entry->enquiry_id;
+            $this->dailyEntryService->delete($daily_entry);
+            $request->session()->put('message', 'Entry has been deleted successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.entries.list', ['id' => $enquiry_id]);
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->back();
+        }
+    }
     public function whatsapp(Request $request)
     {	
 		$qrcode_image = '';
@@ -1186,7 +1712,9 @@ class AdminController extends Controller
         $active_whatsapp_number = '';
         $active_session_id = '';
         $active = $this->whatsappService->getActiveSession();
-        $result = $this->whatsappService->checkStatus($active->session_id);
+        if(isset($active->session_id)) {
+            $result = $this->whatsappService->checkStatus($active->session_id);
+        }
         if(isset($result->status) && $result->status == 'active') {
             $active_whatsapp_number = substr($active->whatsapp_number, 2);
             $active_session_id = $active->session_id;

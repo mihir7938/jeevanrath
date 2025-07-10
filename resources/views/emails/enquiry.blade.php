@@ -9,16 +9,22 @@
     <p>
         <strong>Booking ID: </strong> {{ $result['booking_id'] }}<br>
         <strong>User Type: </strong> {{ $result['user_type'] }}<br>
-        @if($result['user_type'] == 'Company')
         <strong>Company Name: </strong> {{ $result['company_name'] }}<br>
+        @if($result['user_type'] == 'Company')
+            <strong>Guest Name: </strong> {{ $result['name'] }}<br>
+            <strong>Guest Mobile Number: </strong> {{ $result['mobile_number'] }}<br>
+            <strong>Booker Name: </strong> {{ $result['booker_name'] }}<br>
+            <strong>Booker Mobile Number: </strong> {{ $result['booker_mobile'] }}<br>
+        @else
+            <strong>Name: </strong> {{ $result['name'] }}<br>
+            <strong>Mobile Number: </strong> {{ $result['mobile_number'] }}<br>
         @endif
-        <strong>Name: </strong> {{ $result['name'] }}<br>
-        <strong>Mobile Number: </strong> {{ $result['mobile_number'] }}<br>
-        <strong>Email: </strong> {{ $result['email'] }}<br>
         <strong>Journey Date: </strong> {{ $result['journey_date'] }}<br>
+        <strong>End Journey Date: </strong> {{ $result['end_journey_date'] }}<br>
         <strong>Pickup From: </strong> {{ $result['pickup_from'] }}<br>
         <strong>Drop To: </strong> {{ $result['drop_to'] }}<br>
-        <strong>Car: </strong> {{ $result['vehicle_name'] }}<br>
-        <strong>Journey Type: </strong> {{ $result['journey_type'] }}
+        <strong>Vehicle: </strong> {{ $result['vehicle_name'] }}<br>
+        <strong>Journey Type: </strong> {{ $result['journey_type'] }}<br>
+        <strong>Pickup Time: </strong> {{ $result['pickup_time'] }}
     </p>
 </body>

@@ -26,6 +26,7 @@
                                             <th></th>
                                             <th>Action</th>
                                             <th>Duty Status</th>
+                                            <th>Invoice Date</th>
                                             <th>DB Name (Company)</th>
                                             <th>Booking ID</th>
                                             <th>Vendor</th>
@@ -43,6 +44,7 @@
                                             <th>Pickup Location</th>
                                             <th>Drop Location</th>
                                             <th>Journey Type</th>
+                                            <th>Vehicle Type</th>
                                             <th>Vehicle Name</th>
                                             <th>Vehicle Number</th>
                                             <th>Guest Name</th>
@@ -58,6 +60,7 @@
                                             <th></th>
                                             <th>Action</th>
                                             <th>Duty Status</th>
+                                            <th>Invoice Date</th>
                                             <th>DB Name (Company)</th>
                                             <th>Booking ID</th>
                                             <th>Vendor</th>
@@ -75,6 +78,7 @@
                                             <th>Pickup Location</th>
                                             <th>Drop Location</th>
                                             <th>Journey Type</th>
+                                            <th>Vehicle Type</th>
                                             <th>Vehicle Name</th>
                                             <th>Vehicle Number</th>
                                             <th>Guest Name</th>
@@ -108,6 +112,11 @@
                                                         <div class="bg-success d-inline-flex">Approved</div>
                                                     @endif
                                                 </td>
+                                                <td>
+                                                    @if($booking->duty_approved_date)
+                                                        {{Carbon\Carbon::parse($booking->duty_approved_date)->format('d-m-Y')}}
+                                                    @endif
+                                                </td>
                                                 <td>{{$booking->companies ? $booking->companies->name : ''}}</td>
                                                 <td>{{$booking->booking_id}}</td>
                                                 <td>{{$booking->vendors->name}}</td>
@@ -126,6 +135,7 @@
                                                 <td>{{$booking->drop_to}}</td>
                                                 <td>{{$booking->journey_type}}</td>
                                                 <td>{{$booking->vehicle_name}}</td>
+                                                <td>{{$booking->vehicle}}</td>
                                                 <td>{{$booking->vehicle_number}}</td>
                                                 <td>{{$booking->name}}</td>
                                                 <td>{{$booking->mobile_number}}</td>

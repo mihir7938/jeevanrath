@@ -18,6 +18,7 @@
                         <th>Vehicle Number</th>
                         <th>Start Journey</th>
                         <th>End Journey</th>
+                        <th>Vehicle Type</th>
                         <th>Vehicle Name</th>
                         <th>Journey Type</th>
                         <th>Pickup Time</th>
@@ -43,6 +44,7 @@
                         <th>Vehicle Number</th>
                         <th>Start Journey</th>
                         <th>End Journey</th>
+                        <th>Vehicle Type</th>
                         <th>Vehicle Name</th>
                         <th>Journey Type</th>
                         <th>Pickup Time</th>
@@ -93,6 +95,7 @@
                             <td>{{Carbon\Carbon::parse($enquiry->journey_date)->format('d/m/Y')}}</td>
                             <td>{{Carbon\Carbon::parse($enquiry->end_journey_date)->format('d/m/Y')}}</td>
                             <td>{{$enquiry->vehicle_name}}</td>
+                            <td>{{$enquiry->vehicle}}</td>
                             <td>{{$enquiry->journey_type}}</td>
                             <td>{{$enquiry->pickup_time}}</td>
                             <td>{{$enquiry->user_type}}</td>

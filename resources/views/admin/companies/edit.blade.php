@@ -13,9 +13,9 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <form method="POST" action="{{route('admin.companies.update.save')}}" class="form" id="edit-companies-form" enctype="multipart/form-data">
+                    <form method="POST" action="{{route('admin.accounts.update.save')}}" class="form" id="edit-companies-form" enctype="multipart/form-data">
                         @csrf
-                        <input type="hidden" name="id" value="{{$company->id}}" />
+                        <input type="hidden" name="id" value="{{$account->id}}" />
                         @include('shared.alert')
                         @if (count($errors) > 0)
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -36,13 +36,19 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="name">Company Name*</label>
-                                            <input type="text" class="form-control" id="name" name="name" placeholder="Company Name" value="{{$company->name}}">
+                                            <input type="text" class="form-control" id="name" name="name" placeholder="Company Name" value="{{$account->name}}">
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="db_name">Database Name*</label>
-                                            <input type="text" class="form-control" id="db_name" name="db_name" placeholder="Database Name" value="{{$company->db_name}}">
+                                            <label for="acc_id">ACC ID*</label>
+                                            <input type="text" class="form-control" id="acc_id" name="acc_id" placeholder="ACC ID" value="{{$account->acc_id}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="mobile_number">Mobile Number*</label>
+                                            <input type="phone" class="form-control" id="mobile_number" name="mobile_number" placeholder="Mobile Number" value="{{$account->mobile_number}}">
                                         </div>
                                     </div>
                                 </div>
@@ -65,16 +71,25 @@
                 name: {
                     required: true
                 },
-                db_name: {
+                acc_id: {
                     required: true
+                },
+                mobile_number: {
+                    required: true,
+                    digits: true,
+                    minlength: 10,
+                    maxlength: 10
                 }
             },
             messages:{
                 name:{
                     required: "Please enter company name."
                 },
-                db_name:{
-                    required: "Please enter database name."
+                acc_id:{
+                    required: "Please enter acc id."
+                },
+                mobile_number:{
+                    required: "Please enter mobile number."
                 }
             }
         });

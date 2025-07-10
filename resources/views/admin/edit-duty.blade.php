@@ -34,7 +34,8 @@
                                         @if($enquiry->company_name)
                                             <div><label>Company Name :</label> {{$enquiry->company_name}}</div>
                                         @endif
-                                        <div><label>Vehicle Name :</label> {{$enquiry->vehicle_name}}</div>
+                                        <div><label>Vehicle Type :</label> {{$enquiry->vehicle_name}}</div>
+                                        <div><label>Vehicle Name :</label> {{$enquiry->vehicle}}</div>
                                         <div><label>Vehicle Number :</label> {{$enquiry->vehicle_number}}</div>
                                     </div>
                                     <div class="col-md-6">
