@@ -123,7 +123,7 @@
                                                 <td>{{$booking->drivers->name}}</td>
                                                 <td>{{$booking->drivers->mobile_number}}</td>
                                                 <td>{{Carbon\Carbon::parse($booking->journey_date)->format('d-m-Y')}}</td>
-                                                <td>{{Carbon\Carbon::parse($booking->end_duty_date)->format('d-m-Y')}}</td>
+                                                <td>{{Carbon\Carbon::parse($booking->end_journey_date)->format('d-m-Y')}}</td>
                                                 <td>{{$booking->duty_start_time}}</td>
                                                 <td>{{$booking->duty_end_time}}</td>
                                                 <td>{{$booking->start_point_kilometer}}</td>

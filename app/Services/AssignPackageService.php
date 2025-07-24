@@ -39,4 +39,9 @@ class AssignPackageService
     {
         return AssignPackage::where('company_id', $company_id)->get();
     }
+
+    public function getAssignPackageByCompany($company_id, $package_id)
+    {
+        return AssignPackage::where('company_id', $company_id)->where('package_id', $package_id)->first();
+    }
 }

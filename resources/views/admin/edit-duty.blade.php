@@ -114,7 +114,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="fastag_image">Fastag Statement</label>
-                                            <div class="input-group">
+                                            <div class="fastag-input-group">
                                                 <div class="custom-file">             
                                                     <input type="file" class="custom-file-input" id="fastag_image" name="fastag_image">
                                                     <label class="custom-file-label" for="fastag_image">Fastag Statement</label>
@@ -240,6 +240,8 @@
             errorPlacement: function(error, element) {
                 if (element.attr("name") == "image" ) {
                     $(".input-group").after(error);
+                } else if (element.attr("name") == "fastag_image" ) {
+                    $(".fastag-input-group").after(error);
                 } else {
                     error.insertAfter(element);
                 }

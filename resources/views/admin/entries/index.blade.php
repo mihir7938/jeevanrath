@@ -4,7 +4,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Monthly Trip</h1>
+                    <h1 class="m-0">Monthly/Periodic Trip</h1>
                 </div>
             </div>
         </div>
@@ -16,7 +16,7 @@
                     @include('shared.alert')
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">All Monthly Trip</h3>
+                            <h3 class="card-title">All Monthly/Periodic Trip</h3>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -67,12 +67,15 @@
                                         @foreach($packages as $enquiry)
                                             <tr>
                                                 <td class="text-center"></td>
-                                                <td class="text-center" style="min-width: 70px;">
-                                                    <a href="{{route('admin.entries.list', ['id' => $enquiry->id])}}" class="btn btn-outline-dark btn-circle">
-                                                        <i class="fas fa-calendar-alt"></i>
-                                                    </a>
+                                                <td class="text-center" style="min-width: 100px;">
                                                     <a href="{{route('admin.entries.edit', ['id' => $enquiry->id])}}" class="btn btn-outline-primary btn-circle">
                                                         <i class="fas fa-hand-pointer"></i>
+                                                    </a>
+                                                    <a href="{{route('admin.entries.add', ['id' => $enquiry->id])}}" class="btn btn-outline-danger btn-circle">
+                                                        <i class="fas fa-calendar-alt"></i>
+                                                    </a>
+                                                    <a href="{{route('admin.entries.list', ['id' => $enquiry->id])}}" class="btn btn-outline-dark btn-circle" target="_blank">
+                                                        <i class="fas fa-file"></i>
                                                     </a>
                                                 </td>
                                                 @if($enquiry->duty_closed == 1)

@@ -16,11 +16,9 @@ class PackageGrid extends Model
      */
     protected $fillable = [
         'enquiry_id',
-        'package_category_id',
-        'package_category_name',
         'package_id',
-        'package_name',
-        'quantity',
+        'charge_id',
+        'flag',
         'rate',
         'amount',
         'remarks',

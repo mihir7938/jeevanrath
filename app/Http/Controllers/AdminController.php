@@ -11,6 +11,7 @@ use App\Services\PackageGridService;
 use App\Services\PackageCategoryService;
 use App\Services\PackageService;
 use App\Services\AssignPackageService;
+use App\Services\ChargeService;
 use App\Services\AccountService;
 use App\Services\DailyEntryService;
 use App\Services\CityService;
@@ -33,7 +34,7 @@ use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class AdminController extends Controller 
 {
-    private $imageService, $enquiryService, $packageGridService, $packageCategoryService, $packageService, $assignPackageService, $accountService, $dailyEntryService, $cityService, $typeService, $vehicleService, $categoryService, $vehicleDetailService, $driverService, $vendorService, $companyService, $jRVehicleService, $userService, $whatsappService;
+    private $imageService, $enquiryService, $packageGridService, $packageCategoryService, $packageService, $assignPackageService, $chargeService, $accountService, $dailyEntryService, $cityService, $typeService, $vehicleService, $categoryService, $vehicleDetailService, $driverService, $vendorService, $companyService, $jRVehicleService, $userService, $whatsappService;
 
     public function __construct ( 
         UploadImageService $imageService,
@@ -42,6 +43,7 @@ class AdminController extends Controller
         PackageCategoryService $packageCategoryService,
         PackageService $packageService,
         AssignPackageService $assignPackageService,
+        ChargeService $chargeService,
         AccountService $accountService,
         DailyEntryService $dailyEntryService,
         CityService $cityService,
@@ -63,6 +65,7 @@ class AdminController extends Controller
         $this->packageCategoryService = $packageCategoryService;
         $this->packageService = $packageService;
         $this->assignPackageService = $assignPackageService;
+        $this->chargeService = $chargeService;
         $this->accountService = $accountService;
         $this->dailyEntryService = $dailyEntryService;
         $this->cityService = $cityService;
@@ -165,6 +168,25 @@ class AdminController extends Controller
                 $data['package_name'] = $package_data->name;
                 $data['vehicle'] = $request->car;
                 $data['vehicle_number'] = $request->vehicle_number;
+                $start_date = strtotime(date('Y-m-d', strtotime(strtr($request->journey_date, '/', '-'))));
+                $end_date = strtotime(date('Y-m-d', strtotime(strtr($request->end_journey_date, '/', '-'))));
+                $date_array = array();
+                for ($i = $start_date;$i <= $end_date;$i += (86400)){
+                    $day = date('Y-m-d', $i);
+                    $date_array[] = $day;
+                }
+                if(count($date_array) > 1) {
+                    foreach($date_array as $d) {
+                        $journey = date('Y-m-d', strtotime(strtr($d, '/', '-')));
+                        $check_entry = $this->dailyEntryService->checkEntryExists($enquiry->id, $journey);
+                        if($check_entry == 0) {
+                            $entry_data['enquiry_id'] = $enquiry->id;
+                            $entry_data['booking_id'] = $enquiry->booking_id;
+                            $entry_data['journey_date'] = $d;
+                            $this->dailyEntryService->create($entry_data);
+                        }
+                    }
+                }
             }
             $data['name'] = $request->name;
             $data['mobile_number'] = $request->mobile;
@@ -461,6 +483,55 @@ class AdminController extends Controller
             $request->session()->put('message', $e->getMessage());
             $request->session()->put('alert-type', 'alert-warning');
             return redirect()->route('admin.packages.assign');
+        }
+    }
+    public function charges(Request $request)
+    {
+        $charges = $this->chargeService->getAllCharges();
+        return view('admin.charges.index')->with('charges', $charges);
+    }
+    public function addCharge(Request $request)
+    {
+        return view('admin.charges.add');
+    }
+    public function saveCharge(Request $request)
+    {
+        $data['name'] = $request->name;
+        $this->chargeService->create($data);
+        $request->session()->put('message', 'Charge has been added successfully.');
+        $request->session()->put('alert-type', 'alert-success');
+        return redirect()->route('admin.charges');
+    }
+    public function editCharge(Request $request, $id)
+    {
+        try{
+            $charge = $this->chargeService->getChargeById($id);
+            if(!$charge){
+                throw new BadRequestException('Invalid Request id');
+            }
+            return view('admin.charges.edit')->with('charge', $charge);
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.charges');
+        }
+    }
+    public function updateCharge(Request $request)
+    {
+        try{
+            $charge = $this->chargeService->getChargeById($request->id);
+            if(!$charge){
+                throw new BadRequestException('Invalid Request id');
+            }
+            $data['name'] = $request->name;
+            $this->chargeService->update($charge, $data);
+            $request->session()->put('message', 'Charge has been updated successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.charges');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.charges');
         }
     }
     public function cities(Request $request)
@@ -1366,17 +1437,13 @@ class AdminController extends Controller
                 throw new BadRequestException('Invalid Request id');
             }
             $companies = $this->companyService->getAllCompanies();
-            $package_categories = $this->packageCategoryService->getAllPackageCategories();
-            $package_grid = $this->packageGridService->getPackagesByEnqId($enquiry->id);
-            $total_packages = count($package_grid);
-            if ($total_packages > 0) {
-                $category_id = $package_grid[0]->package_category_id;
-                $packages = $this->packageService->getPackagesByCategory($category_id);
-            } else {
-                $category_id = '';
-                $packages = [];
-            }
-            return view('admin.approve-invoices')->with('enquiry', $enquiry)->with('companies', $companies)->with('package_categories', $package_categories)->with('category_id', $category_id)->with('packages', $packages)->with('package_grid', $package_grid)->with('total_packages', $total_packages);
+            $assign_package = $this->assignPackageService->getAssignPackageByCompany($enquiry->package_company_id, $enquiry->package_id);
+            $charges = $this->chargeService->getAllCharges();
+            $package_data = $this->packageGridService->getPackageByEnqIdByFlag($enquiry->id, 1);
+            $extra_km = $this->packageGridService->getPackageByEnqIdByFlag($enquiry->id, 2);
+            $extra_hr = $this->packageGridService->getPackageByEnqIdByFlag($enquiry->id, 3);
+            $charge_grid = $this->packageGridService->getChargesByEnqId($enquiry->id);
+            return view('admin.approve-invoices')->with('enquiry', $enquiry)->with('companies', $companies)->with('assign_package', $assign_package)->with('charges', $charges)->with('package_data', $package_data)->with('extra_km', $extra_km)->with('extra_hr', $extra_hr)->with('charge_grid', $charge_grid);
         }catch(\Exception $e){
             $request->session()->put('message', $e->getMessage());
             $request->session()->put('alert-type', 'alert-warning');
@@ -1404,6 +1471,26 @@ class AdminController extends Controller
             if(!$enquiry){
                 throw new BadRequestException('Invalid Request id');
             }
+            $enquiry->packages()->delete();
+            $total_amount = 0;
+            foreach ($request->package as $key => $row) {
+                if($row['rate']) {
+                    $total_amount = $total_amount + $row['amount'];
+                    $grid_data['enquiry_id'] = $enquiry->id;
+                    if($row['flag'] == 0) {
+                        $grid_data['package_id'] = NULL;
+                        $grid_data['charge_id'] = $row['charge_id'];
+                    } else {
+                        $grid_data['package_id'] = $request->package_id;
+                        $grid_data['charge_id'] = NULL;
+                    }
+                    $grid_data['flag'] = $row['flag'];
+                    $grid_data['rate'] = $row['rate'];
+                    $grid_data['amount'] = $row['amount'];
+                    $grid_data['remarks'] = $row['remarks'];
+                    $this->packageGridService->create($grid_data);
+                }
+            }
             if($request->duty_approved) {
                 $data['duty_approved'] = 1;
                 $data['duty_approved_date'] = date('Y-m-d', strtotime(strtr($request->duty_approved_date, '/', '-')));
@@ -1411,27 +1498,11 @@ class AdminController extends Controller
             $company = $this->companyService->getCompanyById($request->company_name);
             $data['company_id'] = $request->company_name;
             $data['db_name'] = $company->db_name;
-            if($enquiry->total_kilometer == '') {
+            $data['total_amount'] = $total_amount;
+            /*if($enquiry->total_kilometer == '') {
                 $data['total_kilometer'] = ($enquiry->duty_closed_kilometer - $enquiry->duty_on_kilometer);
-            }
+            }*/
             $this->enquiryService->update($enquiry, $data);
-            $enquiry->packages()->delete();
-            foreach ($request->package as $key => $row) {
-                if($row['name'] && $row['quantity'] && $row['rate']) {
-                    $package_category = $this->packageCategoryService->getPackageCategoryById($request->package_category);
-                    $package = $this->packageService->getPackageById($row['name']);
-                    $grid_data['enquiry_id'] = $enquiry->id;
-                    $grid_data['package_category_id'] = $request->package_category;
-                    $grid_data['package_category_name'] = $package_category->name;
-                    $grid_data['package_id'] = $row['name'];
-                    $grid_data['package_name'] = $package->name;
-                    $grid_data['quantity'] = $row['quantity'];
-                    $grid_data['rate'] = $row['rate'];
-                    $grid_data['amount'] = $row['amount'];
-                    $grid_data['remarks'] = $row['remarks'];
-                    $this->packageGridService->create($grid_data);
-                }
-            }
             $request->session()->put('message', 'Package has been updated successfully.');
             $request->session()->put('alert-type', 'alert-success');
             return redirect()->route('admin.invoices');
@@ -1505,6 +1576,30 @@ class AdminController extends Controller
             if($request->duty_closed) {
                 $data['duty_closed'] = 1;
             }
+            $total_kilometer = ($request->duty_closed_kilometer - $request->duty_on_kilometer);
+            $package = $this->packageService->getPackageById($enquiry->package_id);
+            $extra_kilometer = 0;
+            if($package->package_km) {
+                $extra_km = $total_kilometer - $package->package_km;
+                if ($extra_km > 0) {
+                    $extra_kilometer = $extra_km;
+                }
+            }
+            $total_time = (strtotime($request->duty_end_time) - strtotime($request->duty_start_time));
+            $hours = floor($total_time / 3600);
+            $mins = floor(($total_time - ($hours*3600)) / 60);
+            $min_hr = $mins / 60;
+            $extra_time = 0;
+            if($package->package_hr) {
+                $extra_hr = $hours - $package->package_hr;
+                $extra_hr = $extra_hr + round($min_hr, 2);
+                if ($extra_hr > 0) {
+                    $extra_time = $extra_hr;
+                }
+            }
+            $data['total_kilometer'] = $total_kilometer;
+            $data['extra_kilometer'] = $extra_kilometer;
+            $data['extra_time'] = $extra_time;
             $this->enquiryService->update($enquiry, $data);
             $request->session()->put('message', 'Duty details has been updated successfully.');
             $request->session()->put('alert-type', 'alert-success');
@@ -1519,6 +1614,78 @@ class AdminController extends Controller
     {
         $packages = $this->enquiryService->getMonthlyPackags();
         return view('admin.entries.index')->with('packages', $packages);
+    }
+    public function addEntries(Request $request, $id)
+    {
+        try{
+            $enquiry = $this->enquiryService->getMonthlyPackageById($id);
+            if(!$enquiry){
+                throw new BadRequestException('Invalid Request id');
+            }
+            $daily_entries = $this->dailyEntryService->getDailyEntriesByEnqId($id);
+            $package = $this->packageService->getPackageById($enquiry->package_id);
+            return view('admin.entries.add-entry')->with('enquiry', $enquiry)->with('daily_entries', $daily_entries)->with('package', $package);
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.entries');
+        }
+    }
+    public function saveEntries(Request $request)
+    {
+        try{
+            $enquiry = $this->enquiryService->getMonthlyPackageById($request->enquiry_id);
+            if(!$enquiry){
+                throw new BadRequestException('Invalid Request id');
+            }
+            $difference = 0;
+            $extra_km = 0;
+            $ot_hrs = 0;
+            foreach ($request->entry as $key => $row) {
+                $data['starting_kilometer'] = $row['starting_kilometer'];
+                $data['closing_kilometer'] = $row['closing_kilometer'];
+                $data['difference'] = $row['total_km'];
+                $data['extra_km'] = $row['extra_km'];
+                $data['in_time'] = $row['in_time'];
+                $data['out_time'] = $row['out_time'];
+                $data['ot_hrs'] = $row['extra_time'];
+                $data['remarks'] = $row['remarks'];
+                $journey_date = date('Y-m-d', strtotime(strtr($row['journey_date'], '/', '-')));
+                if(isset($row['entry_id'])) {
+                    $entry = $this->dailyEntryService->getDailyEntryById($row['entry_id']);
+                    $this->dailyEntryService->update($entry, $data);
+                } else {
+                    $data['enquiry_id'] = $enquiry->id;
+                    $data['booking_id'] = $enquiry->booking_id;
+                    $data['journey_date'] = $journey_date;
+                    $this->dailyEntryService->create($data);
+                }
+                $difference = $difference + $row['total_km'];
+                $extra_km = $extra_km + $row['extra_km'];
+                $ot_hrs = $ot_hrs + $row['extra_time'];
+            }
+            $edata['end_journey_date'] = $journey_date;
+            $edata['total_kilometer'] = $difference;
+            if($enquiry->package_category_id == 3) {
+                $package = $this->packageService->getPackageById($enquiry->package_id);
+                if($package->package_km) {
+                    $extra_kilometer = $difference - $package->package_km;
+                    if ($extra_kilometer > 0) {
+                        $extra_km = $extra_kilometer;
+                    }
+                }
+            }
+            $edata['extra_kilometer'] = $extra_km;
+            $edata['extra_time'] = $ot_hrs;
+            $this->enquiryService->update($enquiry, $edata);
+            $request->session()->put('message', 'Entry has been updated successfully.');
+            $request->session()->put('alert-type', 'alert-success');
+            return redirect()->route('admin.entries');
+        }catch(\Exception $e){
+            $request->session()->put('message', $e->getMessage());
+            $request->session()->put('alert-type', 'alert-warning');
+            return redirect()->route('admin.entries');
+        }
     }
     public function editEntries(Request $request, $id)
     {
@@ -1541,27 +1708,31 @@ class AdminController extends Controller
             if(!$enquiry){
                 throw new BadRequestException('Invalid Request id.');
             }
+            $data['fastag_amount'] = $request->fastag_amount;
+            if($request->has('image')){
+                $filepath = public_path('assets/' . $enquiry->image);
+                $this->imageService->deleteFile($filepath);
+                $filename = $this->imageService->uploadFile($request->image, "assets/duties");
+                $data['image'] = '/duties/'.$filename;
+            }
+            if($request->has('fastag_image')){
+                $filepath2 = public_path('assets/' . $enquiry->fastag_image);
+                $this->imageService->deleteFile($filepath2);
+                $filename2 = $this->imageService->uploadFile($request->fastag_image, "assets/fastag");
+                $data['fastag_image'] = '/fastag/'.$filename2;
+            }
+            $data['duty_closed'] = 0;
             if($request->duty_closed) {
-                $daily_entries = $this->dailyEntryService->getDailyEntriesByEnqId($request->id);
                 $data['duty_closed'] = 1;
-                $difference = 0;
-                foreach ($daily_entries as $entries) {
-                    $difference = $difference + $entries->difference;
-                }
-                $data['total_kilometer'] = $difference;
-                $request->session()->put('message', 'Duty has been closed successfully.');
-                $request->session()->put('alert-type', 'alert-success');
-            } else {
-                $data['duty_closed'] = 0;
-                $request->session()->put('message', 'Duty has been unclosed.');
-                $request->session()->put('alert-type', 'alert-danger');
             }
             $this->enquiryService->update($enquiry, $data);
+            $request->session()->put('message', 'Duty details has been updated successfully.');
+            $request->session()->put('alert-type', 'alert-success');
             return redirect()->route('admin.entries');
         }catch(\Exception $e){
             $request->session()->put('message', $e->getMessage());
             $request->session()->put('alert-type', 'alert-warning');
-           return redirect()->route('admin.entries');
+            return redirect()->route('admin.entries');
         }
     }
     public function listDailyEntries(Request $request, $id)
@@ -1573,18 +1744,23 @@ class AdminController extends Controller
             }
             $daily_entries = $this->dailyEntryService->getDailyEntriesByEnqId($id);
             $difference = 0;
-            $totaltime = 0;
-            $extra_ot = "0:00";
+            $extra_km = 0;
+            $extra_ot = 0;
             foreach ($daily_entries as $entries) {
                 $difference = $difference + $entries->difference;
-                $temp = explode(":", $entries->ot_hrs);
-                if($temp[0]) {
-                    $totaltime += (int) $temp[0] * 3600;
-                    $totaltime += (int) $temp[1] * 60;
+                $extra_km = $extra_km + $entries->extra_km;
+                $extra_ot = $extra_ot + $entries->ot_hrs;
+            }
+            if($enquiry->package_category_id == 3) {
+                $package = $this->packageService->getPackageById($enquiry->package_id);
+                if($package->package_km) {
+                    $extra_kilometer = $difference - $package->package_km;
+                    if ($extra_kilometer > 0) {
+                        $extra_km = $extra_kilometer;
+                    }
                 }
             }
-            $extra_ot = sprintf('%02d:%02d',($totaltime / 3600),($totaltime / 60 % 60));
-            return view('admin.entries.list')->with('enquiry', $enquiry)->with('daily_entries', $daily_entries)->with('difference', $difference)->with('extra_ot', $extra_ot);
+            return view('admin.entries.list')->with('enquiry', $enquiry)->with('daily_entries', $daily_entries)->with('difference', $difference)->with('extra_km', $extra_km)->with('extra_ot', $extra_ot);
         }catch(\Exception $e){
             $request->session()->put('message', $e->getMessage());
             $request->session()->put('alert-type', 'alert-warning');
@@ -1595,18 +1771,14 @@ class AdminController extends Controller
     {
         $daily_entries = $this->dailyEntryService->getAllEntriesByFilter($request);
         $difference = 0;
-        $totaltime = 0;
-        $extra_ot = "0:00";
+        $extra_km = 0;
+        $extra_ot = 0;
         foreach ($daily_entries as $entries) {
             $difference = $difference + $entries->difference;
-            $temp = explode(":", $entries->ot_hrs);
-            if($temp[0]) {
-                $totaltime += (int) $temp[0] * 3600;
-                $totaltime += (int) $temp[1] * 60;
-            }
+            $extra_km = $extra_km + $entries->extra_km;
+            $extra_ot = $extra_ot + $entries->ot_hrs;
         }
-        $extra_ot = sprintf('%02d:%02d',($totaltime / 3600),($totaltime / 60 % 60));
-        return view('admin.entries.fetch-result')->with('daily_entries', $daily_entries)->with('difference', $difference)->with('extra_ot', $extra_ot)->render();
+        return view('admin.entries.fetch-result')->with('daily_entries', $daily_entries)->with('difference', $difference)->with('extra_km', $extra_km)->with('extra_ot', $extra_ot)->render();
     }
     public function addDailyEntries(Request $request, $id)
     {

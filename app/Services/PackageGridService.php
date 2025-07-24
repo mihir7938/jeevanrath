@@ -39,4 +39,14 @@ class PackageGridService
     {
         return PackageGrid::where('enquiry_id', $enq_id)->orderBy('id', 'asc')->get();    
     }
+
+    public function getPackageByEnqIdByFlag($enq_id, $flag)
+    {
+        return PackageGrid::where('enquiry_id', $enq_id)->where('flag', $flag)->first();    
+    }
+
+    public function getChargesByEnqId($enq_id)
+    {
+        return PackageGrid::where('enquiry_id', $enq_id)->where('flag', 0)->orderBy('id', 'asc')->get();    
+    }
 }

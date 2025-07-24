@@ -42,7 +42,7 @@ class EnquiryService
             $query = $query->where('duty_closed', $duty_closed);
         }
         if ($journey_type == 'oncall') {
-            $query = $query->where('journey_type','!=','Monthly');
+            $query = $query->whereColumn('journey_date','end_journey_date');
         }
         return $query->select('*')->get();
     }
@@ -66,7 +66,7 @@ class EnquiryService
 
     public function getAllDutiesByFilter($request, $status)
     {
-        $query = Enquiry::orderBy('created_at', 'desc')->whereIn('status', $status)->where('journey_type','!=','Monthly');
+        $query = Enquiry::orderBy('created_at', 'desc')->whereIn('status', $status)->whereColumn('journey_date','end_journey_date');
         if($request->has('duty_status') && $request->duty_status != ''){
             $query = $query->where('duty_closed', $request->duty_status);
         }
@@ -118,7 +118,7 @@ class EnquiryService
 
     public function getTripConfirmedById($id)
     {
-        return Enquiry::where('id', $id)->where('status', 3)->first(); 
+        return Enquiry::where('id', $id)->whereColumn('journey_date', 'end_journey_date')->where('status', 3)->first(); 
     }
 
     public function getTotalEnquiries()
@@ -133,20 +133,20 @@ class EnquiryService
 
     public function getTotalDuties()
     {
-        return Enquiry::where('status', 3)->where('journey_type', '!=', 'Monthly')->count(); 
+        return Enquiry::where('status', 3)->whereColumn('journey_date', 'end_journey_date')->count(); 
     }
 
     public function getTotalDutiesByStatus($duty_status_id)
     {
-        return Enquiry::where('status', 3)->where('duty_closed', $duty_status_id)->where('journey_type', '!=', 'Monthly')->count();
+        return Enquiry::where('status', 3)->where('duty_closed', $duty_status_id)->whereColumn('journey_date', 'end_journey_date')->count();
     }
 
     public function getMonthlyPackags()
     {
-        return Enquiry::orderBy('created_at', 'desc')->where('journey_type', 'Monthly')->where('status', 3)->get(); 
+        return Enquiry::orderBy('created_at', 'desc')->whereColumn('journey_date', '!=', 'end_journey_date')->where('status', 3)->get(); 
     }
     public function getMonthlyPackageById($id)
     {
-        return Enquiry::where('id', $id)->where('journey_type', 'Monthly')->where('status', 3)->first(); 
+        return Enquiry::where('id', $id)->whereColumn('journey_date', '!=', 'end_journey_date')->where('status', 3)->first(); 
     }
 }

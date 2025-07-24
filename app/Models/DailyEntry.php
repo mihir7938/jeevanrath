@@ -24,6 +24,7 @@ class DailyEntry extends Model
         'starting_kilometer',
         'closing_kilometer',
         'difference',
+        'extra_km',
         'in_time',
         'out_time',
         'ot_hrs',

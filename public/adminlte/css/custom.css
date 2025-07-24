@@ -124,6 +124,9 @@ table#dataTableVehicle.dtr-inline.collapsed > tbody > tr > th.dtr-control::befor
 #approve-invoices-form label {
     margin-bottom: 0.2rem;
 }
+#add-entries-form .form-group .form-control {
+    padding: 3px 8px;
+}
 
 /* Layout changes Admin Panel End */
 

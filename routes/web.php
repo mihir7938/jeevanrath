@@ -60,6 +60,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/invoices/approve/{id}', [AdminController::class, 'approveInvoice'])->name('admin.invoices.approve');
     Route::post('/invoices/update', [AdminController::class, 'updateInvoice'])->name('admin.invoices.approve.update');
     Route::get('/entries', [AdminController::class, 'entries'])->name('admin.entries');
+    Route::get('/entries/add/{id}', [AdminController::class, 'addEntries'])->name('admin.entries.add');
+    Route::post('/entries/save', [AdminController::class, 'saveEntries'])->name('admin.entries.save');
     Route::get('/entries/edit/{id}', [AdminController::class, 'editEntries'])->name('admin.entries.edit');
     Route::post('/entries/update', [AdminController::class, 'updateEntries'])->name('admin.entries.update');
     Route::get('/entries/list/{id}', [AdminController::class, 'listDailyEntries'])->name('admin.entries.list');
@@ -90,6 +92,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/assign-packages', [AdminController::class, 'assignPackages'])->name('admin.packages.assign');
     Route::post('/fetch-assign-packages', [AdminController::class, 'fetchPackages'])->name('admin.packages.fetch');
     Route::post('/assign-packages/update', [AdminController::class, 'updateAssignPackages'])->name('admin.packages.assign.update');
+    Route::get('/charges', [AdminController::class, 'charges'])->name('admin.charges');
+    Route::get('/charges/add', [AdminController::class, 'addCharge'])->name('admin.charges.add');
+    Route::post('/charges/save', [AdminController::class, 'saveCharge'])->name('admin.charges.add.save');
+    Route::get('/charges/edit/{id}', [AdminController::class, 'editCharge'])->name('admin.charges.edit');
+    Route::post('/charges/update', [AdminController::class, 'updateCharge'])->name('admin.charges.update.save');
     Route::get('/cities', [AdminController::class, 'cities'])->name('admin.cities');
     Route::get('/cities/add', [AdminController::class, 'addCity'])->name('admin.cities.add');
     Route::post('/cities/save', [AdminController::class, 'saveCity'])->name('admin.cities.add.save');

@@ -6,7 +6,6 @@
                 <div class="col-sm-12">
                     <div class="d-flex justify-content-between">
                         <h1 class="m-0">Daily Entries</h1>
-                        <a href="{{route('admin.entries.add.day', ['id' => $enquiry->id])}}" class="btn btn-primary">Add New Entry</a>
                     </div>
                 </div>
             </div>
@@ -52,7 +51,7 @@
                         </div>
                     </form>
                     <div id="search_result">
-                        @include('admin.entries.fetch-result', ['daily_entries' => $daily_entries, 'difference' => $difference, 'extra_ot' => $extra_ot])
+                        @include('admin.entries.fetch-result', ['daily_entries' => $daily_entries, 'difference' => $difference, 'extra_km' => $extra_km, 'extra_ot' => $extra_ot])
                     </div>
                 </div>
             </div>
@@ -133,6 +132,7 @@
                         ],
                         "destroy": true,
                         "responsive": true,
+                        "pageLength": 100
                     }).buttons().container().appendTo('#fetch_entry_data_wrapper .col-md-6:eq(0) label');
                 });
             }

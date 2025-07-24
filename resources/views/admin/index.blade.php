@@ -74,7 +74,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Driver Duty Details (Call Based)</h1>
+                    <h1 class="m-0">Driver Duty Details</h1>
                 </div>
             </div>
         </div>
