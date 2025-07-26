@@ -274,14 +274,18 @@
                                                 <input type="text" class="form-control" id="duty_approved_date" name="duty_approved_date" placeholder="Invoice Date*">
                                             </div>
                                         </div>
+                                    @else
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" id="final_remarks" name="final_remarks" placeholder="Remarks" value="{{$enquiry->final_remarks}}">
+                                            </div>
+                                        </div>
                                     @endif
                                 </div>
                             </div>
-                            @if($enquiry->duty_approved == 0)
-                                <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary" id="btnsubmit" name="btnsubmit">Submit</button>
-                                </div>
-                            @endif
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary" id="btnsubmit" name="btnsubmit">Submit</button>
+                            </div>
                         </div>
                     </form>
                 </div>

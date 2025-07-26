@@ -7,6 +7,11 @@ use App\Models\Enquiry;
 class EnquiryService
 {
 
+    public function getAllReports()
+    {
+        return Enquiry::orderBy('created_at', 'desc')->get();    
+    }
+
     public function getAllEnquiries($per_page = -1)
     {
         if($per_page == -1){
@@ -73,6 +78,17 @@ class EnquiryService
         if($request->has('booking_id') && $request->booking_id != ''){
             $query = $query->where('booking_id', $request->booking_id);
         }
+        if($request->start_date && $request->end_date){
+            $startDate = date("Y-m-d", strtotime(str_replace('/', '-', $request->start_date)));
+            $endDate = date("Y-m-d", strtotime(str_replace('/', '-', $request->end_date)));
+            $query = $query->whereBetween('journey_date', [$startDate, $endDate]);
+        }
+        return $query->select('*')->get();
+    }
+
+    public function getAllReportsByFilter($request)
+    {
+        $query = Enquiry::orderBy('created_at', 'desc');
         if($request->start_date && $request->end_date){
             $startDate = date("Y-m-d", strtotime(str_replace('/', '-', $request->start_date)));
             $endDate = date("Y-m-d", strtotime(str_replace('/', '-', $request->end_date)));

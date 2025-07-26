@@ -72,6 +72,7 @@ class Enquiry extends Model
         'package_category_name',
         'package_id',
         'package_name',
+        'final_remarks',
     ];
     public function vendors() {
         return $this->belongsTo(Vendor::class, 'vendor_id', 'id');

@@ -240,6 +240,16 @@ class AdminController extends Controller
         }
         return view('admin.all')->with('enquiries', $enquiries)->with('status_id', $status_id);
     }
+    public function reports(Request $request)
+    {
+        $enquiries = $this->enquiryService->getAllReports();
+        return view('admin.reports')->with('enquiries', $enquiries);
+    }
+    public function fetchReports(Request $request)
+    {
+        $enquiries = $this->enquiryService->getAllReportsByFilter($request);
+        return view('admin.fetch-reports')->with('enquiries', $enquiries)->render();
+    }
     public function accounts(Request $request)
     {
         $accounts = $this->accountService->getAllAccounts();
@@ -1471,38 +1481,43 @@ class AdminController extends Controller
             if(!$enquiry){
                 throw new BadRequestException('Invalid Request id');
             }
-            $enquiry->packages()->delete();
-            $total_amount = 0;
-            foreach ($request->package as $key => $row) {
-                if($row['rate']) {
-                    $total_amount = $total_amount + $row['amount'];
-                    $grid_data['enquiry_id'] = $enquiry->id;
-                    if($row['flag'] == 0) {
-                        $grid_data['package_id'] = NULL;
-                        $grid_data['charge_id'] = $row['charge_id'];
-                    } else {
-                        $grid_data['package_id'] = $request->package_id;
-                        $grid_data['charge_id'] = NULL;
+            if($enquiry->duty_approved == 1) {
+                $data['final_remarks'] = $request->final_remarks;
+                $this->enquiryService->update($enquiry, $data);
+            } else {
+                $enquiry->packages()->delete();
+                $total_amount = 0;
+                foreach ($request->package as $key => $row) {
+                    if($row['rate']) {
+                        $total_amount = $total_amount + $row['amount'];
+                        $grid_data['enquiry_id'] = $enquiry->id;
+                        if($row['flag'] == 0) {
+                            $grid_data['package_id'] = NULL;
+                            $grid_data['charge_id'] = $row['charge_id'];
+                        } else {
+                            $grid_data['package_id'] = $request->package_id;
+                            $grid_data['charge_id'] = NULL;
+                        }
+                        $grid_data['flag'] = $row['flag'];
+                        $grid_data['rate'] = $row['rate'];
+                        $grid_data['amount'] = $row['amount'];
+                        $grid_data['remarks'] = $row['remarks'];
+                        $this->packageGridService->create($grid_data);
                     }
-                    $grid_data['flag'] = $row['flag'];
-                    $grid_data['rate'] = $row['rate'];
-                    $grid_data['amount'] = $row['amount'];
-                    $grid_data['remarks'] = $row['remarks'];
-                    $this->packageGridService->create($grid_data);
                 }
+                if($request->duty_approved) {
+                    $data['duty_approved'] = 1;
+                    $data['duty_approved_date'] = date('Y-m-d', strtotime(strtr($request->duty_approved_date, '/', '-')));
+                }
+                $company = $this->companyService->getCompanyById($request->company_name);
+                $data['company_id'] = $request->company_name;
+                $data['db_name'] = $company->db_name;
+                $data['total_amount'] = $total_amount;
+                /*if($enquiry->total_kilometer == '') {
+                    $data['total_kilometer'] = ($enquiry->duty_closed_kilometer - $enquiry->duty_on_kilometer);
+                }*/
+                $this->enquiryService->update($enquiry, $data);
             }
-            if($request->duty_approved) {
-                $data['duty_approved'] = 1;
-                $data['duty_approved_date'] = date('Y-m-d', strtotime(strtr($request->duty_approved_date, '/', '-')));
-            }
-            $company = $this->companyService->getCompanyById($request->company_name);
-            $data['company_id'] = $request->company_name;
-            $data['db_name'] = $company->db_name;
-            $data['total_amount'] = $total_amount;
-            /*if($enquiry->total_kilometer == '') {
-                $data['total_kilometer'] = ($enquiry->duty_closed_kilometer - $enquiry->duty_on_kilometer);
-            }*/
-            $this->enquiryService->update($enquiry, $data);
             $request->session()->put('message', 'Package has been updated successfully.');
             $request->session()->put('alert-type', 'alert-success');
             return redirect()->route('admin.invoices');

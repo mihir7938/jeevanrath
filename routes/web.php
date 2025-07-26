@@ -71,6 +71,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/entries/day/edit/{id}', [AdminController::class, 'editDailyEntries'])->name('admin.entries.edit.day');
     Route::post('/entries/day/update', [AdminController::class, 'updateDailyEntries'])->name('admin.entries.update.day');
     Route::get('/entries/day/delete/{id}', [AdminController::class, 'deleteDailyEntries'])->name('admin.entries.delete.day');
+    Route::get('/reports', [AdminController::class, 'reports'])->name('admin.reports');
+    Route::get('/fetch-reports', [AdminController::class, 'fetchReports'])->name('admin.reports.fetch');
     Route::get('/companies', [AdminController::class, 'accounts'])->name('admin.accounts');
     Route::get('/companies/add', [AdminController::class, 'addAccount'])->name('admin.accounts.add');
     Route::post('/companies/save', [AdminController::class, 'saveAccount'])->name('admin.accounts.add.save');
